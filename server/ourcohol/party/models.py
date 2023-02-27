@@ -6,7 +6,7 @@ class Party(models.Model):
     # host =  models.ForeignKey(User on_delete=models.CASCADE, related_name='outfit')
     name = models.CharField(max_length =  255)
     place = models.CharField(max_length =  255)
-    image = models.ImageField(null=True)    # 술자리 사진
+    image = models.ImageField(blank=True,null=True)    # 술자리 사진
     # participates = models.ManyToManyField(User, blank=True, related_name='participate')
     # king_user_id = models.ManyToManyField(User, blank=True, related_name='participate')
     # last_user_id = models.ManyToManyField(User, blank=True, related_name='participate')
