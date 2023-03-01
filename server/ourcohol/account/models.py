@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from party.models import Party
 from django.db import models
 
 class User(AbstractUser):
