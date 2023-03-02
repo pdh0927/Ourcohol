@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from account.models import User
 
 class Party(models.Model):
     id = models.AutoField(primary_key=True)
@@ -7,9 +8,9 @@ class Party(models.Model):
     name = models.CharField(max_length =  255)
     place = models.CharField(max_length =  255)
     image = models.ImageField(blank=True,null=True)    # 술자리 사진
-    # participates = models.ManyToManyField(User, blank=True, related_name='participate')
-    # king_user_id = models.ManyToManyField(User, blank=True, related_name='participate')
-    # last_user_id = models.ManyToManyField(User, blank=True, related_name='participate')
+    participations = models.ManyToManyField(User, related_name='participate') # 참여자 id
+    king_user_id = models.ManyToManyField(User, blank=True, related_name='win_party') # 가장 많이 먹은 사람 id
+    last_user_id = models.ManyToManyField(User, blank=True, related_name='lose_party') # 가장 적게 먹은 사람 id
     started_at = models.DateTimeField
     ended_at = models.DateTimeField(null=True) 
     created_at = models.DateTimeField(default=timezone.now) # 술자리가 만들어진 시간
