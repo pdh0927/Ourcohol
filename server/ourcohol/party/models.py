@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from account.models import User
+from accounts.models import User
 
 class Party(models.Model):
     id = models.AutoField(primary_key=True)
@@ -12,8 +12,9 @@ class Party(models.Model):
     king_user_id = models.ManyToManyField(User, blank=True, related_name='win_party') # 가장 많이 먹은 사람 id
     last_user_id = models.ManyToManyField(User, blank=True, related_name='lose_party') # 가장 적게 먹은 사람 id
     started_at = models.DateTimeField
-    ended_at = models.DateTimeField(null=True) 
     created_at = models.DateTimeField(default=timezone.now) # 술자리가 만들어진 시간
+    ended_at = models.DateTimeField(null=True) 
+    is_active = models.BooleanField(default=False) 
     is_delete = models.BooleanField(default=False)  # for soft delete
     # 먹은 술 총량
     # 방 code
