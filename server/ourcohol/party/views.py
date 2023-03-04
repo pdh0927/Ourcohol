@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import Party
+from .serializers import PartySerializer, ParticipantSerializer
 
-# Create your views here.
+
+class PartyViewSet(viewsets.ModelViewSet):
+    queryset = Party.objects.all()
+    serializer_class = PartySerializer
