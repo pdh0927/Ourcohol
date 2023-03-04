@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Party, Participant
 from accounts.serializers import UserSerializer, Base64Encoding
 
-class PartySerializer(serializers.ModelSerializer):
+class PartyRetrieveSerializer(serializers.ModelSerializer):
     image_memory = serializers.SerializerMethodField()
     participants = serializers.StringRelatedField(many=True)
 
@@ -13,7 +13,11 @@ class PartySerializer(serializers.ModelSerializer):
     
     def get_image_memory(self, party: Party):
         return Base64Encoding.encoding_image(party)
-        
+
+class PartyPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Party
+        fields = '__all__'
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
