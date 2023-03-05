@@ -33,4 +33,3 @@ class Participant(models.Model):
         return self.user.email
 
 
-
