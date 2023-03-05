@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from .models import User
 from allauth.account.adapter import get_adapter
-
+import base64
 
 class UserRegisterSerializer(RegisterSerializer):
     nickname = serializers.CharField( max_length=100,)
@@ -31,6 +31,19 @@ class UserRegisterSerializer(RegisterSerializer):
         return user
 
 class UserSerializer(serializers.ModelSerializer):
+    image_memory = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id','email', 'nickname']
+        fields = ['id','email', 'nickname', 'image_memory']
+
+    def get_image_memory(self, user: User):
+        return Base64Encoding.encoding_image(user)
+
+class Base64Encoding():
+    def encoding_image(instance):
+        if instance.image != None and instance.image != '':
+            with open(f'media/{instance.image.name}', mode='rb') as loadedfile:
+                return base64.b64encode(loadedfile.read())
+        else:
+            return
