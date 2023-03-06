@@ -10,6 +10,7 @@ from rest_framework.response import Response
 class PartyViewSet(viewsets.ModelViewSet):
     queryset = Party.objects.all()
     serializer_class = PartyPostSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -20,10 +21,7 @@ class PartyViewSet(viewsets.ModelViewSet):
 class ParticipantViewSet(viewsets.ModelViewSet):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
-    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    # permission_classes = [AllowAny]
-
 
     # participant를 통해서 party 목록 불러오기
     @action(detail=False, methods=['get'], url_path=r'list/(?P<pk>\d+)')
