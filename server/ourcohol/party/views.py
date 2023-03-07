@@ -39,9 +39,23 @@ class ParticipantViewSet(viewsets.ModelViewSet):
         qs = self.get_queryset().filter(user=pk)
         resultQs = []
         
-        for source in qs: 
-            if str(source.party.created_at.year) == year and str(source.party.created_at.month) == month:
+        for source in qs:
+            
+            if str(source.party.created_at.year) == year and str(source.party.created_at.month) == month:   # 같은년 같은달 
                 resultQs.append(source)
+            
+            if (int(month) - 1) == 0 :  # 이전년 이전달
+                if source.party.created_at.year == (int(year) - 1) and source.party.created_at.month == 12:
+                    resultQs.append(source)
+            else:   # 같은년 이전달
+                if str(source.party.created_at.year) == year and source.party.created_at.month == int(month)-1:
+                    resultQs.append(source)
+            if (int(month) + 1) == 13 : # 다음년 다음달
+                if source.party.created_at.year == int(year) +1 and source.party.created_at.month == 1:
+                    resultQs.append(source)
+            else:   # 같은년 다음달
+                if str(source.party.created_at.year) == year and source.party.created_at.month == int(month)+1:
+                    resultQs.append(source)
 
         serializer = ParticipantPartySerializer(resultQs, many=True)
 
