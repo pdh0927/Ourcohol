@@ -35,9 +35,8 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path=r'recent/(?P<pk>\d+)')
     def recent_party(self, request,pk):
         qs = self.get_queryset().filter(user=pk)
-        resultQs =[]
-        resultQs.append(qs[len(qs)-1]) 
-        print(resultQs)
-        serializer = ParticipantPartySerializer(resultQs, many=True)
+        resultQs = qs[len(qs)-1]
+        # print(resultQs['party']['names'])
+        serializer = ParticipantPartySerializer(resultQs)
 
         return Response(serializer.data)
