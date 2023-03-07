@@ -20,6 +20,13 @@ class PartyPostSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ParticipantPartySerializer(serializers.ModelSerializer):
+    party = PartyRetrieveSerializer(many=False)
+
+    class Meta:
+        model = Participant
+        fields = ['party']
+
 class ParticipantSerializer(serializers.ModelSerializer):
     user =  serializers.StringRelatedField(many=False)
     party = PartyRetrieveSerializer(many=False)

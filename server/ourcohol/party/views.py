@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .models import Party, Participant
-from .serializers import PartyPostSerializer, PartyRetrieveSerializer, ParticipantSerializer
+from .serializers import PartyPostSerializer, PartyRetrieveSerializer, ParticipantSerializer, ParticipantPartySerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
@@ -27,7 +27,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path=r'list/(?P<pk>\d+)')
     def mylist(self, request,pk):
         qs = self.get_queryset().filter(user=pk)
-        serializer = ParticipantSerializer(qs, many=True)
+        serializer = ParticipantPartySerializer(qs, many=True)
 
         return Response(serializer.data)
     
@@ -38,6 +38,6 @@ class ParticipantViewSet(viewsets.ModelViewSet):
         resultQs =[]
         resultQs.append(qs[len(qs)-1]) 
         print(resultQs)
-        serializer = ParticipantSerializer(resultQs, many=True)
+        serializer = ParticipantPartySerializer(resultQs, many=True)
 
         return Response(serializer.data)
