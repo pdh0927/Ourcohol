@@ -7,6 +7,7 @@ class PartyRetrieveSerializer(serializers.ModelSerializer):
     participants = serializers.StringRelatedField(many=True)
 
     class Meta:
+        ordering = ['created_at']
         model = Party
         # fields = ['id','name','place', 'image','participants','drank_beer','drank_soju','is_active', 'created_at']
         fields = '__all__'
