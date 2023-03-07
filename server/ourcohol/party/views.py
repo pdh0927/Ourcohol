@@ -40,7 +40,9 @@ class ParticipantViewSet(viewsets.ModelViewSet):
         resultQs = []
         
         for source in qs: 
-            if str(source.party.created_at.year) == year and str(source.party.created_at.month) == month:
+            if str(source.party.created_at.year) == year and str(source.party.created_at.month) == month:   # 현재 년, 현재 달의 party
+                resultQs.append(source)
+            if str(source.party.created_at.year) == year and str(source.party.created_at.month+1) == month:   # 현재 년, 저번 달의 party
                 resultQs.append(source)
 
         serializer = ParticipantPartySerializer(resultQs, many=True)
@@ -52,7 +54,6 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     def recent_party(self, request,pk):
         qs = self.get_queryset().filter(user=pk)
         resultQs = qs[len(qs)-1]
-        print(resultQs.party.created_at)
         serializer = ParticipantPartySerializer(resultQs)
 
         return Response(serializer.data)
