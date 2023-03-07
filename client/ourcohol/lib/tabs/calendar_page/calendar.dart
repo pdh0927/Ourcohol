@@ -29,6 +29,8 @@ class _CalendarState extends State<Calendar> {
     setState(() {
       year = date.year;
       month = date.month;
+      selectedYear = date.year;
+      selectedMonth = date.month;
 
       startDayOfWeek = (date.weekday - (date.day % 7 - 1)) >= 0
           ? date.weekday - (date.day % 7 - 1)
@@ -81,92 +83,130 @@ class _CalendarState extends State<Calendar> {
       if (i - startDayOfWeek + 1 > 0 &&
           i - startDayOfWeek + 1 <=
               int.parse(calendarData[year.toString()]![month.toString()]!)) {
-        for (int j = 0; j < myPartyList.length; j++) {
-          var parsedDate =
-              DateTime.parse(myPartyList[j]['party']['created_at']);
-          if (parsedDate.year == year &&
-              parsedDate.month == month &&
-              parsedDate.day == i) {
-            childs.add(Container(
-                width: (100.w - 32) / 7,
-                height: 9.h,
-                alignment: Alignment.center,
-                child: MaterialButton(
-                    padding: EdgeInsets.all(0.59.h),
-                    child: SizedBox(
-                      width: (100.w - 32) / 7,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text((i - startDayOfWeek + 1).toString(),
-                                style: i % 7 != 0
-                                    ? textStyle2
-                                    : const TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: "GowunBatang",
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3)),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 0.59.h),
-                              width: (100.w - 32) / 7 - 0.59.h * 2,
-                              height: (100.w - 32) / 7 - 0.59.h * 2,
-                              child: Image.memory(
-                                base64Decode(
-                                    myPartyList[j]['party']['image_memory']),
-                                fit: BoxFit.fill,
+        if (myPartyList.length > 0) {
+          for (int j = 0; j < myPartyList.length; j++) {
+            var parsedDate =
+                DateTime.parse(myPartyList[j]['party']['created_at']);
+            if (parsedDate.year == year &&
+                parsedDate.month == month &&
+                parsedDate.day == i) {
+              childs.add(Container(
+                  width: (100.w - 32) / 7,
+                  height: 9.h,
+                  alignment: Alignment.center,
+                  child: MaterialButton(
+                      padding: EdgeInsets.all(0.59.h),
+                      child: SizedBox(
+                        width: (100.w - 32) / 7,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text((i - startDayOfWeek + 1).toString(),
+                                  style: i % 7 != 0
+                                      ? textStyle2
+                                      : const TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: "GowunBatang",
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.3)),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 0.59.h),
                                 width: (100.w - 32) / 7 - 0.59.h * 2,
                                 height: (100.w - 32) / 7 - 0.59.h * 2,
-                              ),
-                            )
-                          ]),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        selectedYear = year;
-                        selectedMonth = month;
-                        selectedDay = i - startDayOfWeek + 1;
-                      });
-                    })));
-            break;
-          } else if (j == myPartyList.length - 1) {
-            childs.add(Container(
-                width: (100.w - 32) / 7,
-                height: 9.h,
-                alignment: Alignment.center,
-                child: MaterialButton(
-                    padding: EdgeInsets.all(0.59.h),
-                    child: SizedBox(
-                      width: (100.w - 32) / 7,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text((i - startDayOfWeek + 1).toString(),
-                                style: i % 7 != 0
-                                    ? textStyle2
-                                    : const TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: "GowunBatang",
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3)),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 0.59.h),
-                              width: (100.w - 32) / 7 - 0.59.h * 2,
-                              height: (100.w - 32) / 7 - 0.59.h * 2,
-                            )
-                          ]),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        selectedYear = year;
-                        selectedMonth = month;
-                        selectedDay = i - startDayOfWeek + 1;
-                      });
-                    })));
+                                child: Image.memory(
+                                  base64Decode(
+                                      myPartyList[j]['party']['image_memory']),
+                                  fit: BoxFit.fill,
+                                  width: (100.w - 32) / 7 - 0.59.h * 2,
+                                  height: (100.w - 32) / 7 - 0.59.h * 2,
+                                ),
+                              )
+                            ]),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          selectedYear = year;
+                          selectedMonth = month;
+                          selectedDay = i - startDayOfWeek + 1;
+                        });
+                      })));
+              break;
+            } else if (j == myPartyList.length - 1) {
+              childs.add(Container(
+                  width: (100.w - 32) / 7,
+                  height: 9.h,
+                  alignment: Alignment.center,
+                  child: MaterialButton(
+                      padding: EdgeInsets.all(0.59.h),
+                      child: SizedBox(
+                        width: (100.w - 32) / 7,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text((i - startDayOfWeek + 1).toString(),
+                                  style: i % 7 != 0
+                                      ? textStyle2
+                                      : const TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: "GowunBatang",
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.3)),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 0.59.h),
+                                width: (100.w - 32) / 7 - 0.59.h * 2,
+                                height: (100.w - 32) / 7 - 0.59.h * 2,
+                              )
+                            ]),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          selectedYear = year;
+                          selectedMonth = month;
+                          selectedDay = i - startDayOfWeek + 1;
+                        });
+                      })));
+            }
           }
+        } else {
+          childs.add(Container(
+              width: (100.w - 32) / 7,
+              height: 9.h,
+              alignment: Alignment.center,
+              child: MaterialButton(
+                  padding: EdgeInsets.all(0.59.h),
+                  child: SizedBox(
+                    width: (100.w - 32) / 7,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text((i - startDayOfWeek + 1).toString(),
+                              style: i % 7 != 0
+                                  ? textStyle2
+                                  : const TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: "GowunBatang",
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.3)),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 0.59.h),
+                            width: (100.w - 32) / 7 - 0.59.h * 2,
+                            height: (100.w - 32) / 7 - 0.59.h * 2,
+                          )
+                        ]),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedYear = year;
+                      selectedMonth = month;
+                      selectedDay = i - startDayOfWeek + 1;
+                    });
+                  })));
         }
       } else if (i - startDayOfWeek + 1 <= 0) {
         childs.add(Container(
@@ -194,9 +234,6 @@ class _CalendarState extends State<Calendar> {
                           margin: EdgeInsets.only(bottom: 0.59.h),
                           width: (100.w - 32) / 7 - 0.59.h * 2,
                           height: (100.w - 32) / 7 - 0.59.h * 2,
-                          child: Image.asset(
-                              'assets/images/example${(i + 3) % 9}.png',
-                              fit: BoxFit.fitHeight),
                         )
                       ]),
                 ),
@@ -230,9 +267,6 @@ class _CalendarState extends State<Calendar> {
                           margin: EdgeInsets.only(bottom: 0.59.h),
                           width: (100.w - 32) / 7 - 0.59.h * 2,
                           height: (100.w - 32) / 7 - 0.59.h * 2,
-                          child: Image.asset(
-                              'assets/images/example${(i + 3) % 9}.png',
-                              fit: BoxFit.fitHeight),
                         )
                       ]),
                 ),
@@ -274,7 +308,8 @@ class _CalendarState extends State<Calendar> {
   var myPartyList = [];
   Future getMyPartyList() async {
     http.Response response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/party/participant/list/2/'),
+        Uri.parse(
+            'http://127.0.0.1:8000/api/party/participant/list/2/${selectedYear}/${selectedMonth}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -289,8 +324,8 @@ class _CalendarState extends State<Calendar> {
   var _future;
   @override
   void initState() {
-    _future = getMyPartyList();
     setDate();
+    _future = getMyPartyList();
     super.initState();
   }
 
@@ -320,6 +355,7 @@ class _CalendarState extends State<Calendar> {
                     selectedYear = newDate.year;
                     selectedMonth = newDate.month;
                     selectedDay = newDate.day;
+                    _future = getMyPartyList();
                   });
                 },
               ),
