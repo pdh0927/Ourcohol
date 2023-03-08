@@ -1,13 +1,14 @@
 from rest_framework import serializers
 from .models import Party, Participant
 from accounts.serializers import UserSerializer, Base64Encoding
+from comment.serializers import CommentSerializer
 
 class PartyRetrieveSerializer(serializers.ModelSerializer):
     image_memory = serializers.SerializerMethodField()
     participants = serializers.StringRelatedField(many=True)
+    comments = CommentSerializer(many=True)
 
     class Meta:
-        ordering = ['created_at']
         model = Party
         # fields = ['id','name','place', 'image','participants','drank_beer','drank_soju','is_active', 'created_at']
         fields = '__all__'
