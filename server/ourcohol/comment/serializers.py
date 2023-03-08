@@ -1,10 +1,9 @@
 from rest_framework import serializers
 from .models import Comment
-from party.serializers import PartyRetrieveSerializer
+from accounts.serializers import UserSerializer
 
 class CommentSerializer(serializers.ModelSerializer):
-    user =  serializers.StringRelatedField(many=False)
-    party = PartyRetrieveSerializer(many=False)
+    user =  UserSerializer(many=False)
 
     class Meta:
         model = Comment
