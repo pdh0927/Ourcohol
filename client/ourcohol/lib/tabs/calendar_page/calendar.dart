@@ -29,7 +29,9 @@ class _CalendarState extends State<Calendar> {
     setState(() {
       year = date.year;
       month = date.month;
-
+      selectedYear = date.year;
+      selectedMonth = date.month;
+//1이 커져야함
       startDayOfWeek = (date.weekday - (date.day % 7 - 1)) >= 0
           ? date.weekday - (date.day % 7 - 1)
           : date.weekday - (date.day % 7 - 1) + 7;
@@ -73,6 +75,7 @@ class _CalendarState extends State<Calendar> {
     return childs;
   }
 
+  int count = 0;
   List<Widget> getDateList(week) {
     int nextDay = 1;
     List<Widget> childs = [];
@@ -81,102 +84,183 @@ class _CalendarState extends State<Calendar> {
       if (i - startDayOfWeek + 1 > 0 &&
           i - startDayOfWeek + 1 <=
               int.parse(calendarData[year.toString()]![month.toString()]!)) {
-        for (int j = 0; j < myPartyList.length; j++) {
-          var parsedDate =
-              DateTime.parse(myPartyList[j]['party']['created_at']);
-          if (parsedDate.year == year &&
-              parsedDate.month == month &&
-              parsedDate.day == i) {
-            childs.add(Container(
-                width: (100.w - 32) / 7,
-                height: 9.h,
-                alignment: Alignment.center,
-                child: MaterialButton(
-                    padding: EdgeInsets.all(0.59.h),
-                    child: SizedBox(
-                      width: (100.w - 32) / 7,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text((i - startDayOfWeek + 1).toString(),
-                                style: i % 7 != 0
-                                    ? textStyle2
-                                    : const TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: "GowunBatang",
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3)),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 0.59.h),
-                              width: (100.w - 32) / 7 - 0.59.h * 2,
-                              height: (100.w - 32) / 7 - 0.59.h * 2,
-                              child: Image.memory(
-                                base64Decode(
-                                    myPartyList[j]['party']['image_memory']),
-                                fit: BoxFit.fill,
+        // 이번 달
+        if (myPartyList.length > 0 && count < myPartyList.length) {
+          for (int j = 0; j < myPartyList.length; j++) {
+            var parsedDate =
+                DateTime.parse(myPartyList[j]['party']['created_at']);
+            if (parsedDate.year == year &&
+                parsedDate.month == month &&
+                parsedDate.day == i - startDayOfWeek + 1) {
+              childs.add(Container(
+                  width: (100.w - 32) / 7,
+                  height: 9.h,
+                  alignment: Alignment.center,
+                  child: MaterialButton(
+                      padding: EdgeInsets.all(0.59.h),
+                      child: SizedBox(
+                        width: (100.w - 32) / 7,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text((i - startDayOfWeek + 1).toString(),
+                                  style: i % 7 != 0
+                                      ? textStyle2
+                                      : const TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: "GowunBatang",
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w700,
+                                          height: 1.3)),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 0.59.h),
                                 width: (100.w - 32) / 7 - 0.59.h * 2,
                                 height: (100.w - 32) / 7 - 0.59.h * 2,
-                              ),
-                            )
-                          ]),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        selectedYear = year;
-                        selectedMonth = month;
-                        selectedDay = i - startDayOfWeek + 1;
-                      });
-                    })));
-            break;
-          } else if (j == myPartyList.length - 1) {
-            childs.add(Container(
-                width: (100.w - 32) / 7,
-                height: 9.h,
-                alignment: Alignment.center,
-                child: MaterialButton(
-                    padding: EdgeInsets.all(0.59.h),
-                    child: SizedBox(
-                      width: (100.w - 32) / 7,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text((i - startDayOfWeek + 1).toString(),
-                                style: i % 7 != 0
-                                    ? textStyle2
-                                    : const TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: "GowunBatang",
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w700,
-                                        height: 1.3)),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 0.59.h),
-                              width: (100.w - 32) / 7 - 0.59.h * 2,
-                              height: (100.w - 32) / 7 - 0.59.h * 2,
-                            )
-                          ]),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        selectedYear = year;
-                        selectedMonth = month;
-                        selectedDay = i - startDayOfWeek + 1;
-                      });
-                    })));
+                                child: Image.memory(
+                                  base64Decode(
+                                      myPartyList[j]['party']['image_memory']),
+                                  fit: BoxFit.fill,
+                                  width: (100.w - 32) / 7 - 0.59.h * 2,
+                                  height: (100.w - 32) / 7 - 0.59.h * 2,
+                                ),
+                              )
+                            ]),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          selectedYear = year;
+                          selectedMonth = month;
+                          selectedDay = i - startDayOfWeek + 1;
+                        });
+                      })));
+              count++;
+              break;
+            } else if (j == myPartyList.length - 1) {
+              childs.add(Container(
+                  width: (100.w - 32) / 7,
+                  height: 9.h,
+                  padding: EdgeInsets.all(0.59.h),
+                  alignment: Alignment.center,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text((i - startDayOfWeek + 1).toString(),
+                            style: i % 7 != 0
+                                ? textStyle2
+                                : const TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: "GowunBatang",
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.3)),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 0.59.h),
+                          width: (100.w - 32) / 7 - 0.59.h * 2,
+                          height: (100.w - 32) / 7 - 0.59.h * 2,
+                        )
+                      ])));
+            }
           }
+        } else {
+          childs.add(Container(
+              width: (100.w - 32) / 7,
+              height: 9.h,
+              padding: EdgeInsets.all(0.59.h),
+              alignment: Alignment.center,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text((i - startDayOfWeek + 1).toString(),
+                        style: i % 7 != 0
+                            ? textStyle2
+                            : const TextStyle(
+                                fontSize: 12,
+                                fontFamily: "GowunBatang",
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                                height: 1.3)),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 0.59.h),
+                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                    )
+                  ])));
         }
       } else if (i - startDayOfWeek + 1 <= 0) {
-        childs.add(Container(
-            width: (100.w - 32) / 7,
-            height: 9.h,
-            alignment: Alignment.center,
-            child: MaterialButton(
-                padding: EdgeInsets.all(0.59.h),
-                child: SizedBox(
+        // 아전달
+        if (myPartyList.length > 0 && count < myPartyList.length) {
+          for (int j = 0; j < myPartyList.length; j++) {
+            var parsedDate =
+                DateTime.parse(myPartyList[j]['party']['created_at']);
+            if (parsedDate.year == ((month - 1) == 0 ? year - 1 : year) &&
+                parsedDate.month == ((month - 1) == 0 ? 12 : (month - 1)) &&
+                parsedDate.day ==
+                    ((int.parse(calendarData[
+                                ((month - 1) == 0 ? year - 1 : year)
+                                    .toString()]![
+                            ((month - 1) == 0 ? 12 : (month - 1))
+                                .toString()]!) +
+                        (i - startDayOfWeek + 1)))) {
+              childs.add(Container(
                   width: (100.w - 32) / 7,
+                  height: 9.h,
+                  alignment: Alignment.center,
+                  child: MaterialButton(
+                      padding: EdgeInsets.all(0.59.h),
+                      child: SizedBox(
+                        width: (100.w - 32) / 7,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  (int.parse(calendarData[((month - 1) == 0
+                                                  ? year - 1
+                                                  : year)
+                                              .toString()]![((month - 1) == 0
+                                                  ? 12
+                                                  : (month - 1))
+                                              .toString()]!) +
+                                          (i - startDayOfWeek + 1))
+                                      .toString(),
+                                  style: textStyle5),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 0.59.h),
+                                width: (100.w - 32) / 7 - 0.59.h * 2,
+                                height: (100.w - 32) / 7 - 0.59.h * 2,
+                                child: Image.memory(
+                                  base64Decode(
+                                      myPartyList[j]['party']['image_memory']),
+                                  fit: BoxFit.fill,
+                                  width: (100.w - 32) / 7 - 0.59.h * 2,
+                                  height: (100.w - 32) / 7 - 0.59.h * 2,
+                                ),
+                              )
+                            ]),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          selectedYear = (month - 1) == 0 ? year - 1 : year;
+                          selectedMonth = (month - 1) == 0 ? 12 : (month - 1);
+                          selectedDay = int.parse(calendarData[
+                                      ((month - 1) == 0 ? year - 1 : year)
+                                          .toString()]![
+                                  ((month - 1) == 0 ? 12 : (month - 1))
+                                      .toString()]!) +
+                              (i - startDayOfWeek + 1);
+                        });
+                      })));
+              count++;
+              break;
+            } else if (j == myPartyList.length - 1) {
+              childs.add(Container(
+                  width: (100.w - 32) / 7,
+                  height: 9.h,
+                  padding: EdgeInsets.all(0.59.h),
+                  alignment: Alignment.center,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,33 +278,87 @@ class _CalendarState extends State<Calendar> {
                           margin: EdgeInsets.only(bottom: 0.59.h),
                           width: (100.w - 32) / 7 - 0.59.h * 2,
                           height: (100.w - 32) / 7 - 0.59.h * 2,
-                          child: Image.asset(
-                              'assets/images/example${(i + 3) % 9}.png',
-                              fit: BoxFit.fitHeight),
                         )
-                      ]),
-                ),
-                onPressed: () {
-                  setState(() {
-                    selectedYear = (month - 1) == 0 ? year - 1 : year;
-                    selectedMonth = (month - 1) == 0 ? 12 : (month - 1);
-                    selectedDay = int.parse(calendarData[
-                                ((month - 1) == 0 ? year - 1 : year)
-                                    .toString()]![
-                            ((month - 1) == 0 ? 12 : (month - 1))
-                                .toString()]!) +
-                        (i - startDayOfWeek + 1);
-                  });
-                })));
+                      ])));
+            }
+          }
+        } else {
+          childs.add(Container(
+              width: (100.w - 32) / 7,
+              height: 9.h,
+              padding: EdgeInsets.all(0.59.h),
+              alignment: Alignment.center,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                        (int.parse(calendarData[
+                                        ((month - 1) == 0 ? year - 1 : year)
+                                            .toString()]![
+                                    ((month - 1) == 0 ? 12 : (month - 1))
+                                        .toString()]!) +
+                                (i - startDayOfWeek + 1))
+                            .toString(),
+                        style: textStyle5),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 0.59.h),
+                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                    )
+                  ])));
+        }
       } else {
-        childs.add(Container(
-            width: (100.w - 32) / 7,
-            height: 9.h,
-            alignment: Alignment.center,
-            child: MaterialButton(
-                padding: EdgeInsets.all(0.59.h),
-                child: SizedBox(
+        // 다음 달
+        if (myPartyList.length > 0 && count < myPartyList.length) {
+          for (int j = 0; j < myPartyList.length; j++) {
+            var parsedDate =
+                DateTime.parse(myPartyList[j]['party']['created_at']);
+            if (parsedDate.year == ((month + 1) == 13 ? year + 1 : year) &&
+                parsedDate.month == ((month + 1) == 13 ? 1 : (month + 1)) &&
+                parsedDate.day == nextDay) {
+              childs.add(Container(
                   width: (100.w - 32) / 7,
+                  height: 9.h,
+                  alignment: Alignment.center,
+                  child: MaterialButton(
+                      padding: EdgeInsets.all(0.59.h),
+                      child: SizedBox(
+                        width: (100.w - 32) / 7,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(nextDay.toString(), style: textStyle5),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 0.59.h),
+                                width: (100.w - 32) / 7 - 0.59.h * 2,
+                                height: (100.w - 32) / 7 - 0.59.h * 2,
+                                child: Image.memory(
+                                  base64Decode(
+                                      myPartyList[j]['party']['image_memory']),
+                                  fit: BoxFit.fill,
+                                  width: (100.w - 32) / 7 - 0.59.h * 2,
+                                  height: (100.w - 32) / 7 - 0.59.h * 2,
+                                ),
+                              )
+                            ]),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          selectedYear = (month + 1) == 13 ? year + 1 : year;
+                          selectedMonth = (month + 1) == 13 ? 1 : (month + 1);
+                          selectedDay = nextDay;
+                        });
+                      })));
+              count++;
+              break;
+            } else if (j == myPartyList.length - 1) {
+              childs.add(Container(
+                  width: (100.w - 32) / 7,
+                  height: 9.h,
+                  padding: EdgeInsets.all(0.59.h),
+                  alignment: Alignment.center,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -230,19 +368,28 @@ class _CalendarState extends State<Calendar> {
                           margin: EdgeInsets.only(bottom: 0.59.h),
                           width: (100.w - 32) / 7 - 0.59.h * 2,
                           height: (100.w - 32) / 7 - 0.59.h * 2,
-                          child: Image.asset(
-                              'assets/images/example${(i + 3) % 9}.png',
-                              fit: BoxFit.fitHeight),
                         )
-                      ]),
-                ),
-                onPressed: () {
-                  setState(() {
-                    selectedYear = (month + 1) == 13 ? year + 1 : year;
-                    selectedMonth = (month + 1) == 13 ? 1 : (month + 1);
-                    selectedDay = nextDay;
-                  });
-                })));
+                      ])));
+            }
+          }
+        } else {
+          childs.add(Container(
+              width: (100.w - 32) / 7,
+              height: 9.h,
+              padding: EdgeInsets.all(0.59.h),
+              alignment: Alignment.center,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(nextDay.toString(), style: textStyle5),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 0.59.h),
+                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                    )
+                  ])));
+        }
         nextDay++;
       }
     }
@@ -274,14 +421,17 @@ class _CalendarState extends State<Calendar> {
   var myPartyList = [];
   Future getMyPartyList() async {
     http.Response response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/party/participant/list/2/'),
+        Uri.parse(
+            'http://127.0.0.1:8000/api/party/participant/list/2/${selectedYear}/${selectedMonth}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization':
               'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg0MTE2NTk5LCJpYXQiOjE2NzgxMTY1OTksImp0aSI6IjlhZDFkOWJiOGExYjRhNGY5M2Y5NDY5Yjc0ODJhZmY2IiwidXNlcl9pZCI6Mn0.UoQFcrWwWbm6_KrGGNn6mmJzH27ZPQUMqqbLJpB0IWw',
         });
-    myPartyList = jsonDecode(response.body);
+    setState(() {
+      myPartyList = jsonDecode(response.body);
+    });
 
     return jsonDecode(response.body);
   }
@@ -289,13 +439,15 @@ class _CalendarState extends State<Calendar> {
   var _future;
   @override
   void initState() {
-    _future = getMyPartyList();
     setDate();
+    _future = getMyPartyList();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    count = 0;
+
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Container(
         margin: EdgeInsets.only(top: 2.h, bottom: 2.h),
@@ -308,7 +460,7 @@ class _CalendarState extends State<Calendar> {
                   year,
                   month,
                 ),
-                minimumYear: 2023, maximumYear: 2025,
+                minimumYear: 2023, maximumYear: 2029,
                 mode: CupertinoDatePickerMode.date,
                 use24hFormat: true,
                 // This is called when the user changes the date.
@@ -320,6 +472,9 @@ class _CalendarState extends State<Calendar> {
                     selectedYear = newDate.year;
                     selectedMonth = newDate.month;
                     selectedDay = newDate.day;
+                  });
+                  setState(() {
+                    _future = getMyPartyList();
                   });
                 },
               ),
