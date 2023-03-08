@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 
 import 'package:ourcohol/style.dart';
 import 'package:ourcohol/tabs/calendar_page/calendar_data.dart';
@@ -478,16 +479,26 @@ class _CalendarState extends State<Calendar> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 6.w,
-              height: 6.w,
-              margin: EdgeInsets.only(right: 7),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: MemoryImage(base64Decode(partyMemory['party']
-                        ['comments'][i]['user']['image_memory'])),
-                  )),
-            ),
+                width: 6.w,
+                height: 6.w,
+                margin: EdgeInsets.only(right: 7),
+                decoration: partyMemory['party']['comments'][i]['user']
+                            ['image_memory'] !=
+                        null
+                    ? BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: MemoryImage(base64Decode(partyMemory['party']
+                                ['comments'][i]['user']['image_memory']))))
+                    : BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+                child: partyMemory['party']['comments'][i]['user']
+                            ['image_memory'] ==
+                        null
+                    ? const Icon(
+                        FlutterRemix.user_2_fill,
+                        color: Colors.white,
+                      )
+                    : null),
             Text(partyMemory['party']['comments'][i]['content'],
                 style: textStyle8),
           ],
