@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     
     # My Apps
     'party',
-    'accounts'
+    'accounts',
+    'comment'
 ]
 
 MIDDLEWARE = [
