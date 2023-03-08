@@ -98,6 +98,16 @@ class _CalendarState extends State<Calendar> {
                   width: (100.w - 32) / 7,
                   height: 9.h,
                   alignment: Alignment.center,
+                  decoration: selectedDay == (i - startDayOfWeek + 1)
+                      ? BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                              Colors.grey,
+                              Colors.white,
+                            ]))
+                      : null,
                   child: MaterialButton(
                       padding: EdgeInsets.all(0.59.h),
                       child: SizedBox(
@@ -138,7 +148,6 @@ class _CalendarState extends State<Calendar> {
                         });
                       })));
               countParty++;
-
               break;
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
@@ -200,7 +209,7 @@ class _CalendarState extends State<Calendar> {
           finishFlag = true;
         }
       } else if (i - startDayOfWeek + 1 <= 0) {
-        // 아전달
+        // 이전달
         if (myPartyList.length > 0 && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
@@ -218,6 +227,22 @@ class _CalendarState extends State<Calendar> {
                   width: (100.w - 32) / 7,
                   height: 9.h,
                   alignment: Alignment.center,
+                  decoration: selectedDay ==
+                          (int.parse(calendarData[
+                                      ((month - 1) == 0 ? year - 1 : year)
+                                          .toString()]![
+                                  ((month - 1) == 0 ? 12 : (month - 1))
+                                      .toString()]!) +
+                              (i - startDayOfWeek + 1))
+                      ? BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                              Colors.grey,
+                              Colors.white,
+                            ]))
+                      : null,
                   child: MaterialButton(
                       padding: EdgeInsets.all(0.59.h),
                       child: SizedBox(
@@ -332,6 +357,16 @@ class _CalendarState extends State<Calendar> {
                   width: (100.w - 32) / 7,
                   height: 9.h,
                   alignment: Alignment.center,
+                  decoration: selectedDay == (i - 7 * week - lastWeekDay + 1)
+                      ? BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                              Colors.grey,
+                              Colors.white,
+                            ]))
+                      : null,
                   child: MaterialButton(
                       padding: EdgeInsets.all(0.59.h),
                       child: SizedBox(
@@ -502,11 +537,12 @@ class _CalendarState extends State<Calendar> {
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Container(
-            width: 100.w - 32,
-            alignment: Alignment.center,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Container(
+              width: 100.w - 32,
+              alignment: Alignment.center,
+              child: Column(
                 children: [
                   Container(
                     margin: EdgeInsets.only(top: 2.h, bottom: 2.h),
@@ -644,78 +680,89 @@ class _CalendarState extends State<Calendar> {
                           ]);
                         }
                       }),
-                  Container(
-                    margin: EdgeInsets.only(top: 1.5.h, bottom: 1.h),
-                    child: partyMemory != null
-                        ? Column(
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 1.5.h, 16, 1.h),
+              decoration: partyMemory != null
+                  ? const BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                          Colors.grey,
+                          Colors.white,
+                        ]))
+                  : null,
+              child: partyMemory != null
+                  ? Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 1.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${partyMemory['party']['name']}',
+                                style: textStyle6,
+                              ),
+                              Text(
+                                '더 보기',
+                                style: textStyle7,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 1.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(bottom: 1.h),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '${partyMemory['party']['name']}',
-                                      style: textStyle6,
-                                    ),
-                                    Text(
-                                      '더 보기',
-                                      style: textStyle7,
-                                    ),
-                                  ],
+                                margin: EdgeInsets.only(right: 8),
+                                width: 42.w,
+                                height: 30.w,
+                                child: Image.memory(
+                                  base64Decode(
+                                      partyMemory['party']['image_memory']),
+                                  fit: BoxFit.fill,
+                                  width: 42.w,
+                                  height: 30.w,
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 1.h),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(right: 8),
-                                      width: 42.w,
-                                      height: 30.w,
-                                      child: Image.memory(
-                                        base64Decode(partyMemory['party']
-                                            ['image_memory']),
-                                        fit: BoxFit.fill,
-                                        width: 42.w,
-                                        height: 30.w,
+                              partyMemory['party']['comments'].length == 0
+                                  ? Container(
+                                      margin: EdgeInsets.only(left: 6.w),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '우리들의 이야기를 남겨주세요 :)',
+                                        style: textStyle5,
                                       ),
-                                    ),
-                                    partyMemory['party']['comments'].length == 0
-                                        ? Container(
-                                            margin: EdgeInsets.only(left: 6.w),
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              '우리들의 이야기를 남겨주세요 :)',
-                                              style: textStyle5,
-                                            ),
-                                          )
-                                        : Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: getCommentList(),
-                                          )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                    '${selectedYear}.${selectedMonth}.${selectedDay}',
-                                    style: textStyle8),
-                              )
+                                    )
+                                  : Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: getCommentList(),
+                                    )
                             ],
-                          )
-                        : Container(
-                            margin: EdgeInsets.only(top: 9.4.h),
-                            child: Text('내 기억을 떠올려 보세요 :)', style: textStyle9)),
-                  )
-                ]),
-          )),
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                              '${selectedYear}.${selectedMonth}.${selectedDay}',
+                              style: textStyle8),
+                        )
+                      ],
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(top: 9.4.h),
+                      child: Text('내 기억을 떠올려 보세요 :)', style: textStyle9)),
+            )
+          ])),
     );
   }
 }
