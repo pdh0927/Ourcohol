@@ -39,9 +39,11 @@ class ParticipantViewSet(viewsets.ModelViewSet):
         qs = self.get_queryset().filter(user=pk)
         resultQs = []
         
+
         for source in qs:
             
             if str(source.party.created_at.year) == year and str(source.party.created_at.month) == month:   # 같은년 같은달 
+
                 resultQs.append(source)
             
             if (int(month) - 1) == 0 :  # 이전년 이전달
@@ -66,7 +68,6 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     def recent_party(self, request,pk):
         qs = self.get_queryset().filter(user=pk)
         resultQs = qs[len(qs)-1]
-        print(resultQs.party.created_at)
         serializer = ParticipantPartySerializer(resultQs)
 
         return Response(serializer.data)
