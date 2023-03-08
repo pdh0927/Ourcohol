@@ -14,8 +14,6 @@ class Party(models.Model):
     drank_beer = models.IntegerField(default=0)
     drank_soju = models.IntegerField(default=0)
     is_active = models.BooleanField(default=False) 
-    is_delete = models.BooleanField(default=False)  # for soft delete
-    # 방 code
     
     def __str__(self):
         return self.name
