@@ -1,4 +1,5 @@
 from django.db import models
+from party.models import Party, Participant
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
