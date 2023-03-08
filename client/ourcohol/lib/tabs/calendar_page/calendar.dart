@@ -432,6 +432,36 @@ class _CalendarState extends State<Calendar> {
             ));
   }
 
+  List<Widget> getCommentList() {
+    List<Widget> childs = [];
+
+    for (int i = 0; i < partyMemory['party']['comments'].length; i++) {
+      childs.add(Container(
+        margin: EdgeInsets.only(
+            bottom: i != partyMemory['party']['comments'].length - 1 ? 2.w : 0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 6.w,
+              height: 6.w,
+              margin: EdgeInsets.only(right: 7),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: MemoryImage(base64Decode(partyMemory['party']
+                        ['comments'][i]['user']['image_memory'])),
+                  )),
+            ),
+            Text(partyMemory['party']['comments'][i]['content'],
+                style: textStyle8),
+          ],
+        ),
+      ));
+    }
+    return childs;
+  }
+
   var partyMemory;
   var myPartyList = [];
   Future getMyPartyList() async {
@@ -642,8 +672,7 @@ class _CalendarState extends State<Calendar> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(
-                                          bottom: 0.59.h, right: 8),
+                                      margin: EdgeInsets.only(right: 8),
                                       width: 42.w,
                                       height: 30.w,
                                       child: Image.memory(
@@ -654,22 +683,22 @@ class _CalendarState extends State<Calendar> {
                                         height: 30.w,
                                       ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(left: 6.w),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            '우리들의 이야기를 남겨주세요 :)',
-                                            style: textStyle5,
-                                          ),
-                                        )
-                                      ],
-                                    )
+                                    partyMemory['party']['comments'].length == 0
+                                        ? Container(
+                                            margin: EdgeInsets.only(left: 6.w),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              '우리들의 이야기를 남겨주세요 :)',
+                                              style: textStyle5,
+                                            ),
+                                          )
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: getCommentList(),
+                                          )
                                   ],
                                 ),
                               ),
