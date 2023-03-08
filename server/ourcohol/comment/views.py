@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentPostSerializer
+    permission_classes = [IsAuthenticated]
