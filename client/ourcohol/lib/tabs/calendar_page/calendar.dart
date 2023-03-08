@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 
 import 'package:ourcohol/style.dart';
 import 'package:ourcohol/tabs/calendar_page/calendar_data.dart';
@@ -478,16 +479,26 @@ class _CalendarState extends State<Calendar> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 6.w,
-              height: 6.w,
-              margin: EdgeInsets.only(right: 7),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: MemoryImage(base64Decode(partyMemory['party']
-                        ['comments'][i]['user']['image_memory'])),
-                  )),
-            ),
+                width: 6.w,
+                height: 6.w,
+                margin: EdgeInsets.only(right: 7),
+                decoration: partyMemory['party']['comments'][i]['user']
+                            ['image_memory'] !=
+                        null
+                    ? BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: MemoryImage(base64Decode(partyMemory['party']
+                                ['comments'][i]['user']['image_memory']))))
+                    : BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+                child: partyMemory['party']['comments'][i]['user']
+                            ['image_memory'] ==
+                        null
+                    ? const Icon(
+                        FlutterRemix.user_2_fill,
+                        color: Colors.white,
+                      )
+                    : null),
             Text(partyMemory['party']['comments'][i]['content'],
                 style: textStyle8),
           ],
@@ -510,10 +521,10 @@ class _CalendarState extends State<Calendar> {
               'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg0MTE2NTk5LCJpYXQiOjE2NzgxMTY1OTksImp0aSI6IjlhZDFkOWJiOGExYjRhNGY5M2Y5NDY5Yjc0ODJhZmY2IiwidXNlcl9pZCI6Mn0.UoQFcrWwWbm6_KrGGNn6mmJzH27ZPQUMqqbLJpB0IWw',
         });
     setState(() {
-      myPartyList = jsonDecode(response.body);
+      myPartyList = json.decode(utf8.decode(response.bodyBytes)).toList();
     });
 
-    return jsonDecode(response.body);
+    return myPartyList;
   }
 
   var _future;
