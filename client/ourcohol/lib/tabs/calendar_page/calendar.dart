@@ -75,7 +75,9 @@ class _CalendarState extends State<Calendar> {
     return childs;
   }
 
-  int count = 0;
+  int countParty = 0;
+  int countThisMonth = 0;
+  bool finishFlag = false;
   List<Widget> getDateList(week) {
     int nextDay = 1;
     List<Widget> childs = [];
@@ -85,7 +87,7 @@ class _CalendarState extends State<Calendar> {
           i - startDayOfWeek + 1 <=
               int.parse(calendarData[year.toString()]![month.toString()]!)) {
         // 이번 달
-        if (myPartyList.length > 0 && count < myPartyList.length) {
+        if (myPartyList.length > 0 && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -134,7 +136,8 @@ class _CalendarState extends State<Calendar> {
                           selectedDay = i - startDayOfWeek + 1;
                         });
                       })));
-              count++;
+              countParty++;
+
               break;
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
@@ -189,9 +192,14 @@ class _CalendarState extends State<Calendar> {
                     )
                   ])));
         }
+        countThisMonth++;
+        if (int.parse(calendarData[year.toString()]![month.toString()]!) ==
+            countThisMonth) {
+          finishFlag = true;
+        }
       } else if (i - startDayOfWeek + 1 <= 0) {
         // 아전달
-        if (myPartyList.length > 0 && count < myPartyList.length) {
+        if (myPartyList.length > 0 && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -253,7 +261,7 @@ class _CalendarState extends State<Calendar> {
                               (i - startDayOfWeek + 1);
                         });
                       })));
-              count++;
+              countParty++;
               break;
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
@@ -310,7 +318,7 @@ class _CalendarState extends State<Calendar> {
         }
       } else {
         // 다음 달
-        if (myPartyList.length > 0 && count < myPartyList.length) {
+        if (myPartyList.length > 0 && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -351,7 +359,7 @@ class _CalendarState extends State<Calendar> {
                           selectedDay = nextDay;
                         });
                       })));
-              count++;
+              countParty++;
               break;
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
@@ -446,7 +454,11 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    count = 0;
+    setState(() {
+      countParty = 0;
+      countThisMonth = 0;
+      finishFlag = false;
+    });
 
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       Container(
@@ -469,6 +481,8 @@ class _CalendarState extends State<Calendar> {
                     setWeekDay(newDate.year, newDate.month);
                     year = newDate.year;
                     month = newDate.month;
+                    countThisMonth = 0;
+                    finishFlag = false;
                     selectedYear = newDate.year;
                     selectedMonth = newDate.month;
                     selectedDay = newDate.day;
@@ -517,7 +531,7 @@ class _CalendarState extends State<Calendar> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: getDateList(0),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1.5,
                     height: 0,
                     color: Color(0xffCACACA),
@@ -526,7 +540,7 @@ class _CalendarState extends State<Calendar> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: getDateList(1),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1.5,
                     height: 0,
                     color: Color(0xffCACACA),
@@ -535,7 +549,7 @@ class _CalendarState extends State<Calendar> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: getDateList(2),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1.5,
                     height: 0,
                     color: Color(0xffCACACA),
@@ -544,20 +558,41 @@ class _CalendarState extends State<Calendar> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: getDateList(3),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1.5,
                     height: 0,
                     color: Color(0xffCACACA),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: getDateList(4),
-                  ),
-                  Divider(
-                    thickness: 1.5,
-                    height: 0,
-                    color: Color(0xffCACACA),
-                  )
+                  finishFlag == false
+                      ? Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: getDateList(4),
+                            ),
+                            const Divider(
+                              thickness: 1.5,
+                              height: 0,
+                              color: Color(0xffCACACA),
+                            )
+                          ],
+                        )
+                      : const SizedBox(height: 0),
+                  finishFlag == false
+                      ? Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: getDateList(5),
+                            ),
+                            const Divider(
+                              thickness: 1.5,
+                              height: 0,
+                              color: Color(0xffCACACA),
+                            )
+                          ],
+                        )
+                      : const SizedBox(height: 0),
                 ],
               );
             }
@@ -565,7 +600,3 @@ class _CalendarState extends State<Calendar> {
     ]);
   }
 }
-
-
-// serializer 수정해서 party만 나오게
-// 인수로 년,월 받아서 filte해서(안되면 for문 조건)써서 해당 전, 후 달꺼만 오게
