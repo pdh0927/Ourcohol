@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:ourcohol/tabs/calendar_page/calendar.dart';
 import 'package:ourcohol/tabs/calendar_page/calendar_main.dart';
 import 'package:sizer/sizer.dart';
 
@@ -33,7 +34,7 @@ class _MyAppState extends State<MyApp> {
       'Index 0: Home',
       style: optionStyle,
     ),
-    CalendarMain(),
+    Calendar(),
     Text(
       'Index 2: School',
       style: optionStyle,

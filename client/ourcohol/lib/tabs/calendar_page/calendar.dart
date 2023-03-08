@@ -75,9 +75,11 @@ class _CalendarState extends State<Calendar> {
     return childs;
   }
 
-  int count = 0;
+  int countParty = 0;
+  int countThisMonth = 0;
+  bool finishFlag = false;
   List<Widget> getDateList(week) {
-    int nextDay = 1;
+    int lastWeekDay = 0;
     List<Widget> childs = [];
 
     for (int i = week * 7; i < week * 7 + 7; i++) {
@@ -85,7 +87,7 @@ class _CalendarState extends State<Calendar> {
           i - startDayOfWeek + 1 <=
               int.parse(calendarData[year.toString()]![month.toString()]!)) {
         // 이번 달
-        if (myPartyList.length > 0 && count < myPartyList.length) {
+        if (myPartyList.length > 0 && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -132,9 +134,11 @@ class _CalendarState extends State<Calendar> {
                           selectedYear = year;
                           selectedMonth = month;
                           selectedDay = i - startDayOfWeek + 1;
+                          partyMemory = myPartyList[j];
                         });
                       })));
-              count++;
+              countParty++;
+
               break;
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
@@ -189,9 +193,15 @@ class _CalendarState extends State<Calendar> {
                     )
                   ])));
         }
+        lastWeekDay++;
+        countThisMonth++;
+        if (int.parse(calendarData[year.toString()]![month.toString()]!) ==
+            countThisMonth) {
+          finishFlag = true;
+        }
       } else if (i - startDayOfWeek + 1 <= 0) {
         // 아전달
-        if (myPartyList.length > 0 && count < myPartyList.length) {
+        if (myPartyList.length > 0 && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -251,9 +261,10 @@ class _CalendarState extends State<Calendar> {
                                   ((month - 1) == 0 ? 12 : (month - 1))
                                       .toString()]!) +
                               (i - startDayOfWeek + 1);
+                          partyMemory = myPartyList[j];
                         });
                       })));
-              count++;
+              countParty++;
               break;
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
@@ -310,13 +321,13 @@ class _CalendarState extends State<Calendar> {
         }
       } else {
         // 다음 달
-        if (myPartyList.length > 0 && count < myPartyList.length) {
+        if (myPartyList.length > 0 && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
             if (parsedDate.year == ((month + 1) == 13 ? year + 1 : year) &&
                 parsedDate.month == ((month + 1) == 13 ? 1 : (month + 1)) &&
-                parsedDate.day == nextDay) {
+                parsedDate.day == (i - 7 * week - lastWeekDay + 1)) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
                   height: 9.h,
@@ -329,7 +340,8 @@ class _CalendarState extends State<Calendar> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(nextDay.toString(), style: textStyle5),
+                              Text((i - 7 * week - lastWeekDay + 1).toString(),
+                                  style: textStyle5),
                               Container(
                                 margin: EdgeInsets.only(bottom: 0.59.h),
                                 width: (100.w - 32) / 7 - 0.59.h * 2,
@@ -348,10 +360,11 @@ class _CalendarState extends State<Calendar> {
                         setState(() {
                           selectedYear = (month + 1) == 13 ? year + 1 : year;
                           selectedMonth = (month + 1) == 13 ? 1 : (month + 1);
-                          selectedDay = nextDay;
+                          selectedDay = (i - 7 * week - lastWeekDay + 1) as int;
+                          partyMemory = myPartyList[j];
                         });
                       })));
-              count++;
+              countParty++;
               break;
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
@@ -363,7 +376,8 @@ class _CalendarState extends State<Calendar> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(nextDay.toString(), style: textStyle5),
+                        Text((i - 7 * week - lastWeekDay + 1).toString(),
+                            style: textStyle5),
                         Container(
                           margin: EdgeInsets.only(bottom: 0.59.h),
                           width: (100.w - 32) / 7 - 0.59.h * 2,
@@ -382,7 +396,8 @@ class _CalendarState extends State<Calendar> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(nextDay.toString(), style: textStyle5),
+                    Text((i - 7 * week - lastWeekDay + 1).toString(),
+                        style: textStyle5),
                     Container(
                       margin: EdgeInsets.only(bottom: 0.59.h),
                       width: (100.w - 32) / 7 - 0.59.h * 2,
@@ -390,7 +405,6 @@ class _CalendarState extends State<Calendar> {
                     )
                   ])));
         }
-        nextDay++;
       }
     }
 
@@ -418,6 +432,7 @@ class _CalendarState extends State<Calendar> {
             ));
   }
 
+  var partyMemory;
   var myPartyList = [];
   Future getMyPartyList() async {
     http.Response response = await http.get(
@@ -440,132 +455,238 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     setDate();
+    partyMemory = null;
     _future = getMyPartyList();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    count = 0;
+    setState(() {
+      countParty = 0;
+      countThisMonth = 0;
+      finishFlag = false;
+    });
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      Container(
-        margin: EdgeInsets.only(top: 2.h, bottom: 2.h),
-        child: MaterialButton(
-          padding: EdgeInsets.all(0),
-          onPressed: () {
-            _showDialog(
-              CupertinoDatePicker(
-                initialDateTime: DateTime(
-                  year,
-                  month,
-                ),
-                minimumYear: 2023, maximumYear: 2029,
-                mode: CupertinoDatePickerMode.date,
-                use24hFormat: true,
-                // This is called when the user changes the date.
-                onDateTimeChanged: (DateTime newDate) {
-                  setState(() {
-                    setWeekDay(newDate.year, newDate.month);
-                    year = newDate.year;
-                    month = newDate.month;
-                    selectedYear = newDate.year;
-                    selectedMonth = newDate.month;
-                    selectedDay = newDate.day;
-                  });
-                  setState(() {
-                    _future = getMyPartyList();
-                  });
-                },
-              ),
-            );
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                  height: 4.1.h,
-                  child: Text('${year} Year', style: textStyle3)),
-              SizedBox(
-                  height: 3.05.h,
-                  child: Text(monthStr[month], style: textStyle4))
-            ],
-          ),
-        ),
-      ),
-      Container(
-        margin: EdgeInsets.only(bottom: 1.17.h),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: getDayOfWeekList(),
-        ),
-      ),
-      Divider(
-        thickness: 1.5,
-        height: 0,
-        color: Color(0xffCACACA),
-      ),
-      FutureBuilder(
-          future: _future,
-          builder: (context, snapshot) {
-            if (snapshot.hasData == false) {
-              return CupertinoActivityIndicator();
-            } else {
-              return Column(
+    return Container(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            width: 100.w - 32,
+            alignment: Alignment.center,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: getDateList(0),
+                  Container(
+                    margin: EdgeInsets.only(top: 2.h, bottom: 2.h),
+                    child: MaterialButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        _showDialog(
+                          CupertinoDatePicker(
+                            initialDateTime: DateTime(
+                              year,
+                              month,
+                            ),
+                            minimumYear: 2023, maximumYear: 2029,
+                            mode: CupertinoDatePickerMode.date,
+                            use24hFormat: true,
+                            // This is called when the user changes the date.
+                            onDateTimeChanged: (DateTime newDate) {
+                              setState(() {
+                                setWeekDay(newDate.year, newDate.month);
+                                year = newDate.year;
+                                month = newDate.month;
+                                countThisMonth = 0;
+                                finishFlag = false;
+                                selectedYear = newDate.year;
+                                selectedMonth = newDate.month;
+                                selectedDay = newDate.day;
+                              });
+                              setState(() {
+                                _future = getMyPartyList();
+                              });
+                            },
+                          ),
+                        );
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              height: 4.1.h,
+                              child: Text('${year} Year', style: textStyle3)),
+                          SizedBox(
+                              height: 3.05.h,
+                              child: Text(monthStr[month], style: textStyle4))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 1.17.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: getDayOfWeekList(),
+                    ),
                   ),
                   Divider(
                     thickness: 1.5,
                     height: 0,
                     color: Color(0xffCACACA),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: getDateList(1),
-                  ),
-                  Divider(
-                    thickness: 1.5,
-                    height: 0,
-                    color: Color(0xffCACACA),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: getDateList(2),
-                  ),
-                  Divider(
-                    thickness: 1.5,
-                    height: 0,
-                    color: Color(0xffCACACA),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: getDateList(3),
-                  ),
-                  Divider(
-                    thickness: 1.5,
-                    height: 0,
-                    color: Color(0xffCACACA),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: getDateList(4),
-                  ),
-                  Divider(
-                    thickness: 1.5,
-                    height: 0,
-                    color: Color(0xffCACACA),
+                  FutureBuilder(
+                      future: _future,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData == false) {
+                          return CupertinoActivityIndicator();
+                        } else {
+                          return Column(children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: getDateList(0),
+                            ),
+                            const Divider(
+                              thickness: 1.5,
+                              height: 0,
+                              color: Color(0xffCACACA),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: getDateList(1),
+                            ),
+                            const Divider(
+                              thickness: 1.5,
+                              height: 0,
+                              color: Color(0xffCACACA),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: getDateList(2),
+                            ),
+                            const Divider(
+                              thickness: 1.5,
+                              height: 0,
+                              color: Color(0xffCACACA),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: getDateList(3),
+                            ),
+                            const Divider(
+                              thickness: 1.5,
+                              height: 0,
+                              color: Color(0xffCACACA),
+                            ),
+                            finishFlag == false
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: getDateList(4),
+                                      ),
+                                      const Divider(
+                                        thickness: 1.5,
+                                        height: 0,
+                                        color: Color(0xffCACACA),
+                                      )
+                                    ],
+                                  )
+                                : const SizedBox(height: 0),
+                            finishFlag == false
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: getDateList(5),
+                                      ),
+                                      const Divider(
+                                        thickness: 1.5,
+                                        height: 0,
+                                        color: Color(0xffCACACA),
+                                      )
+                                    ],
+                                  )
+                                : const SizedBox(height: 0),
+                          ]);
+                        }
+                      }),
+                  Container(
+                    margin: EdgeInsets.only(top: 1.5.h, bottom: 1.h),
+                    child: partyMemory != null
+                        ? Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(bottom: 1.h),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${partyMemory['party']['name']}',
+                                      style: textStyle6,
+                                    ),
+                                    Text(
+                                      '더 보기',
+                                      style: textStyle7,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 1.h),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          bottom: 0.59.h, right: 8),
+                                      width: 42.w,
+                                      height: 30.w,
+                                      child: Image.memory(
+                                        base64Decode(partyMemory['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: 42.w,
+                                        height: 30.w,
+                                      ),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(left: 6.w),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '우리들의 이야기를 남겨주세요 :)',
+                                            style: textStyle5,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                    '${selectedYear}.${selectedMonth}.${selectedDay}',
+                                    style: textStyle8),
+                              )
+                            ],
+                          )
+                        : Container(
+                            margin: EdgeInsets.only(top: 9.4.h),
+                            child: Text('내 기억을 떠올려 보세요 :)', style: textStyle9)),
                   )
-                ],
-              );
-            }
-          }),
-    ]);
+                ]),
+          )),
+    );
   }
 }
-
-
-// serializer 수정해서 party만 나오게
-// 인수로 년,월 받아서 filte해서(안되면 for문 조건)써서 해당 전, 후 달꺼만 오게

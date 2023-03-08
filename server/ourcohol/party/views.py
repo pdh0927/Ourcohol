@@ -43,9 +43,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
         for source in qs:
             
             if str(source.party.created_at.year) == year and str(source.party.created_at.month) == month:   # 같은년 같은달 
-
                 resultQs.append(source)
-            
             if (int(month) - 1) == 0 :  # 이전년 이전달
                 if source.party.created_at.year == (int(year) - 1) and source.party.created_at.month == 12:
                     resultQs.append(source)
