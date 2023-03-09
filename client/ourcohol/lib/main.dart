@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:ourcohol/tabs/calendar_page/calendar.dart';
 import 'package:ourcohol/tabs/calendar_page/calendar_main.dart';
+import 'package:ourcohol/user/login.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
@@ -30,10 +31,7 @@ class _MyAppState extends State<MyApp> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+    Login(),
     Calendar(),
     Text(
       'Index 2: School',

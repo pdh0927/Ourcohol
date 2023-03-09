@@ -62,3 +62,19 @@ var textStyle9 = const TextStyle(
     color: Color(0xff9B9B9B),
     fontWeight: FontWeight.w700,
     height: 1.3);
+
+////////////////////////////
+
+var textStyle10 = const TextStyle(
+    fontSize: 25,
+    fontFamily: "GowunBatang",
+    color: Color(0xffFFFFFF),
+    fontWeight: FontWeight.w400,
+    height: 1.3);
+
+var textStyle11 = const TextStyle(
+    fontSize: 14,
+    fontFamily: "GowunBatang",
+    color: Color(0xff6B6B6B),
+    fontWeight: FontWeight.w400,
+    height: 1.3);

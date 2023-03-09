@@ -34,6 +34,7 @@ dependencies:
   flutter_remix: ^0.0.3
   sizer: ^2.0.15
   http: ^0.13.4
+  email_validator: ^2.1.16
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
