@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:ourcohol/tabs/calendar_page/calendar.dart';
 import 'package:ourcohol/tabs/calendar_page/calendar_main.dart';
+import 'package:ourcohol/user/login.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
-  runApp(Sizer(builder: (context, orientation, deviceType) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyApp(),
-    );
-  }));
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (c) => UserProvider()),
+      ],
+      child: Sizer(builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: const MyApp(),
+        );
+      })));
 }
 
 class MyApp extends StatefulWidget {
@@ -30,10 +37,7 @@ class _MyAppState extends State<MyApp> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+    Login(),
     Calendar(),
     Text(
       'Index 2: School',
