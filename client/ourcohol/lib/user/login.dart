@@ -17,9 +17,9 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool visible = true;
-  var inputEmail;
+  var inputEmail = '';
   var flagValidateEmail = false;
-  var inputPassword;
+  var inputPassword = '';
 
   validateEmail() {
     setState(() {
@@ -38,19 +38,6 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200) {
         var data =
             await Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
-
-        context.read<UserProvider>().setUserInformation(
-            data['user']['id'],
-            data['user']['email'],
-            data['user']['nickname'],
-            data['token']['access'],
-            data['token']['refresh']);
-        print(context.read<UserProvider>().userId);
-        print(context.read<UserProvider>().email);
-        print(context.read<UserProvider>().nickname);
-        print(context.read<UserProvider>().tokenAccess);
-        print(context.read<UserProvider>().tokenRefresh);
-        print(data);
 
         print('Login Successfully');
         return;
@@ -101,15 +88,20 @@ class _LoginState extends State<Login> {
                     ),
                     autofocus: true,
                     onChanged: (text) {
-                      inputEmail = text;
-                      validateEmail();
+                      setState(() {
+                        inputEmail = text;
+                      });
+
+                      print(inputEmail);
                     },
                   ),
                 ),
                 Container(
                   width: 100.w - 32,
                   height: (100.w - 32) / 7,
-                  margin: EdgeInsets.only(bottom: 17),
+                  margin: EdgeInsets.only(
+                      bottom:
+                          (inputEmail != '' && inputPassword != '') ? 12 : 17),
                   child: TextField(
                     obscureText: visible,
                     decoration: InputDecoration(
@@ -139,27 +131,41 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     onChanged: (text) {
-                      inputPassword = text;
+                      setState(() {
+                        inputPassword = text;
+                      });
                     },
                   ),
                 ),
-                MaterialButton(
-                    height: (100.w - 32) / 7 + 10,
-                    padding: EdgeInsets.all(5),
-                    onPressed: () {
-                      login(inputEmail, inputPassword);
-                    },
-                    child: Container(
+                (inputEmail != '' && inputPassword != '')
+                    ? MaterialButton(
+                        height: (100.w - 32) / 7 + 10,
+                        padding: EdgeInsets.all(5),
+                        onPressed: () {
+                          login(inputEmail, inputPassword);
+                        },
+                        child: Container(
+                            width: 100.w - 32,
+                            height: (100.w - 32) / 7,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: const Color(0xff131313),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Text("로그인 하기", style: textStyle10)))
+                    : Container(
                         width: 100.w - 32,
                         height: (100.w - 32) / 7,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: const Color(0xff131313),
+                            color: const Color(0xffADADAD),
                             borderRadius: BorderRadius.circular(10)),
-                        child: Text("로그인 하기", style: textStyle10))),
+                        child: Text("로그인 하기", style: textStyle10)),
                 Container(
                   height: 30,
-                  margin: EdgeInsets.only(top: 0, left: 13, right: 13),
+                  margin: EdgeInsets.only(
+                      top: (inputEmail != '' && inputPassword != '') ? 0 : 5,
+                      left: 13,
+                      right: 13),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
