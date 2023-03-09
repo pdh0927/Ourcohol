@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:ourcohol/style.dart';
 import 'package:sizer/sizer.dart';
+import 'package:ourcohol/provider_ourcohol.dart';
+import "package:provider/provider.dart";
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -25,16 +27,30 @@ class _LoginState extends State<Login> {
     });
   }
 
-  login(String email, password) async {
+  login(String email, String password) async {
     try {
       Response response =
-          await post(Uri.parse("http://127.0.0.1:8000/api/dj-rest-auth/login/"),
+          await post(Uri.parse("http://127.0.0.1:8000/api/accounts/login/"),
               //Uri.parse("http://10.0.2.2:8000/api/dj-rest-auth/login/"),
 
               body: {'email': email, 'password': password});
 
       if (response.statusCode == 200) {
-        var data = await jsonDecode(response.body);
+        var data =
+            await Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
+
+        context.read<UserProvider>().setUserInformation(
+            data['user']['id'],
+            data['user']['email'],
+            data['user']['nickname'],
+            data['token']['access'],
+            data['token']['refresh']);
+        print(context.read<UserProvider>().userId);
+        print(context.read<UserProvider>().email);
+        print(context.read<UserProvider>().nickname);
+        print(context.read<UserProvider>().tokenAccess);
+        print(context.read<UserProvider>().tokenRefresh);
+        print(data);
 
         print('Login Successfully');
         return;
@@ -130,7 +146,9 @@ class _LoginState extends State<Login> {
                 MaterialButton(
                     height: (100.w - 32) / 7 + 10,
                     padding: EdgeInsets.all(5),
-                    onPressed: () {},
+                    onPressed: () {
+                      login(inputEmail, inputPassword);
+                    },
                     child: Container(
                         width: 100.w - 32,
                         height: (100.w - 32) / 7,

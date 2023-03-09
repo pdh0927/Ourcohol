@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
-  String userId = '';
+  int userId = -1;
   String email = '';
   // String password = '';
   String tokenAccess = '';
