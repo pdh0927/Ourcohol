@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: SafeArea(child: Center(child: _widgetOptions[_selectedIndex])),
       bottomNavigationBar: SizedBox(
-        height: 90,
+        height: 9.7.h,
         width: 100.w,
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[

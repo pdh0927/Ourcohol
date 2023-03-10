@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:ourcohol/home/home.dart';
 import 'package:ourcohol/style.dart';
+import 'package:ourcohol/user/sign_up_page/essential_information.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 import "package:provider/provider.dart";
@@ -76,25 +77,25 @@ class _LoginState extends State<Login> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(style: BorderStyle.none),
+                            borderSide:
+                                const BorderSide(style: BorderStyle.none),
                             borderRadius: BorderRadius.circular(10),
                             gapPadding: 0),
                         enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(style: BorderStyle.none),
+                            borderSide:
+                                const BorderSide(style: BorderStyle.none),
                             borderRadius: BorderRadius.circular(5),
                             gapPadding: 0),
                         hintText: '이메일을 입력해주세요',
-                        hintStyle: TextStyle(color: Color(0xff686868)),
+                        hintStyle: const TextStyle(color: Color(0xff686868)),
                         filled: true,
-                        fillColor: Color(0xffE0E0E0),
+                        fillColor: const Color(0xffE0E0E0),
                       ),
                       autofocus: true,
                       onChanged: (text) {
                         setState(() {
                           inputEmail = text;
                         });
-
-                        print(inputEmail);
                       },
                     ),
                   ),
@@ -110,21 +111,23 @@ class _LoginState extends State<Login> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(style: BorderStyle.none),
+                            borderSide:
+                                const BorderSide(style: BorderStyle.none),
                             borderRadius: BorderRadius.circular(10),
                             gapPadding: 0),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(style: BorderStyle.none),
+                            borderSide:
+                                const BorderSide(style: BorderStyle.none),
                             borderRadius: BorderRadius.circular(10),
                             gapPadding: 0),
                         hintText: '비밀번호를 입력해주세요',
-                        hintStyle: TextStyle(color: Color(0xff686868)),
+                        hintStyle: const TextStyle(color: Color(0xff686868)),
                         filled: true,
                         fillColor: Color(0xffE0E0E0),
                         suffixIcon: IconButton(
                           icon: Icon(
                             visible ? Icons.visibility : Icons.visibility_off,
-                            color: Color(0xffCACACA),
+                            color: const Color(0xffCACACA),
                           ),
                           onPressed: () {
                             setState(() {
@@ -143,7 +146,7 @@ class _LoginState extends State<Login> {
                   (inputEmail != '' && inputPassword != '')
                       ? MaterialButton(
                           height: (100.w - 32) / 7 + 10,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           onPressed: () async {
                             var userData =
                                 await login(inputEmail, inputPassword);
@@ -188,14 +191,18 @@ class _LoginState extends State<Login> {
                       children: [
                         MaterialButton(
                             height: 30,
-                            padding: EdgeInsets.all(3),
+                            padding: const EdgeInsets.all(3),
                             onPressed: () {},
                             child: Text("아이디/비밀번호 찾기", style: textStyle11)),
                         MaterialButton(
                             minWidth: 53,
                             height: 30,
-                            padding: EdgeInsets.all(3),
-                            onPressed: () {},
+                            padding: const EdgeInsets.all(3),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EssentialInformation()));
+                            },
                             child: SizedBox(
                                 width: 50,
                                 child: Text("회원가입", style: textStyle11))),
