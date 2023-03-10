@@ -37,12 +37,13 @@ class _LoginState extends State<Login> {
               body: {'email': email, 'password': password});
 
       if (response.statusCode == 200) {
-        Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
+        var userData =
+            Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
 
         print('Login Successfully');
-        return response.statusCode;
+        return userData;
       } else {
-        throw Exception("이메일 또는 비밀번호를 잘못 입력하셨습니다.");
+        return null;
       }
     } catch (e) {
       print(e.toString());
@@ -144,9 +145,20 @@ class _LoginState extends State<Login> {
                           height: (100.w - 32) / 7 + 10,
                           padding: EdgeInsets.all(5),
                           onPressed: () async {
-                            if (await login(inputEmail, inputPassword) == 200) {
+                            var userData =
+                                await login(inputEmail, inputPassword);
+
+                            if (userData != null) {
+                              context.read<UserProvider>().setUserInformation(
+                                  userData['user']['id'],
+                                  userData['user']['email'],
+                                  userData['user']['nickname'],
+                                  userData['token']['access'],
+                                  userData['token']['refresh']);
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const Home()));
+                            } else {
+                              print('니 뭐 잘못 입력했다.');
                             }
                           },
                           child: Container(
