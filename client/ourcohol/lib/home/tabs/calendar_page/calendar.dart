@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 
 import 'package:ourcohol/style.dart';
-import 'package:ourcohol/tabs/calendar_page/calendar_data.dart';
+import 'package:ourcohol/home/tabs/calendar_page/calendar_data.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
