@@ -113,3 +113,10 @@ var textStyle17 = const TextStyle(
     color: Color(0xffD74646),
     fontWeight: FontWeight.w700,
     height: 1.3);
+
+var textStyle18 = const TextStyle(
+    fontSize: 16,
+    fontFamily: "GowunBatang",
+    color: Color(0xff454545),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
