@@ -28,6 +28,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    print(100.h);
     return Scaffold(
       body: SafeArea(child: Center(child: _widgetOptions[_selectedIndex])),
       bottomNavigationBar: SizedBox(

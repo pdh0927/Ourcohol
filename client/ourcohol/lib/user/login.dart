@@ -91,7 +91,6 @@ class _LoginState extends State<Login> {
                         filled: true,
                         fillColor: const Color(0xffE0E0E0),
                       ),
-                      autofocus: true,
                       onChanged: (text) {
                         setState(() {
                           inputEmail = text;
