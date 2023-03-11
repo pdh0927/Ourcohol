@@ -78,3 +78,45 @@ var textStyle11 = const TextStyle(
     color: Color(0xff6B6B6B),
     fontWeight: FontWeight.w400,
     height: 1.3);
+
+var textStyle12 = const TextStyle(
+    fontSize: 35,
+    fontFamily: "GowunBatang",
+    color: Color(0xff131313),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle13 = const TextStyle(
+    fontSize: 16,
+    fontFamily: "GowunBatang",
+    color: Color(0xff454545),
+    fontWeight: FontWeight.w400,
+    height: 1.3);
+
+var textStyle14 = const TextStyle(
+    fontSize: 16,
+    fontFamily: "GowunBatang",
+    color: Color(0xff131313),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle15 = const TextStyle(
+    fontSize: 14,
+    fontFamily: "GowunBatang",
+    color: Color(0xff57AC6A),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle17 = const TextStyle(
+    fontSize: 14,
+    fontFamily: "GowunBatang",
+    color: Color(0xffD74646),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle18 = const TextStyle(
+    fontSize: 16,
+    fontFamily: "GowunBatang",
+    color: Color(0xff454545),
+    fontWeight: FontWeight.w700,
+    height: 1.3);

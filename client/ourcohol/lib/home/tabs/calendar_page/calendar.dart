@@ -32,7 +32,7 @@ class _CalendarState extends State<Calendar> {
       month = date.month;
       selectedYear = date.year;
       selectedMonth = date.month;
-//1이 커져야함
+
       startDayOfWeek = (date.weekday - (date.day % 7 - 1)) >= 0
           ? date.weekday - (date.day % 7 - 1)
           : date.weekday - (date.day % 7 - 1) + 7;
@@ -88,7 +88,7 @@ class _CalendarState extends State<Calendar> {
           i - startDayOfWeek + 1 <=
               int.parse(calendarData[year.toString()]![month.toString()]!)) {
         // 이번 달
-        if (myPartyList.length > 0 && countParty < myPartyList.length) {
+        if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -97,10 +97,16 @@ class _CalendarState extends State<Calendar> {
                 parsedDate.day == i - startDayOfWeek + 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  height: 9.h,
+                  // height: 9.h,
+                  height: 0.59.h * 2 +
+                      12 * 1.3 +
+                      1 +
+                      0.59.h +
+                      (100.w - 32) / 7 -
+                      0.59.h * 2,
                   alignment: Alignment.center,
                   decoration: selectedDay == (i - startDayOfWeek + 1)
-                      ? BoxDecoration(
+                      ? const BoxDecoration(
                           gradient: LinearGradient(
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
@@ -110,7 +116,8 @@ class _CalendarState extends State<Calendar> {
                             ]))
                       : null,
                   child: MaterialButton(
-                      padding: EdgeInsets.all(0.59.h),
+                      padding:
+                          EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
                       child: SizedBox(
                         width: (100.w - 32) / 7,
                         child: Column(
@@ -153,8 +160,14 @@ class _CalendarState extends State<Calendar> {
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  height: 9.h,
-                  padding: EdgeInsets.all(0.59.h),
+                  // height: 9.h,
+                  height: 0.59.h * 2 +
+                      12 * 1.3 +
+                      1 +
+                      0.59.h +
+                      (100.w - 32) / 7 -
+                      0.59.h * 2,
+                  padding: EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
                   alignment: Alignment.center,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +194,7 @@ class _CalendarState extends State<Calendar> {
           childs.add(Container(
               width: (100.w - 32) / 7,
               height: 9.h,
-              padding: EdgeInsets.all(0.59.h),
+              padding: EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
               alignment: Alignment.center,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +224,7 @@ class _CalendarState extends State<Calendar> {
         }
       } else if (i - startDayOfWeek + 1 <= 0) {
         // 이전달
-        if (myPartyList.length > 0 && countParty < myPartyList.length) {
+        if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -226,7 +239,13 @@ class _CalendarState extends State<Calendar> {
                         (i - startDayOfWeek + 1)))) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  height: 9.h,
+                  // height: 9.h,
+                  height: 0.59.h * 2 +
+                      12 * 1.3 +
+                      1 +
+                      0.59.h +
+                      (100.w - 32) / 7 -
+                      0.59.h * 2,
                   alignment: Alignment.center,
                   decoration: selectedDay ==
                           (int.parse(calendarData[
@@ -235,7 +254,7 @@ class _CalendarState extends State<Calendar> {
                                   ((month - 1) == 0 ? 12 : (month - 1))
                                       .toString()]!) +
                               (i - startDayOfWeek + 1))
-                      ? BoxDecoration(
+                      ? const BoxDecoration(
                           gradient: LinearGradient(
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
@@ -245,7 +264,8 @@ class _CalendarState extends State<Calendar> {
                             ]))
                       : null,
                   child: MaterialButton(
-                      padding: EdgeInsets.all(0.59.h),
+                      padding:
+                          EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
                       child: SizedBox(
                         width: (100.w - 32) / 7,
                         child: Column(
@@ -295,8 +315,14 @@ class _CalendarState extends State<Calendar> {
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  height: 9.h,
-                  padding: EdgeInsets.all(0.59.h),
+                  // height: 9.h,
+                  height: 0.59.h * 2 +
+                      12 * 1.3 +
+                      1 +
+                      0.59.h +
+                      (100.w - 32) / 7 -
+                      0.59.h * 2,
+                  padding: EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
                   alignment: Alignment.center,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,8 +348,14 @@ class _CalendarState extends State<Calendar> {
         } else {
           childs.add(Container(
               width: (100.w - 32) / 7,
-              height: 9.h,
-              padding: EdgeInsets.all(0.59.h),
+              // height: 9.h,
+              height: 0.59.h * 2 +
+                  12 * 1.3 +
+                  1 +
+                  0.59.h +
+                  (100.w - 32) / 7 -
+                  0.59.h * 2,
+              padding: EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
               alignment: Alignment.center,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,7 +379,7 @@ class _CalendarState extends State<Calendar> {
         }
       } else {
         // 다음 달
-        if (myPartyList.length > 0 && countParty < myPartyList.length) {
+        if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -356,10 +388,16 @@ class _CalendarState extends State<Calendar> {
                 parsedDate.day == (i - 7 * week - lastWeekDay + 1)) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  height: 9.h,
+                  // height: 9.h,
+                  height: 0.59.h * 2 +
+                      12 * 1.3 +
+                      1 +
+                      0.59.h +
+                      (100.w - 32) / 7 -
+                      0.59.h * 2,
                   alignment: Alignment.center,
                   decoration: selectedDay == (i - 7 * week - lastWeekDay + 1)
-                      ? BoxDecoration(
+                      ? const BoxDecoration(
                           gradient: LinearGradient(
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
@@ -369,7 +407,8 @@ class _CalendarState extends State<Calendar> {
                             ]))
                       : null,
                   child: MaterialButton(
-                      padding: EdgeInsets.all(0.59.h),
+                      padding:
+                          EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
                       child: SizedBox(
                         width: (100.w - 32) / 7,
                         child: Column(
@@ -405,8 +444,14 @@ class _CalendarState extends State<Calendar> {
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  height: 9.h,
-                  padding: EdgeInsets.all(0.59.h),
+                  // height: 9.h,
+                  height: 0.59.h * 2 +
+                      12 * 1.3 +
+                      1 +
+                      0.59.h +
+                      (100.w - 32) / 7 -
+                      0.59.h * 2,
+                  padding: EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
                   alignment: Alignment.center,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -425,8 +470,14 @@ class _CalendarState extends State<Calendar> {
         } else {
           childs.add(Container(
               width: (100.w - 32) / 7,
-              height: 9.h,
-              padding: EdgeInsets.all(0.59.h),
+              // height: 9.h,
+              height: 0.59.h * 2 +
+                  12 * 1.3 +
+                  1 +
+                  0.59.h +
+                  (100.w - 32) / 7 -
+                  0.59.h * 2,
+              padding: EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
               alignment: Alignment.center,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -481,7 +532,7 @@ class _CalendarState extends State<Calendar> {
             Container(
                 width: 6.w,
                 height: 6.w,
-                margin: EdgeInsets.only(right: 7),
+                margin: const EdgeInsets.only(right: 7),
                 decoration: partyMemory['party']['comments'][i]['user']
                             ['image_memory'] !=
                         null
@@ -490,7 +541,8 @@ class _CalendarState extends State<Calendar> {
                         image: DecorationImage(
                             image: MemoryImage(base64Decode(partyMemory['party']
                                 ['comments'][i]['user']['image_memory']))))
-                    : BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+                    : const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.grey),
                 child: partyMemory['party']['comments'][i]['user']
                             ['image_memory'] ==
                         null
@@ -558,7 +610,7 @@ class _CalendarState extends State<Calendar> {
                   Container(
                     margin: EdgeInsets.only(top: 2.h, bottom: 2.h),
                     child: MaterialButton(
-                      padding: EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(0),
                       onPressed: () {
                         _showDialog(
                           CupertinoDatePicker(
@@ -591,11 +643,10 @@ class _CalendarState extends State<Calendar> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                              height: 4.1.h,
-                              child: Text('${year} Year', style: textStyle3)),
-                          SizedBox(
-                              height: 3.05.h,
+                          Text('$year Year', style: textStyle3),
+                          Container(
+                              margin:
+                                  EdgeInsets.only(top: 0.3.h, bottom: 0.5.h),
                               child: Text(monthStr[month], style: textStyle4))
                         ],
                       ),
@@ -608,7 +659,7 @@ class _CalendarState extends State<Calendar> {
                       children: getDayOfWeekList(),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1.5,
                     height: 0,
                     color: Color(0xffCACACA),
@@ -731,7 +782,7 @@ class _CalendarState extends State<Calendar> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(right: 8),
+                                margin: const EdgeInsets.only(right: 8),
                                 width: 42.w,
                                 height: 30.w,
                                 child: Image.memory(
@@ -743,12 +794,13 @@ class _CalendarState extends State<Calendar> {
                                 ),
                               ),
                               partyMemory['party']['comments'].length == 0
-                                  ? Container(
-                                      margin: EdgeInsets.only(left: 6.w),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '우리들의 이야기를 남겨주세요 :)',
-                                        style: textStyle5,
+                                  ? Expanded(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '우리들의 이야기를 남겨주세요 :)',
+                                          style: textStyle5,
+                                        ),
                                       ),
                                     )
                                   : Column(
