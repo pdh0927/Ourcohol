@@ -668,7 +668,7 @@ class _CalendarState extends State<Calendar> {
                       future: _future,
                       builder: (context, snapshot) {
                         if (snapshot.hasData == false) {
-                          return CupertinoActivityIndicator();
+                          return const CupertinoActivityIndicator();
                         } else {
                           return Column(children: [
                             Row(
@@ -816,13 +816,13 @@ class _CalendarState extends State<Calendar> {
                         Container(
                           alignment: Alignment.centerRight,
                           child: Text(
-                              '${selectedYear}.${selectedMonth}.${selectedDay}',
+                              '$selectedYear.$selectedMonth.$selectedDay',
                               style: textStyle8),
                         )
                       ],
                     )
                   : Container(
-                      margin: EdgeInsets.only(top: 9.4.h),
+                      margin: EdgeInsets.only(top: 6.h),
                       child: Text('내 기억을 떠올려 보세요 :)', style: textStyle9)),
             )
           ])),
