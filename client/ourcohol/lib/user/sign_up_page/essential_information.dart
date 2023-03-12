@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:ourcohol/style.dart';
+import 'package:ourcohol/user/sign_up_page/unessential_information.dart';
 import 'package:sizer/sizer.dart';
 
 class EssentialInformation extends StatefulWidget {
@@ -14,10 +15,10 @@ class EssentialInformation extends StatefulWidget {
 class _EssentialInformationState extends State<EssentialInformation> {
   bool visible1 = true;
   bool visible2 = true;
-  var inputEmail = '';
+  String inputEmail = '';
   int flagValidateEmail = -1; // -1 : 판별x, 0 : false, 1 : true
-  var inputPassword1 = '';
-  var inputPassword2 = '';
+  String inputPassword1 = '';
+  String inputPassword2 = '';
   int flagValidatePassword = -1; // -1 : 판별x, 0 : false, 1 : true
   bool allCheck = false;
   bool firstCheck = false;
@@ -109,10 +110,7 @@ class _EssentialInformationState extends State<EssentialInformation> {
                                 onFocusChange: (bool hasFocus) {
                                   if (hasFocus == false) {
                                     validateEmail1();
-                                    print('false');
-                                  } else {
-                                    print('true');
-                                  }
+                                  } else {}
                                 },
                                 child: TextField(
                                   decoration: InputDecoration(
@@ -517,8 +515,9 @@ class _EssentialInformationState extends State<EssentialInformation> {
                 // margin: EdgeInsets.only(
                 //     bottom: MediaQuery.of(context).viewInsets.bottom),
                 alignment: Alignment.center,
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                decoration:
+                    const BoxDecoration(color: Colors.white, boxShadow: [
                   BoxShadow(color: Colors.grey, blurRadius: 1, spreadRadius: 0)
                 ]),
                 child: (flagValidateEmail == 1 && flagValidatePassword == 1)
@@ -529,12 +528,19 @@ class _EssentialInformationState extends State<EssentialInformation> {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.grey),
                         child: MaterialButton(
-                            padding: EdgeInsets.all(0),
-                            color: Color(0xff131313),
-                            child: Text('다음',
+                            padding: const EdgeInsets.all(0),
+                            color: const Color(0xff131313),
+                            child: const Text('다음',
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.white)),
-                            onPressed: () {}),
+                            onPressed: () {
+                              user['email'] = inputEmail;
+                              user['password1'] = inputPassword1;
+                              user['password2'] = inputPassword2;
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      UnessentialInformation(user: user)));
+                            }),
                       )
                     : Container(
                         width: 100.w - 32,
@@ -543,7 +549,7 @@ class _EssentialInformationState extends State<EssentialInformation> {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.grey),
                         alignment: Alignment.center,
-                        child: Text('다음',
+                        child: const Text('다음',
                             style:
                                 TextStyle(fontSize: 16, color: Colors.white))))
           ],
