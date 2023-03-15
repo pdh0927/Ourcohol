@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from rest_framework import viewsets
 from .models import User
 from .serializers import UserSerializer
@@ -10,17 +11,44 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login  
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from rest_framework.views import APIView
+# from django.contrib.auth import views as auth_views
+# from django.urls import reverse_lazy
 
 
 
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+# class PasswordResetView(auth_views.PasswordResetView):
+#     """
+#     비밀번호 초기화 - 사용자ID, email 입력
+#     """
+#     template_name = 'password_reset.html'
+#     success_url = reverse_lazy('password_reset/done')
+#     # success_url = reverse_lazy('password_reset_done')
+#     # email_template_name = 'common/password_reset_email.html'
+
+
+# class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+#     """
+#     비밀번호 초기화 - 메일 전송 완료
+#     """
+#     template_name = 'password_reset_done.html'
+#     success_url = reverse_lazy('login')
+
+
+# class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+#     """
+#     비밀번호 초기화 - 새로운 비밀번호 입력
+#     """
+#     template_name = 'password_reset_confirm.html'
+#     success_url = reverse_lazy('login')
+
+# class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+#     template_name = 'password_reset_complete.html'
+#     success_url = reverse_lazy('login')
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     # def create(self, request):
     #     serializer = UserSerializer(data=request.data)
@@ -71,10 +99,12 @@ class UserViewSet(viewsets.ModelViewSet):
     #     else:
     #         return Response(status=status.HTTP_400_BAD_REQUEST)
         
-
+    # def get_permissions(self):
+    #     if self.action == 'login' or self.action == 'create':
+    #         return [AllowAny() ]
+    #     return super(UserViewSet, self).get_permissions()
     
-
-
+    
 class ConfirmEmailView(APIView):
     permission_classes = [AllowAny]
 
@@ -82,7 +112,8 @@ class ConfirmEmailView(APIView):
         self.object = confirmation = self.get_object()
         confirmation.confirm(self.request)
         # A React Router Route will handle the failure scenario
-        return HttpResponseRedirect('/') # 인증성공
+        # return HttpResponseRedirect('/') # 인증성공
+        return render(self.request,'account/email/email_verity_success.html')
 
     def get_object(self, queryset=None):
         key = self.kwargs['key']
@@ -101,3 +132,4 @@ class ConfirmEmailView(APIView):
         qs = EmailConfirmation.objects.all_valid()
         qs = qs.select_related("email_address__user")
         return qs
+    

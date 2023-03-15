@@ -45,7 +45,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
 
     # 필수로 작성해야하는 field
-    REQUIRED_FIELDS = ['nickname']
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email
