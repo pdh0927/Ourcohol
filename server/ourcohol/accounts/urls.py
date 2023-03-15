@@ -2,6 +2,7 @@ from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 from . import views
 from dj_rest_auth.registration.views import VerifyEmailView
+from django.contrib.auth.models import User
 
 router = DefaultRouter()
 router.register('', views.UserViewSet)
@@ -20,4 +21,7 @@ urlpatterns = [
     # 유저가 클릭한 이메일(=링크) 확인
     re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', views.ConfirmEmailView.as_view(), name='account_confirm_email'),
 
+    # reset password
+    path('auth/', include('django.contrib.auth.urls')),
+    # http://127.0.0.1:8000/api/accounts/auth/password_reset/
 ]
