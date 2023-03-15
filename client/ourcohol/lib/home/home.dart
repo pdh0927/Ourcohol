@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:ourcohol/home/tabs/calendar_page/calendar.dart';
+import 'package:ourcohol/home/tabs/party_page/party.dart';
 import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> _widgetOptions = <Widget>[
     Text('Index 0: Tips'),
     Calendar(),
-    Text('Index 2: Party'),
+    Party(),
     Text('Index 3: My'),
   ];
 
