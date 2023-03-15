@@ -20,7 +20,7 @@ from rest_framework.views import APIView
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     # def create(self, request):
     #     serializer = UserSerializer(data=request.data)
@@ -71,10 +71,12 @@ class UserViewSet(viewsets.ModelViewSet):
     #     else:
     #         return Response(status=status.HTTP_400_BAD_REQUEST)
         
-
+    # def get_permissions(self):
+    #     if self.action == 'login' or self.action == 'create':
+    #         return [AllowAny() ]
+    #     return super(UserViewSet, self).get_permissions()
     
-
-
+    
 class ConfirmEmailView(APIView):
     permission_classes = [AllowAny]
 
