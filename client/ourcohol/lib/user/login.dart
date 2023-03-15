@@ -9,6 +9,7 @@ import 'package:ourcohol/user/sign_up_page/essential_information.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 import "package:provider/provider.dart";
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -47,6 +48,15 @@ class _LoginState extends State<Login> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  findPassword() async {
+    // 브라우저를 열 링크
+    final url =
+        Uri.parse('http://127.0.0.1:8000/api/accounts/auth/password_reset/');
+
+    // 인앱 브라우저 실행
+    await launchUrl(url);
   }
 
   @override
@@ -189,8 +199,10 @@ class _LoginState extends State<Login> {
                         MaterialButton(
                             height: 30,
                             padding: const EdgeInsets.all(3),
-                            onPressed: () {},
-                            child: Text("아이디/비밀번호 찾기", style: textStyle11)),
+                            onPressed: () async {
+                              await findPassword();
+                            },
+                            child: Text("비밀번호 찾기", style: textStyle11)),
                         MaterialButton(
                             minWidth: 53,
                             height: 30,
