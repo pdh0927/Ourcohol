@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ourcohol/home/home.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:ourcohol/style.dart';
+import 'package:ourcohol/user/login.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:sizer/sizer.dart';
@@ -80,7 +81,8 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
   postRequest(user) async {
     try {
       Response response = await post(
-          Uri.parse("http://127.0.0.1:8000/api/accounts/"),
+          Uri.parse(
+              "http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/"),
           body: user);
       print(user);
       if (response.statusCode == 200) {
@@ -373,20 +375,10 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                               ? tempNickname
                               : inputNickname;
 
-                          var userData = await postRequest(widget.user);
+                          await postRequest(widget.user);
 
-                          if (userData != null) {
-                            context.read<UserProvider>().setUserInformation(
-                                userData['user']['id'],
-                                userData['user']['email'],
-                                userData['user']['nickname'],
-                                userData['token']['access'],
-                                userData['token']['refresh']);
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const Home()));
-                          } else {
-                            print('회원가입 안됐음 망함');
-                          }
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Login()));
                         }),
                   ),
                 ],

@@ -31,26 +31,24 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: SafeArea(child: Center(child: _widgetOptions[_selectedIndex])),
       bottomNavigationBar: SizedBox(
-        height: 9.7.h,
+        height: 10.h,
         width: 100.w,
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(
-                FlutterRemix.lightbulb_line,
-              ),
+              icon: Icon(FlutterRemix.lightbulb_line, size: 20),
               label: '팁',
             ),
             BottomNavigationBarItem(
-              icon: Icon(FlutterRemix.calendar_check_fill),
+              icon: Icon(FlutterRemix.calendar_check_fill, size: 20),
               label: '캘린더',
             ),
             BottomNavigationBarItem(
-              icon: Icon(FlutterRemix.team_line),
+              icon: Icon(FlutterRemix.team_line, size: 20),
               label: '술자리',
             ),
             BottomNavigationBarItem(
-              icon: Icon(FlutterRemix.account_circle_line),
+              icon: Icon(FlutterRemix.account_circle_line, size: 20),
               label: '내정보',
             )
           ],

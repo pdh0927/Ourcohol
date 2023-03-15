@@ -162,9 +162,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
     ],
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    # ]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
+    ]
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
