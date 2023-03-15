@@ -31,11 +31,9 @@ class _LoginState extends State<Login> {
 
   login(String email, String password) async {
     try {
-      Response response =
-          await post(Uri.parse("http://127.0.0.1:8000/api/accounts/login/"),
-              //Uri.parse("http://10.0.2.2:8000/api/dj-rest-auth/login/"),
-
-              body: {'email': email, 'password': password});
+      Response response = await post(
+          Uri.parse("http://127.0.0.1:8000/api/accounts/dj-rest-auth/login/"),
+          body: {'email': email, 'password': password});
 
       if (response.statusCode == 200) {
         var userData =
@@ -155,8 +153,8 @@ class _LoginState extends State<Login> {
                                   userData['user']['id'],
                                   userData['user']['email'],
                                   userData['user']['nickname'],
-                                  userData['token']['access'],
-                                  userData['token']['refresh']);
+                                  userData['access_token'],
+                                  userData['refresh_token']);
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const Home()));
                             } else {

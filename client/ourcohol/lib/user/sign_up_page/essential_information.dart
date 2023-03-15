@@ -98,8 +98,17 @@ class _EssentialInformationState extends State<EssentialInformation> {
                               ),
                             ),
                             Container(
-                                margin: const EdgeInsets.only(bottom: 14),
-                                child: Text('이메일*', style: textStyle14)),
+                              margin: const EdgeInsets.only(bottom: 14),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('이메일*', style: textStyle14),
+                                  Text('인증에 사용될 예정이니 정확히 입력바랍니다',
+                                      style: textStyle21),
+                                ],
+                              ),
+                            ),
                             Container(
                               width: 100.w - 32,
                               height: (100.w - 32) / 7,
@@ -520,7 +529,9 @@ class _EssentialInformationState extends State<EssentialInformation> {
                     const BoxDecoration(color: Colors.white, boxShadow: [
                   BoxShadow(color: Colors.grey, blurRadius: 1, spreadRadius: 0)
                 ]),
-                child: (flagValidateEmail == 1 && flagValidatePassword == 1)
+                child: (flagValidateEmail == 1 &&
+                        flagValidatePassword == 1 &&
+                        allCheck == true)
                     ? Container(
                         width: 100.w - 32,
                         height: 44,

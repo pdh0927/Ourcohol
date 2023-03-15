@@ -37,11 +37,9 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path=r'list/(?P<pk>\d+)/(?P<year>\d+)/(?P<month>\d+)')
     def mylist(self, request, pk, year, month):
         qs = self.get_queryset().filter(user=pk)
-        resultQs = []
         
-
+        resultQs = []
         for source in qs:
-            
             if str(source.party.created_at.year) == year and str(source.party.created_at.month) == month:   # 같은년 같은달 
                 resultQs.append(source)
             if (int(month) - 1) == 0 :  # 이전년 이전달
@@ -63,9 +61,11 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     
     # participant를 통해서 가장 최근 party 불러오기
     @action(detail=False, methods=['get'], url_path=r'recent/(?P<pk>\d+)')
-    def recent_party(self, request,pk):
+    def recent_party(self, request, pk):
         qs = self.get_queryset().filter(user=pk)
-        resultQs = qs[len(qs)-1]
-        serializer = ParticipantPartySerializer(resultQs)
+        resultQs = []
+        if len(qs) > 0:
+            resultQs.append(qs[len(qs)-1])
+        serializer = ParticipantPartySerializer( resultQs, many=True)
 
         return Response(serializer.data)

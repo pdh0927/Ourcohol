@@ -24,13 +24,14 @@ class PartyPostSerializer(serializers.ModelSerializer):
 
 class ParticipantPartySerializer(serializers.ModelSerializer):
     party = PartyRetrieveSerializer(many=False)
+    # party = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Participant
         fields = ['party']
 
 class ParticipantSerializer(serializers.ModelSerializer):
-    user =  serializers.StringRelatedField(many=False)
+    user =  serializers.StringRelatedField(many=True)
     party = PartyRetrieveSerializer(many=False)
 
     class Meta:

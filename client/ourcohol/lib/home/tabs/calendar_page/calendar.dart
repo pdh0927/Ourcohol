@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:ourcohol/provider_ourcohol.dart';
 
 import 'package:ourcohol/style.dart';
 import 'package:ourcohol/home/tabs/calendar_page/calendar_data.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
@@ -565,16 +567,20 @@ class _CalendarState extends State<Calendar> {
   Future getMyPartyList() async {
     http.Response response = await http.get(
         Uri.parse(
-            'http://127.0.0.1:8000/api/party/participant/list/2/${selectedYear}/${selectedMonth}/'),
+            'http://127.0.0.1:8000/api/party/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg0MTE2NTk5LCJpYXQiOjE2NzgxMTY1OTksImp0aSI6IjlhZDFkOWJiOGExYjRhNGY5M2Y5NDY5Yjc0ODJhZmY2IiwidXNlcl9pZCI6Mn0.UoQFcrWwWbm6_KrGGNn6mmJzH27ZPQUMqqbLJpB0IWw',
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
         });
-    setState(() {
-      myPartyList = json.decode(utf8.decode(response.bodyBytes)).toList();
-    });
+    if (json.decode(utf8.decode(response.bodyBytes)) != null) {
+      print('test');
+      print(json.decode(utf8.decode(response.bodyBytes)));
+
+      setState(() {
+        myPartyList = json.decode(utf8.decode(response.bodyBytes)).toList();
+      });
+    }
 
     return myPartyList;
   }
@@ -586,6 +592,8 @@ class _CalendarState extends State<Calendar> {
     partyMemory = null;
     _future = getMyPartyList();
     super.initState();
+    print(context.read<UserProvider>().userId);
+    print(context.read<UserProvider>().tokenAccess);
   }
 
   @override
