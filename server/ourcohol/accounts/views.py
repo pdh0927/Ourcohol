@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from rest_framework import viewsets
 from .models import User
 from .serializers import UserSerializer
@@ -84,7 +85,8 @@ class ConfirmEmailView(APIView):
         self.object = confirmation = self.get_object()
         confirmation.confirm(self.request)
         # A React Router Route will handle the failure scenario
-        return HttpResponseRedirect('/') # 인증성공
+        # return HttpResponseRedirect('/') # 인증성공
+        return render(self.request,'email_verity_success.html')
 
     def get_object(self, queryset=None):
         key = self.kwargs['key']
