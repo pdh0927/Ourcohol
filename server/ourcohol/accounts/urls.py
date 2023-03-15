@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 from dj_rest_auth.registration.views import VerifyEmailView
 from django.contrib.auth.models import User
+from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
 router.register('', views.UserViewSet)
@@ -23,5 +24,10 @@ urlpatterns = [
 
     # reset password
     path('auth/', include('django.contrib.auth.urls')),
+    path('auth/password_reset/', auth_views.PasswordResetView.as_view()),
+    path('auth/password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('auth/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('auth/reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete')
+
     # http://127.0.0.1:8000/api/accounts/auth/password_reset/
 ]
