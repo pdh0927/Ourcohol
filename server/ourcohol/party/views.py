@@ -31,8 +31,19 @@ class PartyViewSet(viewsets.ModelViewSet):
 class ParticipantViewSet(viewsets.ModelViewSet):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
+    # participant를 통해서 가장 최근 party 불러오기
+    @action(detail=False, methods=['get'], url_path=r'recent/(?P<pk>\d+)')
+    def recent_party(self, request, pk):
+        qs = self.get_queryset().filter(user=pk)
+        resultQs = []
+        if len(qs) > 0:
+            resultQs.append(qs[len(qs)-1])
+        serializer = ParticipantPartySerializer( resultQs, many=True)
+
+        return Response(serializer.data)
+    
     # participant를 통해서 party 목록 불러오기
     @action(detail=False, methods=['get'], url_path=r'list/(?P<pk>\d+)/(?P<year>\d+)/(?P<month>\d+)')
     def mylist(self, request, pk, year, month):
@@ -56,16 +67,5 @@ class ParticipantViewSet(viewsets.ModelViewSet):
                     resultQs.append(source)
 
         serializer = ParticipantPartySerializer(resultQs, many=True)
-
-        return Response(serializer.data)
-    
-    # participant를 통해서 가장 최근 party 불러오기
-    @action(detail=False, methods=['get'], url_path=r'recent/(?P<pk>\d+)')
-    def recent_party(self, request, pk):
-        qs = self.get_queryset().filter(user=pk)
-        resultQs = []
-        if len(qs) > 0:
-            resultQs.append(qs[len(qs)-1])
-        serializer = ParticipantPartySerializer( resultQs, many=True)
 
         return Response(serializer.data)

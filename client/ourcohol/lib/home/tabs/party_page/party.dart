@@ -19,10 +19,11 @@ class Party extends StatefulWidget {
 }
 
 class _PartyState extends State<Party> {
-  var party = null;
-  Future getMyPartyList() async {
+  var party = [];
+  Future getRecentParty() async {
     http.Response response;
     if (Platform.isIOS) {
+      print('ios');
       response = await http.get(
           Uri.parse(
               'http://127.0.0.1:8000/api/party/participant/recent/${context.read<UserProvider>().userId}/'),
@@ -32,6 +33,14 @@ class _PartyState extends State<Party> {
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
+      if (json.decode(utf8.decode(response.bodyBytes)) != null) {
+        print(json.decode(utf8.decode(response.bodyBytes)));
+        setState(() {
+          party = json.decode(utf8.decode(response.bodyBytes)).toList();
+        });
+        print(party);
+      }
+      return party;
     } else {
       response = await http.get(
           Uri.parse(
@@ -42,21 +51,19 @@ class _PartyState extends State<Party> {
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
+      if (json.decode(utf8.decode(response.bodyBytes)) != null) {
+        setState(() {
+          party = json.decode(utf8.decode(response.bodyBytes)).toList();
+        });
+      }
+      return party;
     }
-
-    if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-      setState(() {
-        party = json.decode(utf8.decode(response.bodyBytes));
-      });
-    }
-
-    return party;
   }
 
   var _future;
   @override
   void initState() {
-    _future = getMyPartyList();
+    _future = getRecentParty();
     super.initState();
   }
 
