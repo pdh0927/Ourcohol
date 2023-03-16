@@ -79,12 +79,19 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
   }
 
   postRequest(user) async {
+    Response response;
     try {
-      Response response = await post(
-          Uri.parse(
-              "http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/"),
-          body: user);
-      print(user);
+      if (Platform.isIOS) {
+        response = await post(
+            Uri.parse(
+                "http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/"),
+            body: user);
+      } else {
+        response = await post(
+            Uri.parse(
+                "http://10.0.2.2:8000/api/accounts/dj-rest-auth/registration/"),
+            body: user);
+      }
       if (response.statusCode == 200) {
         var userData =
             Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));

@@ -27,7 +27,7 @@ SECRET_KEY = my_settings.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2']
 
 
 # Application definition
@@ -162,9 +162,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    ]
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
+    # ]
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {

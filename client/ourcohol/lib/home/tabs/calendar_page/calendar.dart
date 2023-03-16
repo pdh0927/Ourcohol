@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -565,18 +566,30 @@ class _CalendarState extends State<Calendar> {
   var partyMemory;
   var myPartyList = [];
   Future getMyPartyList() async {
-    http.Response response = await http.get(
-        Uri.parse(
-            'http://127.0.0.1:8000/api/party/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-        });
-    if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-      print('test');
-      print(json.decode(utf8.decode(response.bodyBytes)));
+    http.Response response;
+    if (Platform.isIOS) {
+      response = await http.get(
+          Uri.parse(
+              'http://127.0.0.1:8000/api/party/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    } else {
+      response = await http.get(
+          Uri.parse(
+              'http://10.0.2.2:8000/api/party/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    }
 
+    if (json.decode(utf8.decode(response.bodyBytes)) != null) {
       setState(() {
         myPartyList = json.decode(utf8.decode(response.bodyBytes)).toList();
       });
@@ -592,8 +605,6 @@ class _CalendarState extends State<Calendar> {
     partyMemory = null;
     _future = getMyPartyList();
     super.initState();
-    print(context.read<UserProvider>().userId);
-    print(context.read<UserProvider>().tokenAccess);
   }
 
   @override
