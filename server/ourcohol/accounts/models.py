@@ -2,66 +2,32 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-# class UserManager(BaseUserManager):
-#     # 일반 user 생성
-#     def create_user(self, email, nickname, password, **extra_fields):
-#         if not email:
-#             raise ValueError(_('The Email must be set'))
-#         if not nickname:
-#             raise ValueError(_('The Nickname must be set'))
-#         email = self.normalize_email(email)
-#         user = self.model(email=email,nickname=nickname, **extra_fields)
-#         print(user.is_staff)
-#         print(user.is_active)
-#         print(user.is_superuser)
-#         print(user.username)
-#         user.save()
-#         return user
-
-#     # 관리자 user 생성
-#     def create_superuser(self, email, nickname, password, **extra_fields):
-#         extra_fields.setdefault('is_staff', True)
-#         extra_fields.setdefault('is_active', True)
-#         extra_fields.setdefault('is_superuser', True)
-#         extra_fields.setdefault('is_admin', True)
-
-
-#         if extra_fields.get('is_staff') is not True:
-#             raise ValueError(_('Superuser must have is_staff=True.'))
-#         if extra_fields.get('is_superuser') is not True:
-#             raise ValueError(_('Superuser must have is_superuser=True.'))
-#         return self.create_user(email, nickname, password,  **extra_fields)
-
 class UserManager(BaseUserManager):
-    use_in_migrations = True
-
-    def _create_user(self, email, password, **extra_fields):
-        """
-        Creates and saves a User with the given email and password.
-        """
+    # 일반 user 생성
+    def create_user(self, email, nickname, password, **extra_fields):
         if not email:
-            raise ValueError('The given email must be set')
+            raise ValueError(_('The Email must be set'))
+        if not nickname:
+            raise ValueError(_('The Nickname must be set'))
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=email,nickname=nickname,**extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
+    # 관리자 user 생성
+    def create_superuser(self, email, nickname, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_admin', True)
 
-    def create_superuser(self, email, password, **kwargs):
-        user = self.create_user(
-            email=email,
-            password=password,
-            is_superuser=True,
-            **kwargs
-        )
-        user.is_admin = True
-        user.is_staff = True
-        user.save(using=self._db)
-        return user
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        return self.create_user(email, nickname, password,  **extra_fields)
     
 class User(AbstractUser):
     id = models.AutoField(primary_key=True)
@@ -80,7 +46,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
 
     # 필수로 작성해야하는 field
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['nickname']
 
     def __str__(self):
         return self.email
