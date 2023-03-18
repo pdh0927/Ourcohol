@@ -37,16 +37,6 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
   int randomNumber = 0;
   String tempNickname = '';
 
-  List<int> colorList = [
-    0xffE92311,
-    0xff131313,
-    0xffF6E431,
-    0xff5AC13C,
-    0xff2410DC,
-    0xff861CB2,
-    0xffF86A1B
-  ];
-
   File? resultImage;
   ScreenshotController screenshotController = ScreenshotController();
 

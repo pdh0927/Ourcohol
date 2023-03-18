@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','email', 'nickname', 'image_memory']
+        fields = ['id','email', 'active_party','nickname', 'image_memory']
 
     def get_image_memory(self, user: User):
         return Base64Encoding.encoding_image(user)

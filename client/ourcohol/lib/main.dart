@@ -17,7 +17,7 @@ void main() {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: MyApp(),
+          home: const MyApp(),
         );
       })));
 }

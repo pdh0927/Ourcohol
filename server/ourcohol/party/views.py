@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .models import Party, Participant
-from .serializers import PartyPostSerializer, PartyRetrieveSerializer, ParticipantSerializer, ParticipantPartySerializer
+from .serializers import PartyPostSerializer, PartyRetrieveSerializer, ParticipantSerializer, ParticipantPartySerializer,PartyRetrieveSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
@@ -18,14 +18,17 @@ class PartyViewSet(viewsets.ModelViewSet):
             return PartyRetrieveSerializer
         return PartyPostSerializer
 
-    # #  party 목록 불러오기
-    # @action(detail=False, methods=['get'], url_path=r'list/(?P<pk>\d+)/(?P<year>\d+)/(?P<month>\d+)')
-    # def mylist(self, request, pk, year, month):
-    #     qs = self.get_queryset()
-    #     result = [party for party in list(qs) if party.participants in pk]
-    #     serializer = ParticipantPartySerializer(result, many=True)
+    # active party 불러오기
+    @action(detail=False, methods=['get'], url_path=r'active/(?P<pk>\d+)')
+    def recent_party(self, request, pk):
+        qs = self.get_queryset().filter(id=pk)
+        resultQs = []
+        if len(qs) > 0:
+            resultQs.append(qs[len(qs)-1])
+        serializer = PartyRetrieveSerializer( resultQs, many=True)
 
-    #     return Response(serializer.data)
+        return Response(serializer.data)
+
 
 
 class ParticipantViewSet(viewsets.ModelViewSet):

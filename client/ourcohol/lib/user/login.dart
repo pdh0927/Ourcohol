@@ -81,6 +81,8 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: SafeArea(
         child: Container(
+          width: 100.w - 32,
+          margin: const EdgeInsets.only(right: 16, left: 16),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -182,6 +184,7 @@ class _LoginState extends State<Login> {
                                   userData['user']['id'],
                                   userData['user']['email'],
                                   userData['user']['nickname'],
+                                  userData['user']['active_party'],
                                   userData['access_token'],
                                   userData['refresh_token']);
                               Navigator.of(context).push(MaterialPageRoute(

@@ -30,9 +30,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Center(child: _widgetOptions[_selectedIndex])),
+      body: SafeArea(
+          left: false,
+          right: false,
+          child: Center(child: _widgetOptions[_selectedIndex])),
       bottomNavigationBar: SizedBox(
-        height: 10.h,
+        height: 11.h,
         width: 100.w,
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[

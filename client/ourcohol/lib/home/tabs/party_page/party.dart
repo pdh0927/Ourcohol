@@ -23,10 +23,9 @@ class _PartyState extends State<Party> {
   Future getRecentParty() async {
     http.Response response;
     if (Platform.isIOS) {
-      print('ios');
       response = await http.get(
           Uri.parse(
-              'http://127.0.0.1:8000/api/party/participant/recent/${context.read<UserProvider>().userId}/'),
+              'http://127.0.0.1:8000/api/party/active/${context.read<UserProvider>().activeParty}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -34,17 +33,15 @@ class _PartyState extends State<Party> {
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
       if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-        print(json.decode(utf8.decode(response.bodyBytes)));
         setState(() {
           party = json.decode(utf8.decode(response.bodyBytes)).toList();
         });
-        print(party);
       }
       return party;
     } else {
       response = await http.get(
           Uri.parse(
-              'http://10.0.2.2:8000/api/party/participant/recent/${context.read<UserProvider>().userId}/'),
+              'http://10.0.2.2:8000/api/party/active/${context.read<UserProvider>().activeParty}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -75,16 +72,16 @@ class _PartyState extends State<Party> {
           if (snapshot.hasData == false) {
             return const CupertinoActivityIndicator();
           } else {
-            if (party.length == 0) {
+            if (party.isEmpty) {
               return NoParty();
-            } else if (party[0]['party']['is_active'] == false &&
-                party[0]['party']['ended_at'] == null) {
+            } else if (party[0]['is_active'] == false &&
+                party[0]['ended_at'] == null) {
               return UnactiveParty();
-            } else if (party[0]['party']['is_active'] == false &&
-                party[0]['party']['ended_at'] != null) {
+            } else if (party[0]['is_active'] == false &&
+                party[0]['ended_at'] != null) {
               return NoParty();
             } else {
-              return ActiveParty();
+              return ActiveParty(party: party);
             }
           }
         });

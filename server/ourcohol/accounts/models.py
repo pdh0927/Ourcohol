@@ -35,6 +35,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     nickname = models.CharField(default='', max_length=100, null=False, blank=False)
     image = models.ImageField(blank=True,null=True)
+    active_party = models.IntegerField(default=-1)
     is_active = models.BooleanField(default=True)   
     is_staff =  models.BooleanField(default=False)
     is_admin =  models.BooleanField(default=False)

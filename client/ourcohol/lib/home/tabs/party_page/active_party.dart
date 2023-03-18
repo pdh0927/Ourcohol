@@ -1,17 +1,373 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_remix/flutter_remix.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:ourcohol/home/tabs/party_page/plus_menu.dart';
+import 'package:ourcohol/home/tabs/party_page/popup_munu.dart';
+
+import 'package:ourcohol/style.dart';
+
+import 'package:sizer/sizer.dart';
 
 class ActiveParty extends StatefulWidget {
-  const ActiveParty({super.key});
+  ActiveParty({super.key, this.party});
+  var party;
 
   @override
   State<ActiveParty> createState() => _ActivePartyState();
 }
 
 class _ActivePartyState extends State<ActiveParty> {
-  var party;
+  int count = 0;
+  int sojuStandard = 8;
+  int beerStandard = 3;
+  int kingAlcohol = -1;
+  int lastAlcohol = 999999;
+
+  setKingAndLast() {
+    kingAlcohol = widget.party[0]['participants'][0]['drank_beer'] +
+        widget.party[0]['participants'][0]['drank_soju'];
+    lastAlcohol = widget.party[0]['participants'][0]['drank_beer'] +
+        widget.party[0]['participants'][0]['drank_soju'];
+    for (int i = 1; i < widget.party[0]['participants'].length; i++) {
+      if (widget.party[0]['participants'][i]['drank_beer'] +
+              widget.party[0]['participants'][i]['drank_soju'] >
+          kingAlcohol) {
+        kingAlcohol = widget.party[0]['participants'][i]['drank_beer'] +
+            widget.party[0]['participants'][i]['drank_soju'];
+      }
+      if (widget.party[0]['participants'][i]['drank_beer'] +
+              widget.party[0]['participants'][i]['drank_soju'] <
+          lastAlcohol) {
+        lastAlcohol = widget.party[0]['participants'][i]['drank_beer'] +
+            widget.party[0]['participants'][i]['drank_soju'];
+      }
+    }
+  }
+
+  getTabeHorizon() {
+    setKingAndLast();
+    int tepCount = count;
+    List<Widget> childs = [];
+    for (int i = tepCount; i < tepCount + 2; i++) {
+      childs.add(Container(
+          width: (100.w - 32) / 2,
+          height: (100.w - 50) / 2,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: (i % 4 == 1 || i % 4 == 2)
+                  ? const Color(0xff8F8F8F)
+                  : const Color(0xffEAEAEA)),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: (100.w - 50) / 8,
+                    height: (100.w - 50) / 8,
+                    margin: EdgeInsets.only(right: 10 / 393 * 100.w),
+                    decoration: BoxDecoration(
+                      color: Color(colorList[
+                          widget.party[0]['participants'][i]['id'] % 7]),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: const Icon(FlutterRemix.user_2_fill,
+                        color: Colors.white, size: 40), // 교체 해야함
+                  ),
+                  Text(widget.party[0]['participants'][i]['user']['nickname'],
+                      style: textStyle14)
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: (100.w - 50) / 8,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (widget.party[0]['participants'][i]['drank_beer'] +
+                                    widget.party[0]['participants'][i]
+                                        ['drank_soju']) ==
+                                kingAlcohol
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: const [
+                                  Icon(FlutterRemix.vip_crown_fill,
+                                      color: Color(0xffFFDE2F)),
+                                  Text(
+                                    '술고래',
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontFamily: "GowunBatang",
+                                        color: Color(0xffFFDE2F),
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.3),
+                                  )
+                                ],
+                              )
+                            : (widget.party[0]['participants'][i]
+                                            ['drank_beer'] +
+                                        widget.party[0]['participants'][i]
+                                            ['drank_soju']) ==
+                                    lastAlcohol
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: const [
+                                      Icon(FlutterRemix.delete_bin_2_fill,
+                                          color: Color(0xff131313)),
+                                      Text(
+                                        '알쓰',
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: "GowunBatang",
+                                            color: Color(0xff131313),
+                                            fontWeight: FontWeight.w700,
+                                            height: 1.3),
+                                      )
+                                    ],
+                                  )
+                                : const Icon(FlutterRemix.vip_crown_fill,
+                                    size: 0),
+                      ],
+                    ),
+                  ),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        widget.party[0]['participants'][i]['drank_soju'] /
+                                    sojuStandard >
+                                0
+                            ? Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    widget.party[0]['participants'][i]
+                                                    ['drank_soju'] %
+                                                sojuStandard >
+                                            0
+                                        ? Container(
+                                            margin: EdgeInsets.only(
+                                                right: 10 / 393 * 100.w),
+                                            child: Stack(children: [
+                                              Container(
+                                                width: (100.w - 50) / 8,
+                                                height: (100.w - 50) / 8,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                ),
+                                                child: Text('소주잔',
+                                                    style: textStyle24),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: ((100.w - 50) / 8) -
+                                                        2.w,
+                                                    top: ((100.w - 50) / 8) -
+                                                        4.w),
+                                                child: Text(
+                                                    'X${widget.party[0]['participants'][i]['drank_soju'] % sojuStandard}',
+                                                    style: textStyle23),
+                                              )
+                                            ]),
+                                          )
+                                        : const SizedBox(height: 0, width: 0),
+                                    (widget.party[0]['participants'][i]
+                                                        ['drank_soju'] /
+                                                    sojuStandard)
+                                                .toInt() >
+                                            0
+                                        ? Stack(children: [
+                                            Container(
+                                              width: (100.w - 50) / 8,
+                                              height: (100.w - 50) / 8,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                              child: Text('소주병',
+                                                  style: textStyle24),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left:
+                                                      ((100.w - 50) / 8) - 2.w,
+                                                  top:
+                                                      ((100.w - 50) / 8) - 4.w),
+                                              child: Text(
+                                                  'X${(widget.party[0]['participants'][i]['drank_soju'] / sojuStandard).toInt()}',
+                                                  style: textStyle23),
+                                            )
+                                          ])
+                                        : const SizedBox(height: 0, width: 0),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(height: 0, width: 0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            widget.party[0]['participants'][i]['drank_beer'] %
+                                        beerStandard >
+                                    0
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        right: 10 / 393 * 100.w),
+                                    child: Stack(children: [
+                                      Container(
+                                        width: (100.w - 50) / 8,
+                                        height: (100.w - 50) / 8,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: Text('맥주잔', style: textStyle24),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: ((100.w - 50) / 8) - 2.w,
+                                            top: ((100.w - 50) / 8) - 4.w),
+                                        child: Text(
+                                            'X${widget.party[0]['participants'][i]['drank_beer'] % beerStandard}',
+                                            style: textStyle23),
+                                      )
+                                    ]),
+                                  )
+                                : const SizedBox(height: 0, width: 0),
+                            (widget.party[0]['participants'][i]['drank_beer'] /
+                                            beerStandard)
+                                        .toInt() >
+                                    0
+                                ? Stack(children: [
+                                    Container(
+                                      width: (100.w - 50) / 8,
+                                      height: (100.w - 50) / 8,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Text('맥주병', style: textStyle24),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: ((100.w - 50) / 8) - 2.w,
+                                          top: ((100.w - 50) / 8) - 4.w),
+                                      child: Text(
+                                          'X${(widget.party[0]['participants'][i]['drank_beer'] / beerStandard).toInt()}',
+                                          style: textStyle23),
+                                    )
+                                  ])
+                                : const SizedBox(height: 0, width: 0),
+                          ],
+                        )
+                      ])
+                ],
+              )
+            ],
+          )));
+      count++;
+      if (count == widget.party[0]['participants'].length) {
+        break;
+      }
+    }
+    return Row(children: childs);
+  }
+
+  getTable() {
+    List<Widget> childs = [];
+
+    for (int i = 0; i < (widget.party[0]['participants'].length) / 2; i++) {
+      childs.add(getTabeHorizon());
+    }
+
+    return childs;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text('activeparty'));
+    count = 0;
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        actions: [const PopupMenu()],
+      ),
+      floatingActionButton: const PlusMenu(),
+      backgroundColor: const Color(0xffFFFFFF),
+      body: SafeArea(
+        child: Container(
+            width: 100.w,
+            alignment: Alignment.center,
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 100.w - 32,
+                      margin: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 20),
+                      alignment: Alignment.center,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Text(widget.party[0]['name'],
+                                  style: textStyle22)),
+                          Container(
+                              margin: const EdgeInsets.only(left: 15),
+                              width: 100.w - 32 - 50,
+                              height: (100.w - 32 - 50) / 7 * 5,
+                              child: Image.memory(
+                                base64Decode(widget.party[0]['image_memory']),
+                                fit: BoxFit.fill,
+                              ))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 100.w - 32,
+                      margin:
+                          const EdgeInsets.only(left: 16, right: 16, top: 15),
+                      alignment: Alignment.center,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Text('우리들의 테이블', style: textStyle14)),
+                          Container(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: getTable(),
+                          ))
+                        ],
+                      ),
+                    )
+                  ],
+                ))),
+      ),
+    );
   }
 }

@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+
+List<int> colorList = [
+  0xffE92311,
+  0xff131313,
+  0xffF6E431,
+  0xff5AC13C,
+  0xff2410DC,
+  0xff861CB2,
+  0xffF86A1B
+];
 
 var textStyle1 = const TextStyle(
     fontSize: 16,
@@ -139,5 +150,39 @@ var textStyle21 = const TextStyle(
     fontSize: 11,
     fontFamily: "GowunBatang",
     color: Colors.red,
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+var textStyle22 = const TextStyle(
+    fontSize: 25,
+    fontFamily: "GowunBatang",
+    color: Color(0xff131313),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle23 = TextStyle(
+    fontSize: (13 / 393 * 100).w,
+    fontFamily: "GowunBatang",
+    color: const Color(0xff131313),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle24 = TextStyle(
+    fontSize: (13 / 393 * 100).w,
+    fontFamily: "GowunBatang",
+    color: const Color(0xff131313),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle25 = const TextStyle(
+    fontSize: 14,
+    fontFamily: "GowunBatang",
+    color: Color(0xff131313),
+    fontWeight: FontWeight.w700,
+    height: 1.3);
+
+var textStyle26 = const TextStyle(
+    fontSize: 14,
+    fontFamily: "GowunBatang",
+    color: Color(0xffFFFFFF),
     fontWeight: FontWeight.w700,
     height: 1.3);
