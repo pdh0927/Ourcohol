@@ -34,18 +34,47 @@ class PartyViewSet(viewsets.ModelViewSet):
 class ParticipantViewSet(viewsets.ModelViewSet):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    # participant를 통해서 가장 최근 party 불러오기
-    @action(detail=False, methods=['get'], url_path=r'recent/(?P<pk>\d+)')
-    def recent_party(self, request, pk):
-        qs = self.get_queryset().filter(user=pk)
-        resultQs = []
-        if len(qs) > 0:
-            resultQs.append(qs[len(qs)-1])
-        serializer = ParticipantPartySerializer( resultQs, many=True)
+    # 소주 1잔 추가
+    @action(detail=False, methods=['get'], url_path=r'add/soju/(?P<pk>\d+)')
+    def addSoju(self, request, pk):
+        
+        instance = self.get_object()
+        instance.drank_soju += 1
+        instance.save()
 
-        return Response(serializer.data)
+        return Response(instance.drank_soju)
+    
+    # 소주 1잔 빼기
+    @action(detail=False, methods=['get'], url_path=r'minus/soju/(?P<pk>\d+)')
+    def minusSoju(self, request, pk):
+        
+        instance = self.get_object()
+        instance.drank_soju -= 1
+        instance.save()
+
+        return Response(instance.drank_soju)
+    
+    # 맥주 1잔 추가
+    @action(detail=False, methods=['get'], url_path=r'add/beer/(?P<pk>\d+)')
+    def addBeer(self, request, pk):
+        
+        instance = self.get_object()
+        instance.drank_beer += 1
+        instance.save()
+
+        return Response(instance.drank_beer)
+    
+    # 맥주 1잔 뺴기
+    @action(detail=False, methods=['get'], url_path=r'minus/beer/(?P<pk>\d+)')
+    def minusBeer(self, request, pk):
+        
+        instance = self.get_object()
+        instance.drank_beer -= 1
+        instance.save()
+
+        return Response(instance.drank_beer)
     
     # participant를 통해서 party 목록 불러오기
     @action(detail=False, methods=['get'], url_path=r'list/(?P<pk>\d+)/(?P<year>\d+)/(?P<month>\d+)')
@@ -72,3 +101,5 @@ class ParticipantViewSet(viewsets.ModelViewSet):
         serializer = ParticipantPartySerializer(resultQs, many=True)
 
         return Response(serializer.data)
+    
+    
