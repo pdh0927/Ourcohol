@@ -1,18 +1,22 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:ourcohol/home/tabs/party_page/plus_menu.dart';
 import 'package:ourcohol/home/tabs/party_page/popup_munu.dart';
-
+import 'package:ourcohol/provider_ourcohol.dart';
+import 'package:http/http.dart' as http;
 import 'package:ourcohol/style.dart';
+import 'package:provider/provider.dart';
 
 import 'package:sizer/sizer.dart';
 
 class ActiveParty extends StatefulWidget {
-  ActiveParty({super.key, this.party});
+  ActiveParty({super.key, this.party, this.myPaticipantIndex});
   var party;
+  var myPaticipantIndex;
 
   @override
   State<ActiveParty> createState() => _ActivePartyState();
@@ -297,6 +301,71 @@ class _ActivePartyState extends State<ActiveParty> {
     return childs;
   }
 
+  Future _modifyAlcohol(String modifyType, String alcoholType) async {
+    http.Response response;
+    if (Platform.isIOS) {
+      response = await http.get(
+          Uri.parse(
+              'http://127.0.0.1:8000/api/party/participant/${modifyType}/${alcoholType}/${widget.party[0]['participants'][widget.myPaticipantIndex]['id']}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    } else {
+      response = await http.get(
+          Uri.parse(
+              'http://10.0.2.2:8000/api/party/participant/${modifyType}/${alcoholType}/${widget.party[0]['participants'][widget.myPaticipantIndex]['id']}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+      if (json.decode(utf8.decode(response.bodyBytes)) != null) {
+        setState(() {});
+      }
+    }
+    return;
+  }
+
+  modifyAlcohol(String modifyType, String alcoholType) {
+    if (modifyType == 'minus') {
+      if ((alcoholType == 'soju' &&
+              widget.party[0]['participants'][widget.myPaticipantIndex]
+                      ['drank_soju'] ==
+                  0) ||
+          (alcoholType == 'beer' &&
+              widget.party[0]['participants'][widget.myPaticipantIndex]
+                      ['drank_beer'] ==
+                  0)) {
+        return;
+      }
+    }
+
+    _modifyAlcohol(modifyType, alcoholType);
+    setState(() {
+      if (alcoholType == 'soju') {
+        if (modifyType == 'add') {
+          widget.party[0]['participants'][widget.myPaticipantIndex]
+              ['drank_soju']++;
+        } else {
+          widget.party[0]['participants'][widget.myPaticipantIndex]
+              ['drank_soju']--;
+        }
+      } else {
+        if (modifyType == 'add') {
+          widget.party[0]['participants'][widget.myPaticipantIndex]
+              ['drank_beer']++;
+        } else {
+          widget.party[0]['participants'][widget.myPaticipantIndex]
+              ['drank_beer']--;
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -304,6 +373,7 @@ class _ActivePartyState extends State<ActiveParty> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.myPaticipantIndex);
     count = 0;
     return Scaffold(
       appBar: AppBar(
@@ -311,7 +381,7 @@ class _ActivePartyState extends State<ActiveParty> {
         backgroundColor: Colors.white,
         actions: [const PopupMenu()],
       ),
-      floatingActionButton: const PlusMenu(),
+      floatingActionButton: PlusMenu(modifyAlcohol: modifyAlcohol),
       backgroundColor: const Color(0xffFFFFFF),
       body: SafeArea(
         child: Container(

@@ -1,10 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
+import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:ourcohol/style.dart';
+import 'package:provider/provider.dart';
 
 class PlusMenu extends StatefulWidget {
-  const PlusMenu({super.key});
+  PlusMenu({super.key, this.modifyAlcohol});
+  var modifyAlcohol;
 
   @override
   State<PlusMenu> createState() => _PlusMenuState();
@@ -12,6 +19,7 @@ class PlusMenu extends StatefulWidget {
 
 class _PlusMenuState extends State<PlusMenu> {
   var flag = false;
+
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
@@ -43,14 +51,18 @@ class _PlusMenuState extends State<PlusMenu> {
             labelStyle: textStyle14,
             labelBackgroundColor: Colors.transparent,
             labelShadow: [],
-            onTap: () {}),
+            onTap: () {
+              widget.modifyAlcohol('add', 'beer');
+            }),
         SpeedDialChild(
             child: Text('소주'),
             label: '소주 한잔',
             labelStyle: textStyle14,
             labelBackgroundColor: Colors.transparent,
             labelShadow: [],
-            onTap: () async {}),
+            onTap: () async {
+              widget.modifyAlcohol('add', 'soju');
+            }),
       ],
     );
   }

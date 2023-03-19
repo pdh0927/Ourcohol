@@ -37,6 +37,7 @@ class _PartyState extends State<Party> {
           party = json.decode(utf8.decode(response.bodyBytes)).toList();
         });
       }
+      getMyPaticipantId();
       return party;
     } else {
       response = await http.get(
@@ -53,7 +54,20 @@ class _PartyState extends State<Party> {
           party = json.decode(utf8.decode(response.bodyBytes)).toList();
         });
       }
+      getMyPaticipantId();
       return party;
+    }
+  }
+
+  var myPaticipantIndex;
+  getMyPaticipantId() {
+    for (int i = 0; i < party[0]['participants'].length; i++) {
+      if (party[0]['participants'][i]['user']['id'] ==
+          context.read<UserProvider>().userId) {
+        setState(() {
+          myPaticipantIndex = i;
+        });
+      }
     }
   }
 
@@ -81,7 +95,8 @@ class _PartyState extends State<Party> {
                 party[0]['ended_at'] != null) {
               return NoParty();
             } else {
-              return ActiveParty(party: party);
+              return ActiveParty(
+                  party: party, myPaticipantIndex: myPaticipantIndex);
             }
           }
         });
