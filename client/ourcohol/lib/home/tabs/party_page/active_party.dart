@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
 import 'package:ourcohol/home/tabs/party_page/plus_menu.dart';
 import 'package:ourcohol/home/tabs/party_page/popup_munu.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
@@ -58,7 +58,7 @@ class _ActivePartyState extends State<ActiveParty> {
       childs.add(Container(
           width: (100.w - 32) / 2,
           height: (100.w - 50) / 2,
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: (i % 4 == 1 || i % 4 == 2)
                   ? const Color(0xff8F8F8F)
@@ -150,9 +150,10 @@ class _ActivePartyState extends State<ActiveParty> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    widget.party[0]['participants'][i]
-                                                    ['drank_soju'] %
-                                                sojuStandard >
+                                    (widget.party[0]['participants'][i]
+                                                        ['drank_soju'] /
+                                                    sojuStandard)
+                                                .toInt() >
                                             0
                                         ? Container(
                                             margin: EdgeInsets.only(
@@ -168,26 +169,24 @@ class _ActivePartyState extends State<ActiveParty> {
                                                       BorderRadius.circular(
                                                           100),
                                                 ),
-                                                child: Text('소주잔',
+                                                child: Text('소주병',
                                                     style: textStyle24),
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: ((100.w - 50) / 8) -
-                                                        2.w,
-                                                    top: ((100.w - 50) / 8) -
-                                                        4.w),
-                                                child: Text(
-                                                    'X${widget.party[0]['participants'][i]['drank_soju'] % sojuStandard}',
-                                                    style: textStyle23),
-                                              )
+                                                  padding: EdgeInsets.only(
+                                                      left: ((100.w - 50) / 8) -
+                                                          2.w,
+                                                      top: ((100.w - 50) / 8) -
+                                                          4.w),
+                                                  child: Text(
+                                                      'X${(widget.party[0]['participants'][i]['drank_soju'] / sojuStandard).toInt()}',
+                                                      style: textStyle23))
                                             ]),
                                           )
                                         : const SizedBox(height: 0, width: 0),
-                                    (widget.party[0]['participants'][i]
-                                                        ['drank_soju'] /
-                                                    sojuStandard)
-                                                .toInt() >
+                                    widget.party[0]['participants'][i]
+                                                    ['drank_soju'] %
+                                                sojuStandard >
                                             0
                                         ? Stack(children: [
                                             Container(
@@ -199,7 +198,7 @@ class _ActivePartyState extends State<ActiveParty> {
                                                 borderRadius:
                                                     BorderRadius.circular(100),
                                               ),
-                                              child: Text('소주병',
+                                              child: Text('소주잔',
                                                   style: textStyle24),
                                             ),
                                             Padding(
@@ -209,7 +208,7 @@ class _ActivePartyState extends State<ActiveParty> {
                                                   top:
                                                       ((100.w - 50) / 8) - 4.w),
                                               child: Text(
-                                                  'X${(widget.party[0]['participants'][i]['drank_soju'] / sojuStandard).toInt()}',
+                                                  'X${widget.party[0]['participants'][i]['drank_soju'] % sojuStandard}',
                                                   style: textStyle23),
                                             )
                                           ])
@@ -221,8 +220,9 @@ class _ActivePartyState extends State<ActiveParty> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            widget.party[0]['participants'][i]['drank_beer'] %
-                                        beerStandard >
+                            (widget.party[0]['participants'][i]['drank_beer'] /
+                                            beerStandard)
+                                        .toInt() >
                                     0
                                 ? Container(
                                     margin: EdgeInsets.only(
@@ -237,22 +237,21 @@ class _ActivePartyState extends State<ActiveParty> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                         ),
-                                        child: Text('맥주잔', style: textStyle24),
+                                        child: Text('맥주병', style: textStyle24),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
                                             left: ((100.w - 50) / 8) - 2.w,
                                             top: ((100.w - 50) / 8) - 4.w),
                                         child: Text(
-                                            'X${widget.party[0]['participants'][i]['drank_beer'] % beerStandard}',
+                                            'X${(widget.party[0]['participants'][i]['drank_beer'] / beerStandard).toInt()}',
                                             style: textStyle23),
                                       )
                                     ]),
                                   )
                                 : const SizedBox(height: 0, width: 0),
-                            (widget.party[0]['participants'][i]['drank_beer'] /
-                                            beerStandard)
-                                        .toInt() >
+                            widget.party[0]['participants'][i]['drank_beer'] %
+                                        beerStandard >
                                     0
                                 ? Stack(children: [
                                     Container(
@@ -264,16 +263,15 @@ class _ActivePartyState extends State<ActiveParty> {
                                         borderRadius:
                                             BorderRadius.circular(100),
                                       ),
-                                      child: Text('맥주병', style: textStyle24),
+                                      child: Text('맥주잔', style: textStyle24),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                          left: ((100.w - 50) / 8) - 2.w,
-                                          top: ((100.w - 50) / 8) - 4.w),
-                                      child: Text(
-                                          'X${(widget.party[0]['participants'][i]['drank_beer'] / beerStandard).toInt()}',
-                                          style: textStyle23),
-                                    )
+                                        padding: EdgeInsets.only(
+                                            left: ((100.w - 50) / 8) - 2.w,
+                                            top: ((100.w - 50) / 8) - 4.w),
+                                        child: Text(
+                                            'X${widget.party[0]['participants'][i]['drank_beer'] % beerStandard}',
+                                            style: textStyle23))
                                   ])
                                 : const SizedBox(height: 0, width: 0),
                           ],
@@ -340,6 +338,19 @@ class _ActivePartyState extends State<ActiveParty> {
               widget.party[0]['participants'][widget.myPaticipantIndex]
                       ['drank_beer'] ==
                   0)) {
+        // 더 먹으면 사망합니다 알림
+        return;
+      }
+    } else {
+      if ((alcoholType == 'soju' &&
+              widget.party[0]['participants'][widget.myPaticipantIndex]
+                      ['drank_soju'] ==
+                  sojuStandard * 100) ||
+          (alcoholType == 'beer' &&
+              widget.party[0]['participants'][widget.myPaticipantIndex]
+                      ['drank_beer'] ==
+                  beerStandard * 100)) {
+        // 더 먹으면 사망합니다 알림
         return;
       }
     }

@@ -30,15 +30,11 @@ class _PopupMenuState extends State<PopupMenu> {
                         minWidth: 80,
                         padding: EdgeInsets.zero,
                         onPressed: () {},
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Icon(FlutterRemix.user_add_line),
-                                Text('인원 추가')
-                              ],
-                            ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Icon(FlutterRemix.user_add_line),
+                            Text('인원 추가')
                           ],
                         )),
                   )),
