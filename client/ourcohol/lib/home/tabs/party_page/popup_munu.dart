@@ -16,7 +16,7 @@ class _PopupMenuState extends State<PopupMenu> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-        padding: EdgeInsets.only(bottom: 0, top: 15, right: 10, left: 10),
+        padding: const EdgeInsets.only(bottom: 0, top: 15, right: 10, left: 10),
         icon: const Icon(
           FlutterRemix.menu_line,
           color: Color(0xff131313),
@@ -44,7 +44,7 @@ class _PopupMenuState extends State<PopupMenu> {
                                       height: (100.w - 32) / 2,
                                       width: 100.w - 32,
                                       padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
+                                          bottom: 10, left: 20, right: 20),
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(5)),
@@ -120,7 +120,7 @@ class _PopupMenuState extends State<PopupMenu> {
                                           ),
                                           Container(
                                             width: 100.w - 32 - 40,
-                                            height: 44,
+                                            height: 44 / 852 * 100.h,
                                             margin:
                                                 const EdgeInsets.only(top: 16),
                                             decoration: BoxDecoration(
