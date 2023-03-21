@@ -105,11 +105,11 @@ var textStyle13 = const TextStyle(
     height: 1.3);
 
 var textStyle14 = const TextStyle(
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: "GowunBatang",
     color: Color(0xff131313),
     fontWeight: FontWeight.w700,
-    height: 1.3);
+    height: 1.2);
 
 var textStyle15 = const TextStyle(
     fontSize: 14,
@@ -160,11 +160,11 @@ var textStyle22 = const TextStyle(
     height: 1.3);
 
 var textStyle23 = TextStyle(
-    fontSize: (13 / 393 * 100).w,
+    fontSize: (14 / 393 * 100).w,
     fontFamily: "GowunBatang",
     color: const Color(0xff131313),
     fontWeight: FontWeight.w700,
-    height: 1.3);
+    height: 1.2);
 
 var textStyle24 = TextStyle(
     fontSize: (13 / 393 * 100).w,
