@@ -59,14 +59,16 @@ class _PartyState extends State<Party> {
     }
   }
 
-  var myPaticipantIndex;
+  var myPaticipantIndex = -1;
   getMyPaticipantId() {
-    for (int i = 0; i < party[0]['participants'].length; i++) {
-      if (party[0]['participants'][i]['user']['id'] ==
-          context.read<UserProvider>().userId) {
-        setState(() {
-          myPaticipantIndex = i;
-        });
+    if (party.isNotEmpty) {
+      for (int i = 0; i < party[0]['participants'].length; i++) {
+        if (party[0]['participants'][i]['user']['id'] ==
+            context.read<UserProvider>().userId) {
+          setState(() {
+            myPaticipantIndex = i;
+          });
+        }
       }
     }
   }
@@ -80,6 +82,9 @@ class _PartyState extends State<Party> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<UserProvider>().userId);
+    print(context.read<UserProvider>().tokenAccess);
+
     return FutureBuilder(
         future: _future,
         builder: (context, snapshot) {

@@ -570,7 +570,7 @@ class _CalendarState extends State<Calendar> {
     if (Platform.isIOS) {
       response = await http.get(
           Uri.parse(
-              'http://127.0.0.1:8000/api/party/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+              'http://127.0.0.1:8000/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -580,7 +580,7 @@ class _CalendarState extends State<Calendar> {
     } else {
       response = await http.get(
           Uri.parse(
-              'http://10.0.2.2:8000/api/party/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+              'http://10.0.2.2:8000/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

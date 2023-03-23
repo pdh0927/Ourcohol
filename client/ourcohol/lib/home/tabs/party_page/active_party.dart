@@ -396,13 +396,12 @@ class _ActivePartyState extends State<ActiveParty> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.myPaticipantIndex);
     count = 0;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        actions: [const PopupMenu()],
+        actions: const [PopupMenu()],
       ),
       floatingActionButton: PlusMenu(modifyAlcohol: modifyAlcohol),
       backgroundColor: const Color(0xffFFFFFF),
