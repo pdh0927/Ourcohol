@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:http/http.dart';
+import 'package:ourcohol/provider_ourcohol.dart';
+
 import 'package:ourcohol/style.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class PopupMenu extends StatefulWidget {
@@ -12,6 +18,45 @@ class PopupMenu extends StatefulWidget {
 
 class _PopupMenuState extends State<PopupMenu> {
   var inputId;
+
+  addParticipant(userId) async {
+    Response response;
+    print(userId);
+    try {
+      if (Platform.isIOS) {
+        response = await post(
+            Uri.parse("http://127.0.0.1:8000/api/participant/"),
+            body: {
+              'user': userId.toString(),
+              'party': context.read<PartyProvider>().partyId.toString(),
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      } else {
+        response = await post(
+            Uri.parse("http://10.0.2.2:8000/api/participant/"),
+            body: {
+              'user': userId.toString(),
+              'party': context.read<PartyProvider>().partyId.toString(),
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      }
+
+      if (response.statusCode == 208) {
+        print(response.body);
+        return null;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +187,8 @@ class _PopupMenuState extends State<PopupMenu> {
                                                         fontSize: 16,
                                                         color: Colors.white)),
                                                 onPressed: () async {
+                                                  addParticipant(
+                                                      int.parse(inputId));
                                                   Navigator.pop(context);
                                                 }),
                                           ),

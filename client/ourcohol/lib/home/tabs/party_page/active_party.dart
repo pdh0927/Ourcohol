@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:http/http.dart';
 
 import 'package:ourcohol/home/tabs/party_page/plus_menu.dart';
 import 'package:ourcohol/home/tabs/party_page/popup_munu.dart';
@@ -14,9 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class ActiveParty extends StatefulWidget {
-  ActiveParty({super.key, this.party, this.myPaticipantIndex});
-  var party;
-  var myPaticipantIndex;
+  ActiveParty({super.key});
 
   @override
   State<ActiveParty> createState() => _ActivePartyState();
@@ -30,22 +29,26 @@ class _ActivePartyState extends State<ActiveParty> {
   int lastAlcohol = 999999;
 
   setKingAndLast() {
-    kingAlcohol = widget.party[0]['participants'][0]['drank_beer'] +
-        widget.party[0]['participants'][0]['drank_soju'];
-    lastAlcohol = widget.party[0]['participants'][0]['drank_beer'] +
-        widget.party[0]['participants'][0]['drank_soju'];
-    for (int i = 1; i < widget.party[0]['participants'].length; i++) {
-      if (widget.party[0]['participants'][i]['drank_beer'] +
-              widget.party[0]['participants'][i]['drank_soju'] >
+    kingAlcohol = context.read<PartyProvider>().participants[0]['drank_beer'] +
+        context.read<PartyProvider>().participants[0]['drank_soju'];
+    lastAlcohol = context.read<PartyProvider>().participants[0]['drank_beer'] +
+        context.read<PartyProvider>().participants[0]['drank_soju'];
+    for (int i = 1;
+        i < context.read<PartyProvider>().participants.length;
+        i++) {
+      if (context.read<PartyProvider>().participants[i]['drank_beer'] +
+              context.read<PartyProvider>().participants[i]['drank_soju'] >
           kingAlcohol) {
-        kingAlcohol = widget.party[0]['participants'][i]['drank_beer'] +
-            widget.party[0]['participants'][i]['drank_soju'];
+        kingAlcohol = context.read<PartyProvider>().participants[i]
+                ['drank_beer'] +
+            context.read<PartyProvider>().participants[i]['drank_soju'];
       }
-      if (widget.party[0]['participants'][i]['drank_beer'] +
-              widget.party[0]['participants'][i]['drank_soju'] <
+      if (context.read<PartyProvider>().participants[i]['drank_beer'] +
+              context.read<PartyProvider>().participants[i]['drank_soju'] <
           lastAlcohol) {
-        lastAlcohol = widget.party[0]['participants'][i]['drank_beer'] +
-            widget.party[0]['participants'][i]['drank_soju'];
+        lastAlcohol = context.read<PartyProvider>().participants[i]
+                ['drank_beer'] +
+            context.read<PartyProvider>().participants[i]['drank_soju'];
       }
     }
   }
@@ -75,7 +78,8 @@ class _ActivePartyState extends State<ActiveParty> {
 
                     decoration: BoxDecoration(
                       color: Color(colorList[
-                          widget.party[0]['participants'][i]['id'] % 7]),
+                          context.read<PartyProvider>().participants[i]['id'] %
+                              7]),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: const Icon(FlutterRemix.user_2_fill,
@@ -88,9 +92,11 @@ class _ActivePartyState extends State<ActiveParty> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        (widget.party[0]['participants'][i]['drank_beer'] +
-                                    widget.party[0]['participants'][i]
-                                        ['drank_soju']) ==
+                        (context.read<PartyProvider>().participants[i]
+                                        ['drank_beer'] +
+                                    context
+                                        .read<PartyProvider>()
+                                        .participants[i]['drank_soju']) ==
                                 kingAlcohol
                             ? Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -108,10 +114,11 @@ class _ActivePartyState extends State<ActiveParty> {
                                   )
                                 ],
                               )
-                            : (widget.party[0]['participants'][i]
+                            : (context.read<PartyProvider>().participants[i]
                                             ['drank_beer'] +
-                                        widget.party[0]['participants'][i]
-                                            ['drank_soju']) ==
+                                        context
+                                            .read<PartyProvider>()
+                                            .participants[i]['drank_soju']) ==
                                     lastAlcohol
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -146,15 +153,16 @@ class _ActivePartyState extends State<ActiveParty> {
                           margin: EdgeInsets.only(bottom: (10 / 393 * 100).w),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              widget.party[0]['participants'][i]['user']
-                                  ['nickname'],
+                              context.read<PartyProvider>().participants[i]
+                                  ['user']['nickname'],
                               style: textStyle14),
                         ),
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              widget.party[0]['participants'][i]['drank_soju'] /
+                              context.read<PartyProvider>().participants[i]
+                                              ['drank_soju'] /
                                           sojuStandard >
                                       0
                                   ? Container(
@@ -163,8 +171,8 @@ class _ActivePartyState extends State<ActiveParty> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          (widget.party[0]['participants'][i]
-                                                              ['drank_soju'] /
+                                          (context.read<PartyProvider>().participants[
+                                                              i]['drank_soju'] /
                                                           sojuStandard)
                                                       .toInt() >
                                                   0
@@ -190,13 +198,15 @@ class _ActivePartyState extends State<ActiveParty> {
                                                           style: textStyle24),
                                                     ),
                                                     Text(
-                                                        'X${(widget.party[0]['participants'][i]['drank_soju'] / sojuStandard).toInt()}',
+                                                        'X${(context.read<PartyProvider>().participants[i]['drank_soju'] / sojuStandard).toInt()}',
                                                         style: textStyle23)
                                                   ]),
                                                 )
                                               : const SizedBox(
                                                   height: 0, width: 0),
-                                          widget.party[0]['participants'][i]
+                                          context
+                                                              .read<PartyProvider>()
+                                                              .participants[i]
                                                           ['drank_soju'] %
                                                       sojuStandard >
                                                   0
@@ -218,7 +228,7 @@ class _ActivePartyState extends State<ActiveParty> {
                                                         style: textStyle24),
                                                   ),
                                                   Text(
-                                                      'X${widget.party[0]['participants'][i]['drank_soju'] % sojuStandard}',
+                                                      'X${context.read<PartyProvider>().participants[i]['drank_soju'] % sojuStandard}',
                                                       style: textStyle23)
                                                 ])
                                               : const SizedBox(
@@ -230,7 +240,7 @@ class _ActivePartyState extends State<ActiveParty> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  (widget.party[0]['participants'][i]
+                                  (context.read<PartyProvider>().participants[i]
                                                       ['drank_beer'] /
                                                   beerStandard)
                                               .toInt() >
@@ -254,12 +264,12 @@ class _ActivePartyState extends State<ActiveParty> {
                                                   style: textStyle24),
                                             ),
                                             Text(
-                                                'X${(widget.party[0]['participants'][i]['drank_beer'] / beerStandard).toInt()}',
+                                                'X${(context.read<PartyProvider>().participants[i]['drank_beer'] / beerStandard).toInt()}',
                                                 style: textStyle23)
                                           ]),
                                         )
                                       : const SizedBox(height: 0, width: 0),
-                                  widget.party[0]['participants'][i]
+                                  context.read<PartyProvider>().participants[i]
                                                   ['drank_beer'] %
                                               beerStandard >
                                           0
@@ -279,7 +289,7 @@ class _ActivePartyState extends State<ActiveParty> {
                                                 Text('맥주잔', style: textStyle24),
                                           ),
                                           Text(
-                                              'X${widget.party[0]['participants'][i]['drank_beer'] % beerStandard}',
+                                              'X${context.read<PartyProvider>().participants[i]['drank_beer'] % beerStandard}',
                                               style: textStyle23)
                                         ])
                                       : const SizedBox(height: 0, width: 0),
@@ -294,7 +304,7 @@ class _ActivePartyState extends State<ActiveParty> {
             ],
           )));
       count++;
-      if (count == widget.party[0]['participants'].length) {
+      if (count == context.read<PartyProvider>().participants.length) {
         break;
       }
     }
@@ -304,7 +314,9 @@ class _ActivePartyState extends State<ActiveParty> {
   getTable() {
     List<Widget> childs = [];
 
-    for (int i = 0; i < (widget.party[0]['participants'].length) / 2; i++) {
+    for (int i = 0;
+        i < (context.read<PartyProvider>().participants.length) / 2;
+        i++) {
       childs.add(getTabeHorizon());
     }
 
@@ -316,7 +328,7 @@ class _ActivePartyState extends State<ActiveParty> {
     if (Platform.isIOS) {
       response = await http.get(
           Uri.parse(
-              'http://127.0.0.1:8000/api/party/participant/${modifyType}/${alcoholType}/${widget.party[0]['participants'][widget.myPaticipantIndex]['id']}/'),
+              'http://127.0.0.1:8000/api/party/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[myPaticipantIndex]['id']}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -326,7 +338,7 @@ class _ActivePartyState extends State<ActiveParty> {
     } else {
       response = await http.get(
           Uri.parse(
-              'http://10.0.2.2:8000/api/party/participant/${modifyType}/${alcoholType}/${widget.party[0]['participants'][widget.myPaticipantIndex]['id']}/'),
+              'http://10.0.2.2:8000/api/party/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[myPaticipantIndex]['id']}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -340,14 +352,30 @@ class _ActivePartyState extends State<ActiveParty> {
     return;
   }
 
+  var myPaticipantIndex = -1;
+  getMyPaticipantId() {
+    if (context.read<PartyProvider>().partyId != -1) {
+      for (int i = 0;
+          i < context.read<PartyProvider>().participants.length;
+          i++) {
+        if (context.read<PartyProvider>().participants[i]['user']['id'] ==
+            context.read<UserProvider>().userId) {
+          setState(() {
+            myPaticipantIndex = i;
+          });
+        }
+      }
+    }
+  }
+
   modifyAlcohol(String modifyType, String alcoholType) {
     if (modifyType == 'minus') {
       if ((alcoholType == 'soju' &&
-              widget.party[0]['participants'][widget.myPaticipantIndex]
+              context.read<PartyProvider>().participants[myPaticipantIndex]
                       ['drank_soju'] ==
                   0) ||
           (alcoholType == 'beer' &&
-              widget.party[0]['participants'][widget.myPaticipantIndex]
+              context.read<PartyProvider>().participants[myPaticipantIndex]
                       ['drank_beer'] ==
                   0)) {
         // 더 먹으면 사망합니다 알림
@@ -355,11 +383,11 @@ class _ActivePartyState extends State<ActiveParty> {
       }
     } else {
       if ((alcoholType == 'soju' &&
-              widget.party[0]['participants'][widget.myPaticipantIndex]
+              context.read<PartyProvider>().participants[myPaticipantIndex]
                       ['drank_soju'] ==
                   sojuStandard * 100) ||
           (alcoholType == 'beer' &&
-              widget.party[0]['participants'][widget.myPaticipantIndex]
+              context.read<PartyProvider>().participants[myPaticipantIndex]
                       ['drank_beer'] ==
                   beerStandard * 100)) {
         // 더 먹으면 사망합니다 알림
@@ -371,18 +399,18 @@ class _ActivePartyState extends State<ActiveParty> {
     setState(() {
       if (alcoholType == 'soju') {
         if (modifyType == 'add') {
-          widget.party[0]['participants'][widget.myPaticipantIndex]
+          context.read<PartyProvider>().participants[myPaticipantIndex]
               ['drank_soju']++;
         } else {
-          widget.party[0]['participants'][widget.myPaticipantIndex]
+          context.read<PartyProvider>().participants[myPaticipantIndex]
               ['drank_soju']--;
         }
       } else {
         if (modifyType == 'add') {
-          widget.party[0]['participants'][widget.myPaticipantIndex]
+          context.read<PartyProvider>().participants[myPaticipantIndex]
               ['drank_beer']++;
         } else {
-          widget.party[0]['participants'][widget.myPaticipantIndex]
+          context.read<PartyProvider>().participants[myPaticipantIndex]
               ['drank_beer']--;
         }
       }
@@ -391,6 +419,7 @@ class _ActivePartyState extends State<ActiveParty> {
 
   @override
   void initState() {
+    getMyPaticipantId();
     super.initState();
   }
 
@@ -424,14 +453,15 @@ class _ActivePartyState extends State<ActiveParty> {
                           Container(
                               alignment: Alignment.centerLeft,
                               margin: const EdgeInsets.only(bottom: 10),
-                              child: Text(widget.party[0]['name'],
+                              child: Text(context.read<PartyProvider>().name,
                                   style: textStyle22)),
                           Container(
                               margin: const EdgeInsets.only(left: 15),
                               width: 100.w - 32 - 50,
                               height: (100.w - 32 - 50) / 7 * 5,
                               child: Image.memory(
-                                base64Decode(widget.party[0]['image_memory']),
+                                base64Decode(
+                                    context.read<PartyProvider>().image_memory),
                                 fit: BoxFit.fill,
                               ))
                         ],

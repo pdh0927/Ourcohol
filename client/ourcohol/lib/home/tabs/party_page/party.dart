@@ -19,7 +19,7 @@ class Party extends StatefulWidget {
 }
 
 class _PartyState extends State<Party> {
-  var party = [];
+  var party;
   Future getRecentParty() async {
     http.Response response;
     if (Platform.isIOS) {
@@ -33,11 +33,25 @@ class _PartyState extends State<Party> {
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
       if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-        setState(() {
-          party = json.decode(utf8.decode(response.bodyBytes)).toList();
-        });
+        party = json.decode(utf8.decode(response.bodyBytes)).toList();
+        print(party[0]['id'].runtimeType);
+
+        context.read<PartyProvider>().setPartyInformation(
+              party[0]['id'],
+              party[0]['image_memory'],
+              party[0]['participants'],
+              party[0]['comments'],
+              party[0]['name'],
+              party[0]['place'],
+              party[0]['image'],
+              party[0]['created_at'],
+              party[0]['ended_at'],
+              party[0]['drank_beer'],
+              party[0]['drank_soju'],
+              party[0]['is_active'],
+            );
       }
-      getMyPaticipantId();
+
       return party;
     } else {
       response = await http.get(
@@ -50,26 +64,25 @@ class _PartyState extends State<Party> {
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
       if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-        setState(() {
-          party = json.decode(utf8.decode(response.bodyBytes)).toList();
-        });
-      }
-      getMyPaticipantId();
-      return party;
-    }
-  }
+        var party = json.decode(utf8.decode(response.bodyBytes)).toList();
 
-  var myPaticipantIndex = -1;
-  getMyPaticipantId() {
-    if (party.isNotEmpty) {
-      for (int i = 0; i < party[0]['participants'].length; i++) {
-        if (party[0]['participants'][i]['user']['id'] ==
-            context.read<UserProvider>().userId) {
-          setState(() {
-            myPaticipantIndex = i;
-          });
-        }
+        context.read<PartyProvider>().setPartyInformation(
+              party[0]['id'],
+              party[0]['image_memory'],
+              party[0]['participants'],
+              party[0]['comments'],
+              party[0]['name'],
+              party[0]['place'],
+              party[0]['image'],
+              party[0]['created_at'],
+              party[0]['ended_at'],
+              party[0]['drank_beer'],
+              party[0]['drank_soju'],
+              party[0]['is_active'],
+            );
       }
+
+      return party;
     }
   }
 
@@ -82,26 +95,22 @@ class _PartyState extends State<Party> {
 
   @override
   Widget build(BuildContext context) {
-    print(context.read<UserProvider>().userId);
-    print(context.read<UserProvider>().tokenAccess);
-
     return FutureBuilder(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasData == false) {
             return const CupertinoActivityIndicator();
           } else {
-            if (party.isEmpty) {
+            if (context.read<PartyProvider>().partyId == -1) {
               return NoParty();
-            } else if (party[0]['is_active'] == false &&
-                party[0]['ended_at'] == null) {
+            } else if (context.read<PartyProvider>().is_active == false &&
+                context.read<PartyProvider>().ended_at == '') {
               return UnactiveParty();
-            } else if (party[0]['is_active'] == false &&
-                party[0]['ended_at'] != null) {
+            } else if (context.read<PartyProvider>().is_active == false &&
+                context.read<PartyProvider>().ended_at != '') {
               return NoParty();
             } else {
-              return ActiveParty(
-                  party: party, myPaticipantIndex: myPaticipantIndex);
+              return ActiveParty();
             }
           }
         });

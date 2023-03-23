@@ -57,8 +57,8 @@ class _HomeState extends State<Home> {
             )
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xff131313),
-          unselectedItemColor: Color(0xffCACACA),
+          selectedItemColor: const Color(0xff131313),
+          unselectedItemColor: const Color(0xffCACACA),
           showSelectedLabels: true,
           showUnselectedLabels: true,
           onTap: _onItemTapped,
