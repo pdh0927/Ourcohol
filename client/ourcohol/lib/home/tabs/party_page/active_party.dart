@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
-
 import 'package:ourcohol/home/tabs/party_page/plus_menu.dart';
 import 'package:ourcohol/home/tabs/party_page/popup_munu.dart';
+
 import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:http/http.dart' as http;
 import 'package:ourcohol/style.dart';
@@ -72,19 +72,32 @@ class _ActivePartyState extends State<ActiveParty> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: (100.w - 50) / 7,
-                    height: (100.w - 50) / 7,
-
-                    decoration: BoxDecoration(
-                      color: Color(colorList[
-                          context.read<PartyProvider>().participants[i]['id'] %
-                              7]),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: const Icon(FlutterRemix.user_2_fill,
-                        color: Colors.white, size: 40), // 교체 해야함
-                  ),
+                  (context.read<PartyProvider>().participants[i]['user']
+                              ['image_memory'] !=
+                          null
+                      ? Container(
+                          width: (100.w - 50) / 7,
+                          height: (100.w - 50) / 7,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: MemoryImage(base64Decode(context
+                                          .read<PartyProvider>()
+                                          .participants[i]['user']
+                                      ['image_memory'])),
+                                  fit: BoxFit.fill)))
+                      : Container(
+                          width: (100.w - 50) / 7,
+                          height: (100.w - 50) / 7,
+                          decoration: BoxDecoration(
+                            color: Color(colorList[context
+                                    .read<PartyProvider>()
+                                    .participants[i]['id'] %
+                                7]),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: const Icon(FlutterRemix.user_2_fill,
+                              color: Colors.white, size: 40))),
                   Container(
                     width: (100.w - 50) / 8,
                     alignment: Alignment.center,
@@ -234,8 +247,7 @@ class _ActivePartyState extends State<ActiveParty> {
                                               : const SizedBox(
                                                   height: 0, width: 0),
                                         ],
-                                      ),
-                                    )
+                                      ))
                                   : const SizedBox(height: 0, width: 0),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -328,7 +340,7 @@ class _ActivePartyState extends State<ActiveParty> {
     if (Platform.isIOS) {
       response = await http.get(
           Uri.parse(
-              'http://127.0.0.1:8000/api/party/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[myPaticipantIndex]['id']}/'),
+              'http://127.0.0.1:8000/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -338,57 +350,42 @@ class _ActivePartyState extends State<ActiveParty> {
     } else {
       response = await http.get(
           Uri.parse(
-              'http://10.0.2.2:8000/api/party/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[myPaticipantIndex]['id']}/'),
+              'http://10.0.2.2:8000/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
-      if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-        setState(() {});
-      }
     }
     return;
-  }
-
-  var myPaticipantIndex = -1;
-  getMyPaticipantId() {
-    if (context.read<PartyProvider>().partyId != -1) {
-      for (int i = 0;
-          i < context.read<PartyProvider>().participants.length;
-          i++) {
-        if (context.read<PartyProvider>().participants[i]['user']['id'] ==
-            context.read<UserProvider>().userId) {
-          setState(() {
-            myPaticipantIndex = i;
-          });
-        }
-      }
-    }
   }
 
   modifyAlcohol(String modifyType, String alcoholType) {
     if (modifyType == 'minus') {
       if ((alcoholType == 'soju' &&
-              context.read<PartyProvider>().participants[myPaticipantIndex]
-                      ['drank_soju'] ==
+              context.read<PartyProvider>().participants[context
+                      .read<PartyProvider>()
+                      .myPaticipantIndex]['drank_soju'] ==
                   0) ||
           (alcoholType == 'beer' &&
-              context.read<PartyProvider>().participants[myPaticipantIndex]
-                      ['drank_beer'] ==
+              context.read<PartyProvider>().participants[context
+                      .read<PartyProvider>()
+                      .myPaticipantIndex]['drank_beer'] ==
                   0)) {
         // 더 먹으면 사망합니다 알림
         return;
       }
     } else {
       if ((alcoholType == 'soju' &&
-              context.read<PartyProvider>().participants[myPaticipantIndex]
-                      ['drank_soju'] ==
+              context.read<PartyProvider>().participants[context
+                      .read<PartyProvider>()
+                      .myPaticipantIndex]['drank_soju'] ==
                   sojuStandard * 100) ||
           (alcoholType == 'beer' &&
-              context.read<PartyProvider>().participants[myPaticipantIndex]
-                      ['drank_beer'] ==
+              context.read<PartyProvider>().participants[context
+                      .read<PartyProvider>()
+                      .myPaticipantIndex]['drank_beer'] ==
                   beerStandard * 100)) {
         // 더 먹으면 사망합니다 알림
         return;
@@ -399,18 +396,26 @@ class _ActivePartyState extends State<ActiveParty> {
     setState(() {
       if (alcoholType == 'soju') {
         if (modifyType == 'add') {
-          context.read<PartyProvider>().participants[myPaticipantIndex]
+          context
+                  .read<PartyProvider>()
+                  .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_soju']++;
         } else {
-          context.read<PartyProvider>().participants[myPaticipantIndex]
+          context
+                  .read<PartyProvider>()
+                  .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_soju']--;
         }
       } else {
         if (modifyType == 'add') {
-          context.read<PartyProvider>().participants[myPaticipantIndex]
+          context
+                  .read<PartyProvider>()
+                  .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_beer']++;
         } else {
-          context.read<PartyProvider>().participants[myPaticipantIndex]
+          context
+                  .read<PartyProvider>()
+                  .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_beer']--;
         }
       }
@@ -419,12 +424,12 @@ class _ActivePartyState extends State<ActiveParty> {
 
   @override
   void initState() {
-    getMyPaticipantId();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<UserProvider>().tokenAccess);
     count = 0;
     return Scaffold(
       appBar: AppBar(

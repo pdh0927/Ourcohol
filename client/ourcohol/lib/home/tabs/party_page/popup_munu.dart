@@ -9,6 +9,8 @@ import 'package:ourcohol/style.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import 'party_information.dart';
+
 class PopupMenu extends StatefulWidget {
   const PopupMenu({super.key});
 
@@ -47,7 +49,24 @@ class _PopupMenuState extends State<PopupMenu> {
       }
 
       if (response.statusCode == 208) {
-        print(response.body);
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('이미 초대된 사용자 '),
+              content: const Text('다른 사용자를 초대해주세요'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
         return null;
       } else {
         return null;
@@ -246,7 +265,10 @@ class _PopupMenuState extends State<PopupMenu> {
                     child: MaterialButton(
                         minWidth: 80,
                         padding: EdgeInsets.zero,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const PartyInformation()));
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

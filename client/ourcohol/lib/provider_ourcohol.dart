@@ -4,17 +4,14 @@ import 'package:flutter/material.dart';
 class UserProvider extends ChangeNotifier {
   int userId = -1;
   String email = '';
-  int activeParty = -1;
   String tokenAccess = '';
   String tokenRefresh = '';
   String nickname = '';
 
-  setUserInformation(
-      userId, email, nickname, activeParty, tokenAccess, tokenRefresh) {
+  setUserInformation(userId, email, nickname, tokenAccess, tokenRefresh) {
     this.userId = userId;
     this.email = email;
     this.nickname = nickname;
-    this.activeParty = activeParty;
     this.tokenAccess = tokenAccess;
     this.tokenRefresh = tokenRefresh;
 
@@ -36,8 +33,22 @@ class PartyProvider extends ChangeNotifier {
   int drank_soju = 0;
   bool is_active = false;
 
-  setPartyInformation(partyId, image_memory, participants, comments, name,
-      place, image, created_at, ended_at, drank_beer, drank_soju, is_active) {
+  var myPaticipantIndex = -1;
+
+  setPartyInformation(
+      partyId,
+      image_memory,
+      participants,
+      comments,
+      name,
+      place,
+      image,
+      created_at,
+      ended_at,
+      drank_beer,
+      drank_soju,
+      is_active,
+      userId) {
     this.partyId = partyId;
     this.image_memory = image_memory;
     this.participants = participants;
@@ -50,6 +61,15 @@ class PartyProvider extends ChangeNotifier {
     this.drank_beer = drank_beer;
     this.drank_soju = drank_soju;
     this.is_active = is_active;
+
+    if (partyId != -1) {
+      for (int i = 0; i < participants.length; i++) {
+        if (participants[i]['user']['id'] == userId) {
+          myPaticipantIndex = i;
+          notifyListeners();
+        }
+      }
+    }
 
     notifyListeners();
   }

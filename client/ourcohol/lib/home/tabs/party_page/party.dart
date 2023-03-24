@@ -19,43 +19,46 @@ class Party extends StatefulWidget {
 }
 
 class _PartyState extends State<Party> {
-  var party;
+  var party = {};
   Future getRecentParty() async {
     http.Response response;
     if (Platform.isIOS) {
       response = await http.get(
           Uri.parse(
-              'http://127.0.0.1:8000/api/party/active/${context.read<UserProvider>().activeParty}/'),
+              'http://127.0.0.1:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
-      if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-        party = json.decode(utf8.decode(response.bodyBytes)).toList();
+
+      if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
+        party =
+            json.decode(utf8.decode(response.bodyBytes)).toList()[0]['party'];
 
         context.read<PartyProvider>().setPartyInformation(
-              party[0]['id'],
-              party[0]['image_memory'],
-              party[0]['participants'],
-              party[0]['comments'],
-              party[0]['name'],
-              party[0]['place'],
-              party[0]['image'],
-              party[0]['created_at'],
-              party[0]['ended_at'],
-              party[0]['drank_beer'],
-              party[0]['drank_soju'],
-              party[0]['is_active'],
-            );
+            party['id'],
+            party['image_memory'],
+            party['participants'],
+            party['comments'],
+            party['name'],
+            party['place'],
+            party['image'],
+            party['created_at'],
+            party['ended_at'],
+            party['drank_beer'],
+            party['drank_soju'],
+            party['is_active'],
+            context.read<UserProvider>().userId);
       }
+      print('return before');
 
       return party;
     } else {
       response = await http.get(
           Uri.parse(
-              'http://10.0.2.2:8000/api/party/active/${context.read<UserProvider>().activeParty}/'),
+              'http://127.0.0.1:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -63,22 +66,23 @@ class _PartyState extends State<Party> {
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
       if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-        var party = json.decode(utf8.decode(response.bodyBytes)).toList();
+        party =
+            json.decode(utf8.decode(response.bodyBytes)).toList()[0]['party'];
 
         context.read<PartyProvider>().setPartyInformation(
-              party[0]['id'],
-              party[0]['image_memory'],
-              party[0]['participants'],
-              party[0]['comments'],
-              party[0]['name'],
-              party[0]['place'],
-              party[0]['image'],
-              party[0]['created_at'],
-              party[0]['ended_at'],
-              party[0]['drank_beer'],
-              party[0]['drank_soju'],
-              party[0]['is_active'],
-            );
+            party['id'],
+            party['image_memory'],
+            party['participants'],
+            party['comments'],
+            party['name'],
+            party['place'],
+            party['image'],
+            party['created_at'],
+            party['ended_at'],
+            party['drank_beer'],
+            party['drank_soju'],
+            party['is_active'],
+            context.read<UserProvider>().userId);
       }
 
       return party;

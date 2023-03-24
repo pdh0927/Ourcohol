@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
                   Container(
                     width: 100.w - 32,
                     height: (100.w - 32) / 7,
-                    margin: EdgeInsets.only(bottom: 17),
+                    margin: const EdgeInsets.only(bottom: 17),
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(5)),
                     child: TextField(
@@ -184,7 +184,6 @@ class _LoginState extends State<Login> {
                                   userData['user']['id'],
                                   userData['user']['email'],
                                   userData['user']['nickname'],
-                                  userData['user']['active_party'],
                                   userData['access_token'],
                                   userData['refresh_token']);
                               Navigator.of(context).push(MaterialPageRoute(

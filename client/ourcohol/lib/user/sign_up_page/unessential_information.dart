@@ -208,20 +208,29 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
-                                        child: Container(
-                                          width: 100,
-                                          height: 100,
-                                          decoration: BoxDecoration(
-                                            color: Color(
-                                                colorList[randomNumber % 7]),
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                          ),
-                                          child: const Icon(
-                                              FlutterRemix.user_2_fill,
-                                              color: Colors.white,
-                                              size: 70),
-                                        )),
+                                        child: resultImage != null
+                                            ? Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        image: FileImage(
+                                                            resultImage!))),
+                                              )
+                                            : Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: BoxDecoration(
+                                                  color: Color(colorList[
+                                                      randomNumber % 7]),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                    FlutterRemix.user_2_fill,
+                                                    color: Colors.white,
+                                                    size: 70),
+                                              )),
                                     MaterialButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
@@ -373,9 +382,29 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                               : inputNickname;
 
                           await postRequest(widget.user);
-
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const Login()));
+                          showDialog<void>(
+                            context: context,
+                            barrierDismissible: false, // user must tap button!
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('이메일 인증'),
+                                content:
+                                    const Text('가입한 이메일의 메일을 통하여 간단한 인증하면 끝'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Approve'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Login()));
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }),
                   ),
                 ],

@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from .models import Party
 from .serializers import (
+    ParticipantPartySerializer,
     PartyPostSerializer,
     PartyRetrieveSerializer,
     PartyRetrieveSerializer,
@@ -25,13 +26,13 @@ class PartyViewSet(viewsets.ModelViewSet):
 
     # active party 불러오기
     # todo : user.partys().1개로 불러오기로 수정
-    @action(detail=False, methods=["get"], url_path=r"active/(?P<pk>\d+)")
-    def recent_party(self, request, pk):
-        print(pk)
-        qs = self.get_queryset().filter(id=pk)
-        resultQs = []
-        if len(qs) > 0:
-            resultQs.append(qs[len(qs) - 1])
-        serializer = PartyRetrieveSerializer(resultQs, many=True)
+    # @action(detail=False, methods=["get"], url_path=r"active/(?P<pk>\d+)")
+    # def recent_party(self, request, pk):
+    #     print(pk)
+    #     qs = self.get_queryset().filter(id=pk)
+    #     resultQs = []
+    #     if len(qs) > 0:
+    #         resultQs.append(qs[len(qs) - 1])
+    #     serializer = PartyRetrieveSerializer(resultQs, many=True)
 
-        return Response(serializer.data)
+    #     return Response(serializer.data)
