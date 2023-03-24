@@ -437,7 +437,7 @@ class _ActivePartyState extends State<ActiveParty> {
       body: SafeArea(
         child: Container(
             width: 100.w,
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(
@@ -446,7 +446,7 @@ class _ActivePartyState extends State<ActiveParty> {
                       width: 100.w - 32,
                       margin: const EdgeInsets.only(
                           left: 16, right: 16, bottom: 20),
-                      alignment: Alignment.center,
+                      alignment: Alignment.topCenter,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [

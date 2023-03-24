@@ -21,7 +21,6 @@ class _PopupMenuState extends State<PopupMenu> {
 
   addParticipant(userId) async {
     Response response;
-    print(userId);
     try {
       if (Platform.isIOS) {
         response = await post(
@@ -172,25 +171,38 @@ class _PopupMenuState extends State<PopupMenu> {
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 color: Colors.grey),
-                                            child: MaterialButton(
-                                                padding:
-                                                    const EdgeInsets.all(0),
-                                                color: const Color(0xff131313),
-                                                shape:
-                                                    const RoundedRectangleBorder(
+                                            child: inputId != ''
+                                                ? MaterialButton(
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                    color:
+                                                        const Color(0xff131313),
+                                                    shape: const RoundedRectangleBorder(
                                                         borderRadius:
                                                             BorderRadius.all(
                                                                 Radius.circular(
                                                                     10))),
-                                                child: const Text('초대하기',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.white)),
-                                                onPressed: () async {
-                                                  addParticipant(
-                                                      int.parse(inputId));
-                                                  Navigator.pop(context);
-                                                }),
+                                                    child: const Text('초대하기',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.white)),
+                                                    onPressed: () async {
+                                                      addParticipant(
+                                                          int.parse(inputId));
+                                                      Navigator.pop(context);
+                                                    })
+                                                : Container(
+                                                    width: 100.w - 32 - 40,
+                                                    height: 44 / 852 * 100.h,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                        color: const Color(
+                                                            0xffADADAD),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                10)),
+                                                    child: Text("초대하기", style: textStyle10)),
                                           ),
                                         ],
                                       ),

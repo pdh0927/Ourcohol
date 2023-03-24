@@ -34,7 +34,6 @@ class _PartyState extends State<Party> {
           });
       if (json.decode(utf8.decode(response.bodyBytes)) != null) {
         party = json.decode(utf8.decode(response.bodyBytes)).toList();
-        print(party[0]['id'].runtimeType);
 
         context.read<PartyProvider>().setPartyInformation(
               party[0]['id'],
