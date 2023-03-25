@@ -10,10 +10,11 @@ class UserRegisterSerializer(RegisterSerializer):
     nickname = serializers.CharField(
         max_length=100,
     )
+    image = serializers.ImageField()
 
     class Meta:
         model = User
-        fields = ["email", "password", "nickname"]
+        fields = ["email", "password", "nickname", "image"]
 
     # override get_cleaned_data of RegisterSerializer
     def get_cleaned_data(self):
@@ -22,6 +23,7 @@ class UserRegisterSerializer(RegisterSerializer):
             "password2": self.validated_data.get("password2", ""),
             "email": self.validated_data.get("email", ""),
             "nickname": self.validated_data.get("nickname", ""),
+            "image": self.validated_data.get("image", ""),
         }
 
     # override save method of RegisterSerializer
@@ -30,6 +32,7 @@ class UserRegisterSerializer(RegisterSerializer):
         user = adapter.new_user(request)
         self.cleaned_data = self.get_cleaned_data()
         user.nickname = self.cleaned_data.get("nickname")
+        user.image = self.cleaned_data.get("image")
         user.save()
         adapter.save_user(request, user, self)
         return user

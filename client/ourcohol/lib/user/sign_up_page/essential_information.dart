@@ -518,51 +518,42 @@ class _EssentialInformationState extends State<EssentialInformation> {
                             SizedBox(height: 40 / 852 * 100.w)
                           ]))),
             ),
-            Container(
-                height: 76,
-                width: 100.w,
-                // margin: EdgeInsets.only(
-                //     bottom: MediaQuery.of(context).viewInsets.bottom),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                decoration:
-                    const BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(color: Colors.grey, blurRadius: 1, spreadRadius: 0)
-                ]),
-                child: (flagValidateEmail == 1 &&
-                        flagValidatePassword == 1 &&
-                        allCheck == true)
-                    ? Container(
-                        width: 100.w - 32,
-                        height: 44,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey),
-                        child: MaterialButton(
-                            padding: const EdgeInsets.all(0),
-                            color: const Color(0xff131313),
-                            child: const Text('다음',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
-                            onPressed: () {
-                              user['email'] = inputEmail;
-                              user['password1'] = inputPassword1;
-                              user['password2'] = inputPassword2;
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      UnessentialInformation(user: user)));
-                            }),
-                      )
-                    : Container(
-                        width: 100.w - 32,
-                        height: 44,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey),
-                        alignment: Alignment.center,
+            (flagValidateEmail == 1 &&
+                    flagValidatePassword == 1 &&
+                    allCheck == true)
+                ? Container(
+                    width: 100.w - 32,
+                    height: 44,
+                    margin: const EdgeInsets.only(top: 16),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    child: MaterialButton(
+                        padding: const EdgeInsets.all(0),
+                        color: const Color(0xff131313),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                         child: const Text('다음',
                             style:
-                                TextStyle(fontSize: 16, color: Colors.white))))
+                                TextStyle(fontSize: 16, color: Colors.white)),
+                        onPressed: () {
+                          user['email'] = inputEmail;
+                          user['password1'] = inputPassword1;
+                          user['password2'] = inputPassword2;
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  UnessentialInformation(user: user)));
+                        }),
+                  )
+                : Container(
+                    width: 100.w - 32,
+                    height: 44,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey),
+                    alignment: Alignment.center,
+                    child: const Text('다음',
+                        style: TextStyle(fontSize: 16, color: Colors.white)))
           ],
         )));
   }

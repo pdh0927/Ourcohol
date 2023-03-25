@@ -1,21 +1,22 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:http/http.dart';
+
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ourcohol/home/home.dart';
-import 'package:ourcohol/provider_ourcohol.dart';
+
 import 'package:ourcohol/style.dart';
 import 'package:ourcohol/user/login.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
+
 import 'package:sizer/sizer.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+
+import '../../provider_ourcohol.dart';
 
 class UnessentialInformation extends StatefulWidget {
   UnessentialInformation({super.key, this.user});
@@ -38,8 +39,6 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
   String tempNickname = '';
 
   File? resultImage;
-  ScreenshotController screenshotController = ScreenshotController();
-
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
@@ -48,10 +47,11 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
       File? img = File(image.path);
 
       img = await cropImage(imageFile: img);
+
       setState(() {
         resultImage = img;
       });
-    } on PlatformException catch (e) {
+    } catch (e) {
       print(e);
     }
   }
@@ -68,29 +68,91 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
     }
   }
 
-  postRequest(user) async {
-    Response response;
+  // postRequest(user) async {
+  //   http.StreamedResponse response;
+  //   try {
+  //     if (Platform.isIOS) {
+  //       String url =
+  //           "http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/";
+  //       var request = http.MultipartRequest('POST', Uri.parse(url));
+  //       request.fields.addAll({
+  //         'email': user['email'],
+  //         'password1': user['password1'],
+  //         'password2': user['password2'],
+  //         'nickname': user['nickname'],
+  //       });
+  //       request.files
+  //           .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+
+  //       response = await request.send();
+  //     } else {
+  //       print('ㅇ이거');
+  //       String url =
+  //           "http://10.0.2.2:8000/api/accounts/dj-rest-auth/registration/";
+  //       var request = http.MultipartRequest('POST', Uri.parse(url));
+
+  //       request.files
+  //           .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+  //       request.fields.addAll({
+  //         'email': user['email'],
+  //         'password1': user['password1'],
+  //         'password2': user['password2'],
+  //         'nickname': user['nickname']
+  //       });
+  //       response = await request.send();
+  //     }
+  //     // if (response.statusCode == 200) {
+
+  //     //   print('회원가입 Successfully');
+  //     //   return userData;
+  //     // } else {
+  //     //   return null;
+  //     // }
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+  Future<void> postRequest(user) async {
+    http.StreamedResponse response;
     try {
       if (Platform.isIOS) {
-        response = await post(
-            Uri.parse(
-                "http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/"),
-            body: user);
-      } else {
-        response = await post(
-            Uri.parse(
-                "http://10.0.2.2:8000/api/accounts/dj-rest-auth/registration/"),
-            body: user);
-      }
-      if (response.statusCode == 200) {
-        var userData =
-            Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
+        var dio = Dio();
+        var formData = FormData.fromMap({
+          'email': user['email'],
+          'password1': user['password1'],
+          'password2': user['password2'],
+          'nickname': user['nickname'],
+          'image': await MultipartFile.fromFile(resultImage!.path)
+        });
+        print(resultImage!.path);
 
-        print('회원가입 Successfully');
-        return userData;
+        // 업로드 요청
+        final response = await dio.post(
+            'http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/',
+            data: formData);
       } else {
-        return null;
+        print('ㅇ이거');
+        String url =
+            "http://10.0.2.2:8000/api/accounts/dj-rest-auth/registration/";
+        var request = http.MultipartRequest('POST', Uri.parse(url));
+
+        request.files
+            .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+        request.fields.addAll({
+          'email': user['email'],
+          'password1': user['password1'],
+          'password2': user['password2'],
+          'nickname': user['nickname']
+        });
+        response = await request.send();
       }
+      // if (response.statusCode == 200) {
+
+      //   print('회원가입 Successfully');
+      //   return userData;
+      // } else {
+      //   return null;
+      // }
     } catch (e) {
       print(e.toString());
     }
@@ -216,7 +278,8 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                                                     shape: BoxShape.circle,
                                                     image: DecorationImage(
                                                         image: FileImage(
-                                                            resultImage!))),
+                                                            resultImage!),
+                                                        fit: BoxFit.fill)),
                                               )
                                             : Container(
                                                 width: 100,
@@ -362,9 +425,8 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                     width: 100.w - 32,
                     height: 44,
                     margin: const EdgeInsets.only(top: 16),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
                     child: MaterialButton(
                         padding: const EdgeInsets.all(0),
                         color: const Color(0xff131313),
@@ -375,13 +437,11 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                             style:
                                 TextStyle(fontSize: 16, color: Colors.white)),
                         onPressed: () async {
-                          // widget.user['image'] =
-                          //     (resultImage == null) ? null : resultImage;
                           widget.user['nickname'] = (inputNickname == '')
                               ? tempNickname
                               : inputNickname;
-
-                          await postRequest(widget.user);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Login()));
                           showDialog<void>(
                             context: context,
                             barrierDismissible: false, // user must tap button!
@@ -395,18 +455,15 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                                     child: const Text('Approve'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Login()));
                                     },
                                   ),
                                 ],
                               );
                             },
                           );
+                          await postRequest(widget.user);
                         }),
-                  ),
+                  )
                 ],
               )
             ])));
