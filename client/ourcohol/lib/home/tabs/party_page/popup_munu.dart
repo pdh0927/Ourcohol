@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
@@ -12,8 +14,8 @@ import 'package:sizer/sizer.dart';
 import 'party_information.dart';
 
 class PopupMenu extends StatefulWidget {
-  const PopupMenu({super.key});
-
+  PopupMenu({super.key, this.rebuild});
+  var rebuild;
   @override
   State<PopupMenu> createState() => _PopupMenuState();
 }
@@ -69,6 +71,11 @@ class _PopupMenuState extends State<PopupMenu> {
         );
         return null;
       } else {
+        context
+            .read<PartyProvider>()
+            .participants
+            .add(json.decode(utf8.decode(response.bodyBytes))[0]);
+
         return null;
       }
     } catch (e) {
@@ -139,6 +146,12 @@ class _PopupMenuState extends State<PopupMenu> {
                                                     BorderRadius.circular(5)),
                                             child: TextField(
                                               textAlign: TextAlign.start,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .allow(RegExp('[0-9]'))
+                                              ],
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
                                                 focusedBorder:
@@ -207,9 +220,12 @@ class _PopupMenuState extends State<PopupMenu> {
                                                             color:
                                                                 Colors.white)),
                                                     onPressed: () async {
-                                                      addParticipant(
+                                                      await addParticipant(
                                                           int.parse(inputId));
                                                       Navigator.pop(context);
+                                                      Navigator.pop(context);
+
+                                                      widget.rebuild();
                                                     })
                                                 : Container(
                                                     width: 100.w - 32 - 40,
@@ -265,9 +281,13 @@ class _PopupMenuState extends State<PopupMenu> {
                     child: MaterialButton(
                         minWidth: 80,
                         padding: EdgeInsets.zero,
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const PartyInformation()));
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          await Navigator.of(context, rootNavigator: false)
+                              .push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PartyInformation()));
+                          widget.rebuild();
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

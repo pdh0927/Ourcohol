@@ -422,6 +422,10 @@ class _ActivePartyState extends State<ActiveParty> {
     });
   }
 
+  rebuild() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -429,13 +433,12 @@ class _ActivePartyState extends State<ActiveParty> {
 
   @override
   Widget build(BuildContext context) {
-    print(context.read<UserProvider>().tokenAccess);
     count = 0;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        actions: const [PopupMenu()],
+        actions: [PopupMenu(rebuild: rebuild)],
       ),
       floatingActionButton: PlusMenu(modifyAlcohol: modifyAlcohol),
       backgroundColor: const Color(0xffFFFFFF),
