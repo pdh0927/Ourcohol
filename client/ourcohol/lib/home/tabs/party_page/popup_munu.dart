@@ -290,6 +290,7 @@ class _PopupMenuState extends State<PopupMenu> {
                                   builder: (c) => PartyInformation(
                                         rebuild1: widget.rebuild1,
                                         rebuild2: widget.rebuild2,
+                                        updateParty: widget.updateParty,
                                       )));
                           widget.rebuild2();
                         },

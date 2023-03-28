@@ -60,7 +60,8 @@ class _PartyInformationState extends State<PartyInformation> {
   }
 
   finishParty() async {
-    await widget.updateParty('ended_at', context.read<PartyProvider>().ended_at);
+    await widget.updateParty(
+        'ended_at', context.read<PartyProvider>().ended_at);
   }
 
   addParticipant(userId) async {
@@ -667,9 +668,9 @@ class _PartyInformationState extends State<PartyInformation> {
                       // 술자리 끝내기
                       context.read<PartyProvider>().ended_at =
                           DateTime.now().toString();
-
                       finishParty();
                       Navigator.pop(context);
+                      widget.rebuild2();
                     }
                   },
                   child: Container(
@@ -690,4 +691,3 @@ class _PartyInformationState extends State<PartyInformation> {
         )));
   }
 }
-

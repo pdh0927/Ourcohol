@@ -140,27 +140,21 @@ class _CalendarState extends State<Calendar> {
                                   ? Container(
                                       margin: EdgeInsets.only(bottom: 0.59.h),
                                       width: (100.w - 32) / 7 - 0.59.h * 2,
-                                      height: ((100.w - 32) / 7 - 0.59.h * 2) /
-                                          7 *
-                                          5,
+                                      height: (100.w - 32) / 7 - 0.59.h * 2,
                                       child: Image.memory(
                                         base64Decode(myPartyList[j]['party']
                                             ['image_memory']),
                                         fit: BoxFit.fill,
                                         width: (100.w - 32) / 7 - 0.59.h * 2,
-                                        height:
-                                            ((100.w - 32) / 7 - 0.59.h * 2) /
-                                                7 *
-                                                5,
+                                        height: ((100.w - 32) / 7 - 0.59.h * 2),
                                       ),
                                     )
                                   : TmpPicture(
                                       participants: context
                                           .read<PartyProvider>()
                                           .participants,
-                                      height: ((100.w - 32) / 7 - 0.59.h * 2) /
-                                          7 *
-                                          5)
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
                       ),
                       onPressed: () {
@@ -299,18 +293,25 @@ class _CalendarState extends State<Calendar> {
                                           (i - startDayOfWeek + 1))
                                       .toString(),
                                   style: textStyle5),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 0.59.h),
-                                width: (100.w - 32) / 7 - 0.59.h * 2,
-                                height: (100.w - 32) / 7 - 0.59.h * 2,
-                                child: Image.memory(
-                                  base64Decode(
-                                      myPartyList[j]['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: (100.w - 32) / 7 - 0.59.h * 2,
-                                  height: (100.w - 32) / 7 - 0.59.h * 2,
-                                ),
-                              )
+                              context.read<PartyProvider>().image_memory != null
+                                  ? Container(
+                                      margin: EdgeInsets.only(bottom: 0.59.h),
+                                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                                      child: Image.memory(
+                                        base64Decode(myPartyList[j]['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: (100.w - 32) / 7 - 0.59.h * 2,
+                                        height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
                       ),
                       onPressed: () {
@@ -433,18 +434,25 @@ class _CalendarState extends State<Calendar> {
                             children: [
                               Text((i - 7 * week - lastWeekDay + 1).toString(),
                                   style: textStyle5),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 0.59.h),
-                                width: (100.w - 32) / 7 - 0.59.h * 2,
-                                height: (100.w - 32) / 7 - 0.59.h * 2,
-                                child: Image.memory(
-                                  base64Decode(
-                                      myPartyList[j]['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: (100.w - 32) / 7 - 0.59.h * 2,
-                                  height: (100.w - 32) / 7 - 0.59.h * 2,
-                                ),
-                              )
+                              context.read<PartyProvider>().image_memory != null
+                                  ? Container(
+                                      margin: EdgeInsets.only(bottom: 0.59.h),
+                                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                                      child: Image.memory(
+                                        base64Decode(myPartyList[j]['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: (100.w - 32) / 7 - 0.59.h * 2,
+                                        height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
                       ),
                       onPressed: () {
@@ -830,7 +838,8 @@ class _CalendarState extends State<Calendar> {
                                       participants: context
                                           .read<PartyProvider>()
                                           .participants,
-                                      height: 30.w),
+                                      height: 30.w,
+                                      width: 42.w),
                               partyMemory['party']['comments'].length == 0
                                   ? Expanded(
                                       child: Container(
@@ -869,10 +878,10 @@ class _CalendarState extends State<Calendar> {
 }
 
 class TmpPicture extends StatefulWidget {
-  TmpPicture({super.key, this.participants, this.height});
+  TmpPicture({super.key, this.participants, this.height, this.width});
   var participants;
   var height;
-
+  var width;
   @override
   State<TmpPicture> createState() => _TmpPictureState();
 }
@@ -884,10 +893,10 @@ class _TmpPictureState extends State<TmpPicture> {
       childs.add(Container(
         child: (widget.participants[i]['user']['image_memory'] != null
             ? Container(
-                width: widget.height /
-                    (2 + (widget.participants.length / 2).ceil()),
-                height: widget.height /
-                    (2 + (widget.participants.length / 2).ceil()),
+                width: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
+                height: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
@@ -895,18 +904,18 @@ class _TmpPictureState extends State<TmpPicture> {
                             widget.participants[i]['user']['image_memory'])),
                         fit: BoxFit.fill)))
             : Container(
-                width: widget.height /
-                    (2 + (widget.participants.length / 2).ceil()),
-                height: widget.height /
-                    (2 + (widget.participants.length / 2).ceil()),
+                width: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
+                height: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
                 decoration: BoxDecoration(
                   color: Color(colorList[widget.participants[i]['id'] % 7]),
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Icon(FlutterRemix.user_2_fill,
                     color: Colors.white,
-                    size: widget.height /
-                        (3 + (widget.participants.length / 2).ceil())))),
+                    size: widget.width /
+                        (5 * (widget.participants.length / 4).ceil())))),
       ));
     }
     return childs;
@@ -921,13 +930,13 @@ class _TmpPictureState extends State<TmpPicture> {
         image: AssetImage('assets/images/background_picture.png'),
       )),
       alignment: Alignment.center,
-      width: widget.height / 5 * 7,
+      width: widget.width,
       height: widget.height,
       child: Wrap(
           direction: Axis.horizontal, // 나열 방향
           alignment: WrapAlignment.center, // 정렬 방식
-          spacing: widget.height / 12, // 좌우 간격
-          runSpacing: widget.height / 12, // 상하 간격
+          spacing: widget.width / 20, // 좌우 간격
+          runSpacing: widget.width / 20, // 상하 간격
           children: getList()),
     );
   }
