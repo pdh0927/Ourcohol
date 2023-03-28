@@ -19,6 +19,18 @@ class Party extends StatefulWidget {
 }
 
 class _PartyState extends State<Party> {
+  rebuild1() async {
+    setState(() {});
+  }
+
+  rebuild2() async {
+    setState(() {
+      context.read<PartyProvider>().initPartyInformation();
+      _future = getRecentParty();
+      party = {};
+    });
+  }
+
   var party = {};
   Future getRecentParty() async {
     http.Response response;
@@ -46,19 +58,20 @@ class _PartyState extends State<Party> {
             party['place'],
             party['image'],
             party['created_at'],
+            party['started_at'],
             party['ended_at'],
             party['drank_beer'],
             party['drank_soju'],
-            party['is_active'],
             context.read<UserProvider>().userId);
+      } else {
+        context.read<PartyProvider>().initPartyInformation();
       }
-      print('return before');
 
       return party;
     } else {
       response = await http.get(
           Uri.parse(
-              'http://127.0.0.1:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
+              'http://10.0.2.2:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -78,11 +91,13 @@ class _PartyState extends State<Party> {
             party['place'],
             party['image'],
             party['created_at'],
+            party['started_at'],
             party['ended_at'],
             party['drank_beer'],
             party['drank_soju'],
-            party['is_active'],
             context.read<UserProvider>().userId);
+      } else {
+        context.read<PartyProvider>().initPartyInformation();
       }
 
       return party;
@@ -92,6 +107,8 @@ class _PartyState extends State<Party> {
   var _future;
   @override
   void initState() {
+    party = {};
+
     _future = getRecentParty();
     super.initState();
   }
@@ -106,14 +123,13 @@ class _PartyState extends State<Party> {
           } else {
             if (context.read<PartyProvider>().partyId == -1) {
               return NoParty();
-            } else if (context.read<PartyProvider>().is_active == false &&
-                context.read<PartyProvider>().ended_at == '') {
+            } else if (context.read<PartyProvider>().started_at == '') {
               return UnactiveParty();
-            } else if (context.read<PartyProvider>().is_active == false &&
-                context.read<PartyProvider>().ended_at != '') {
+            } else if (DateTime.parse(context.read<PartyProvider>().ended_at)
+                .isBefore(DateTime.now())) {
               return NoParty();
             } else {
-              return ActiveParty();
+              return ActiveParty(rebuild1: rebuild1, rebuild2: rebuild2);
             }
           }
         });

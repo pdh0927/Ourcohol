@@ -78,111 +78,92 @@ var textStyle9 = const TextStyle(
 
 var textStyle10 = const TextStyle(
     fontSize: 25,
-    fontFamily: "GowunBatang",
     color: Color(0xffFFFFFF),
     fontWeight: FontWeight.w400,
     height: 1.3);
 
 var textStyle11 = const TextStyle(
     fontSize: 14,
-    fontFamily: "GowunBatang",
     color: Color(0xff6B6B6B),
     fontWeight: FontWeight.w400,
     height: 1.3);
 
 var textStyle12 = const TextStyle(
     fontSize: 35,
-    fontFamily: "GowunBatang",
     color: Color(0xff131313),
     fontWeight: FontWeight.w700,
     height: 1.3);
 
 var textStyle13 = const TextStyle(
     fontSize: 16,
-    fontFamily: "GowunBatang",
     color: Color(0xff454545),
     fontWeight: FontWeight.w400,
     height: 1.3);
 
 var textStyle14 = const TextStyle(
     fontSize: 15,
-    fontFamily: "GowunBatang",
     color: Color(0xff131313),
     fontWeight: FontWeight.w700,
     height: 1.2);
 
 var textStyle15 = const TextStyle(
     fontSize: 14,
-    fontFamily: "GowunBatang",
     color: Color(0xff57AC6A),
     fontWeight: FontWeight.w700,
     height: 1.3);
 
 var textStyle17 = const TextStyle(
     fontSize: 14,
-    fontFamily: "GowunBatang",
     color: Color(0xffD74646),
     fontWeight: FontWeight.w700,
     height: 1.3);
 
 var textStyle18 = const TextStyle(
     fontSize: 16,
-    fontFamily: "GowunBatang",
     color: Color(0xff454545),
     fontWeight: FontWeight.w700,
     height: 1.3);
 
 var textStyle19 = const TextStyle(
     fontSize: 11,
-    fontFamily: "GowunBatang",
     color: Color(0xff454545),
     fontWeight: FontWeight.w400,
     height: 1.3);
 
 var textStyle20 = const TextStyle(
     fontSize: 16,
-    fontFamily: "GowunBatang",
     color: Color(0xff131313),
     fontWeight: FontWeight.w400,
     height: 1.3);
 
 var textStyle21 = const TextStyle(
-    fontSize: 11,
-    fontFamily: "GowunBatang",
-    color: Colors.red,
-    fontWeight: FontWeight.w700,
-    height: 1.3);
+    fontSize: 11, color: Colors.red, fontWeight: FontWeight.w700, height: 1.3);
 var textStyle22 = const TextStyle(
     fontSize: 25,
-    fontFamily: "GowunBatang",
     color: Color(0xff131313),
     fontWeight: FontWeight.w700,
     height: 1.3);
 
 var textStyle23 = TextStyle(
     fontSize: (14 / 393 * 100).w,
-    fontFamily: "GowunBatang",
     color: const Color(0xff131313),
     fontWeight: FontWeight.w700,
     height: 1.2);
 
 var textStyle24 = TextStyle(
     fontSize: (13 / 393 * 100).w,
-    fontFamily: "GowunBatang",
     color: const Color(0xff131313),
     fontWeight: FontWeight.w700,
     height: 1.3);
 
 var textStyle25 = const TextStyle(
     fontSize: 14,
-    fontFamily: "GowunBatang",
     color: Color(0xff131313),
     fontWeight: FontWeight.w700,
     height: 1.3);
 
 var textStyle26 = const TextStyle(
     fontSize: 14,
-    fontFamily: "GowunBatang",
     color: Color(0xffFFFFFF),
     fontWeight: FontWeight.w700,
     height: 1.3);

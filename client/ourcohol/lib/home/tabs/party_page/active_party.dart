@@ -15,8 +15,9 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class ActiveParty extends StatefulWidget {
-  ActiveParty({super.key});
-
+  ActiveParty({super.key, this.rebuild1, this.rebuild2});
+  var rebuild1;
+  var rebuild2;
   @override
   State<ActiveParty> createState() => _ActivePartyState();
 }
@@ -422,10 +423,6 @@ class _ActivePartyState extends State<ActiveParty> {
     });
   }
 
-  rebuild() {
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
@@ -438,7 +435,9 @@ class _ActivePartyState extends State<ActiveParty> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        actions: [PopupMenu(rebuild: rebuild)],
+        actions: [
+          PopupMenu(rebuild1: widget.rebuild1, rebuild2: widget.rebuild2)
+        ],
       ),
       floatingActionButton: PlusMenu(modifyAlcohol: modifyAlcohol),
       backgroundColor: const Color(0xffFFFFFF),

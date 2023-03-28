@@ -14,8 +14,10 @@ import 'package:sizer/sizer.dart';
 import 'party_information.dart';
 
 class PopupMenu extends StatefulWidget {
-  PopupMenu({super.key, this.rebuild});
-  var rebuild;
+  PopupMenu({super.key, this.rebuild1, this.rebuild2});
+  var rebuild1;
+  var rebuild2;
+
   @override
   State<PopupMenu> createState() => _PopupMenuState();
 }
@@ -75,7 +77,6 @@ class _PopupMenuState extends State<PopupMenu> {
             .read<PartyProvider>()
             .participants
             .add(json.decode(utf8.decode(response.bodyBytes))[0]);
-
         return null;
       }
     } catch (e) {
@@ -225,7 +226,7 @@ class _PopupMenuState extends State<PopupMenu> {
                                                       Navigator.pop(context);
                                                       Navigator.pop(context);
 
-                                                      widget.rebuild();
+                                                      widget.rebuild1();
                                                     })
                                                 : Container(
                                                     width: 100.w - 32 - 40,
@@ -285,9 +286,11 @@ class _PopupMenuState extends State<PopupMenu> {
                           Navigator.pop(context);
                           await Navigator.of(context, rootNavigator: false)
                               .push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PartyInformation()));
-                          widget.rebuild();
+                                  builder: (c) => PartyInformation(
+                                        rebuild1: widget.rebuild1,
+                                        rebuild2: widget.rebuild2,
+                                      )));
+                          widget.rebuild2();
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

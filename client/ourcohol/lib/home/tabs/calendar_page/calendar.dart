@@ -589,7 +589,7 @@ class _CalendarState extends State<Calendar> {
           });
     }
 
-    if (json.decode(utf8.decode(response.bodyBytes)) != null) {
+    if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
       setState(() {
         myPartyList = json.decode(utf8.decode(response.bodyBytes)).toList();
       });

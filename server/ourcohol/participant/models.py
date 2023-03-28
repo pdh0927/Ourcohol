@@ -17,4 +17,4 @@ class Participant(models.Model):
     is_host = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.email
+        return f"{self.id} {self.user.email}"
