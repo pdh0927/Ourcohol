@@ -132,7 +132,7 @@ class _EssentialInformationState extends State<EssentialInformation> {
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             style: BorderStyle.none),
-                                        borderRadius: BorderRadius.circular(5),
+                                        borderRadius: BorderRadius.circular(10),
                                         gapPadding: 0),
                                     hintText: '이메일을 입력해주세요',
                                     hintStyle: const TextStyle(
