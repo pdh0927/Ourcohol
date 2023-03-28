@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_remix/flutter_remix.dart';
 
@@ -29,7 +30,7 @@ class UnessentialInformation extends StatefulWidget {
 class _UnessentialInformationState extends State<UnessentialInformation> {
   @override
   void initState() {
-    randomNumber = Random().nextInt(100000);
+    randomNumber = Random().nextInt(10000);
     tempNickname = '알쓰 $randomNumber호';
     super.initState();
   }
@@ -214,11 +215,15 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                               ),
                               Container(
                                 width: 100.w - 32,
-                                height: (100.w - 32) / 7,
-                                margin: const EdgeInsets.only(bottom: 25),
+                                height: (100.w - 32) / 5.5,
+                                margin: const EdgeInsets.only(bottom: 30),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5)),
                                 child: TextField(
+                                  textAlignVertical: TextAlignVertical.bottom,
+                                  maxLength: 8,
+                                  maxLengthEnforcement:
+                                      MaxLengthEnforcement.enforced,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     focusedBorder: OutlineInputBorder(
