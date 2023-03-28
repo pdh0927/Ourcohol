@@ -11,9 +11,10 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class PartyInformation extends StatefulWidget {
-  PartyInformation({super.key, this.rebuild1, this.rebuild2});
+  PartyInformation({super.key, this.rebuild1, this.rebuild2, this.updateParty});
   var rebuild1;
   var rebuild2;
+  var updateParty;
   @override
   State<PartyInformation> createState() => _PartyInformationState();
 }
@@ -43,7 +44,6 @@ class _PartyInformationState extends State<PartyInformation> {
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
-      
     }
 
     if (response.statusCode == 204) {
@@ -54,7 +54,8 @@ class _PartyInformationState extends State<PartyInformation> {
   }
 
   finishParty() async {
-   await update('ended_at', context.read<PartyProvider>().ended_at);
+    await widget.updateParty(
+        'ended_at', context.read<PartyProvider>().ended_at);
   }
 
   addParticipant(userId) async {
@@ -168,45 +169,6 @@ class _PartyInformationState extends State<PartyInformation> {
       ));
     }
     return childs;
-  }
-
-  update(String key, String value) async {
-    Response response;
-    try {
-      if (Platform.isIOS) {
-        response = await patch(
-            Uri.parse(
-                "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
-            body: {
-              key: value
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      } else {
-        response = await patch(
-            Uri.parse(
-                "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/"),
-            body: {
-              key: value
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      }
-
-      if (response.statusCode == 200) {
-        print('update success');
-        return null;
-      } else {
-        print('update fail');
-        return null;
-      }
-    } catch (e) {
-      print(e.toString());
-    }
   }
 
   @override
@@ -379,7 +341,7 @@ class _PartyInformationState extends State<PartyInformation> {
                                             context.read<PartyProvider>().name =
                                                 text;
                                           });
-                                          await update('name', text);
+                                          await widget.updateParty('name', text);
                                         },
                                       ),
                                     ),
@@ -438,7 +400,7 @@ class _PartyInformationState extends State<PartyInformation> {
                                                 .read<PartyProvider>()
                                                 .place = text;
                                           });
-                                          await update('place', text);
+                                          await widget.updateParty('place', text);
                                         },
                                       ),
                                     ),
@@ -692,10 +654,10 @@ class _PartyInformationState extends State<PartyInformation> {
                       Navigator.pop(context);
                     } else {
                       // 술자리 끝내기
-                    
+
                       context.read<PartyProvider>().ended_at =
                           DateTime.now().toString();
-                            finishParty();
+                      finishParty();
                       Navigator.pop(context);
                     }
                   },

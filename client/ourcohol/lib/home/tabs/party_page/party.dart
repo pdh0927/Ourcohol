@@ -26,13 +26,13 @@ class _PartyState extends State<Party> {
   rebuild2() async {
     setState(() {
       context.read<PartyProvider>().initPartyInformation();
+
       _future = getRecentParty();
-      party = {};
     });
   }
 
-  var party = {};
   Future getRecentParty() async {
+    var party = {};
     http.Response response;
     if (Platform.isIOS) {
       response = await http.get(
@@ -78,7 +78,7 @@ class _PartyState extends State<Party> {
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
-      if (json.decode(utf8.decode(response.bodyBytes)) != null) {
+      if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
         party =
             json.decode(utf8.decode(response.bodyBytes)).toList()[0]['party'];
 
@@ -107,8 +107,6 @@ class _PartyState extends State<Party> {
   var _future;
   @override
   void initState() {
-    party = {};
-
     _future = getRecentParty();
     super.initState();
   }

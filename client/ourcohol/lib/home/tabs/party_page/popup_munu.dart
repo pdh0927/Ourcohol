@@ -14,9 +14,10 @@ import 'package:sizer/sizer.dart';
 import 'party_information.dart';
 
 class PopupMenu extends StatefulWidget {
-  PopupMenu({super.key, this.rebuild1, this.rebuild2});
+  PopupMenu({super.key, this.rebuild1, this.rebuild2, this.updateParty});
   var rebuild1;
   var rebuild2;
+  var updateParty;
 
   @override
   State<PopupMenu> createState() => _PopupMenuState();

@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
+
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ourcohol/home/tabs/party_page/plus_menu.dart';
 import 'package:ourcohol/home/tabs/party_page/popup_munu.dart';
 
@@ -29,6 +32,85 @@ class _ActivePartyState extends State<ActiveParty> {
   int kingAlcohol = -1;
   int lastAlcohol = 999999;
 
+  updateParty(String key, String value) async {
+    http.Response response;
+    try {
+      if (Platform.isIOS) {
+        response = await patch(
+            Uri.parse(
+                "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
+            body: {
+              key: value
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      } else {
+        response = await patch(
+            Uri.parse(
+                "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/"),
+            body: {
+              key: value
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      }
+
+      if (response.statusCode == 200) {
+        print('update success');
+        return null;
+      } else {
+        print('update fail');
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  addPicture() async {
+    print('addPicture');
+    http.StreamedResponse response;
+    try {
+      if (Platform.isIOS) {
+        String url =
+            "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/";
+        var request = http.MultipartRequest(
+          'PATCH',
+          Uri.parse(url),
+        );
+        request.headers.addAll({
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
+        });
+        request.files
+            .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+
+        response = await request.send();
+      } else {
+        String url =
+            "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/";
+        var request = http.MultipartRequest('PATCH', Uri.parse(url));
+        request.headers.addAll({
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
+        });
+        request.files
+            .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+
+        response = await request.send();
+      }
+      if (response.statusCode == 200) {
+        print('사진 잘 올리감');
+      } else {
+        print('사진 잘 못 올리감');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   setKingAndLast() {
     kingAlcohol = context.read<PartyProvider>().participants[0]['drank_beer'] +
         context.read<PartyProvider>().participants[0]['drank_soju'];
@@ -51,6 +133,36 @@ class _ActivePartyState extends State<ActiveParty> {
                 ['drank_beer'] +
             context.read<PartyProvider>().participants[i]['drank_soju'];
       }
+    }
+  }
+
+  File? resultImage;
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+
+      if (image == null) return;
+      File? img = File(image.path);
+
+      img = await cropImage(imageFile: img);
+
+      setState(() {
+        resultImage = img;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<File?> cropImage({required File imageFile}) async {
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+        sourcePath: imageFile.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+
+    if (croppedImage == null) {
+      return null;
+    } else {
+      return File(croppedImage.path);
     }
   }
 
@@ -430,13 +542,17 @@ class _ActivePartyState extends State<ActiveParty> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<PartyProvider>().image_memory);
     count = 0;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
         actions: [
-          PopupMenu(rebuild1: widget.rebuild1, rebuild2: widget.rebuild2)
+          PopupMenu(
+              rebuild1: widget.rebuild1,
+              rebuild2: widget.rebuild2,
+              updateParty: updateParty)
         ],
       ),
       floatingActionButton: PlusMenu(modifyAlcohol: modifyAlcohol),
@@ -462,15 +578,51 @@ class _ActivePartyState extends State<ActiveParty> {
                               margin: const EdgeInsets.only(bottom: 10),
                               child: Text(context.read<PartyProvider>().name,
                                   style: textStyle22)),
-                          Container(
-                              margin: const EdgeInsets.only(left: 15),
-                              width: 100.w - 32 - 50,
-                              height: (100.w - 32 - 50) / 7 * 5,
-                              child: Image.memory(
-                                base64Decode(
-                                    context.read<PartyProvider>().image_memory),
-                                fit: BoxFit.fill,
-                              ))
+                          context.read<PartyProvider>().image_memory != null
+                              ? Container(
+                                  margin: const EdgeInsets.only(left: 15),
+                                  width: 100.w - 32 - 50,
+                                  height: (100.w - 32 - 50) / 7 * 5,
+                                  child: Image.memory(
+                                    base64Decode(context
+                                        .read<PartyProvider>()
+                                        .image_memory),
+                                    fit: BoxFit.fill,
+                                  ))
+                              : Container(
+                                  margin: const EdgeInsets.only(left: 15),
+                                  width: 100.w - 32 - 50,
+                                  height: (100.w - 32 - 50) / 7 * 5,
+                                  child: MaterialButton(
+                                      onPressed: () {
+                                        showDialog<void>(
+                                          context: context,
+                                          barrierDismissible:
+                                              false, // user must tap button!
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('!!주의!!'),
+                                              content: const Text(
+                                                  '한번 찍으면 돌이킬수 없습니다!'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: const Text('확인'),
+                                                  onPressed: () async {
+                                                    Navigator.of(context).pop();
+                                                    print('before');
+                                                    await pickImage(
+                                                        ImageSource.camera);
+                                                    print('after');
+                                                    await addPicture();
+                                                    widget.rebuild2();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Text('우리들의 추억을 남겨보세요 :)')))
                         ],
                       ),
                     ),
