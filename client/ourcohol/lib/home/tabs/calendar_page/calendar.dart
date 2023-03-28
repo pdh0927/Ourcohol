@@ -136,18 +136,31 @@ class _CalendarState extends State<Calendar> {
                                           color: Colors.red,
                                           fontWeight: FontWeight.w700,
                                           height: 1.3)),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 0.59.h),
-                                width: (100.w - 32) / 7 - 0.59.h * 2,
-                                height: (100.w - 32) / 7 - 0.59.h * 2,
-                                child: Image.memory(
-                                  base64Decode(
-                                      myPartyList[j]['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: (100.w - 32) / 7 - 0.59.h * 2,
-                                  height: (100.w - 32) / 7 - 0.59.h * 2,
-                                ),
-                              )
+                              context.read<PartyProvider>().image_memory != null
+                                  ? Container(
+                                      margin: EdgeInsets.only(bottom: 0.59.h),
+                                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2) /
+                                          7 *
+                                          5,
+                                      child: Image.memory(
+                                        base64Decode(myPartyList[j]['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: (100.w - 32) / 7 - 0.59.h * 2,
+                                        height:
+                                            ((100.w - 32) / 7 - 0.59.h * 2) /
+                                                7 *
+                                                5,
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2) /
+                                          7 *
+                                          5)
                             ]),
                       ),
                       onPressed: () {
@@ -800,18 +813,24 @@ class _CalendarState extends State<Calendar> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 8),
-                                width: 42.w,
-                                height: 30.w,
-                                child: Image.memory(
-                                  base64Decode(
-                                      partyMemory['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: 42.w,
-                                  height: 30.w,
-                                ),
-                              ),
+                              context.read<PartyProvider>().image_memory != null
+                                  ? Container(
+                                      margin: const EdgeInsets.only(right: 8),
+                                      width: 42.w,
+                                      height: 30.w,
+                                      child: Image.memory(
+                                        base64Decode(partyMemory['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: 42.w,
+                                        height: 30.w,
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: 30.w),
                               partyMemory['party']['comments'].length == 0
                                   ? Expanded(
                                       child: Container(
@@ -845,6 +864,71 @@ class _CalendarState extends State<Calendar> {
                       child: Text('내 기억을 떠올려 보세요 :)', style: textStyle9)),
             )
           ])),
+    );
+  }
+}
+
+class TmpPicture extends StatefulWidget {
+  TmpPicture({super.key, this.participants, this.height});
+  var participants;
+  var height;
+
+  @override
+  State<TmpPicture> createState() => _TmpPictureState();
+}
+
+class _TmpPictureState extends State<TmpPicture> {
+  getList() {
+    List<Widget> childs = [];
+    for (int i = 0; i < widget.participants.length; i++) {
+      childs.add(Container(
+        child: (widget.participants[i]['user']['image_memory'] != null
+            ? Container(
+                width: widget.height /
+                    (2 + (widget.participants.length / 2).ceil()),
+                height: widget.height /
+                    (2 + (widget.participants.length / 2).ceil()),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: MemoryImage(base64Decode(
+                            widget.participants[i]['user']['image_memory'])),
+                        fit: BoxFit.fill)))
+            : Container(
+                width: widget.height /
+                    (2 + (widget.participants.length / 2).ceil()),
+                height: widget.height /
+                    (2 + (widget.participants.length / 2).ceil()),
+                decoration: BoxDecoration(
+                  color: Color(colorList[widget.participants[i]['id'] % 7]),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Icon(FlutterRemix.user_2_fill,
+                    color: Colors.white,
+                    size: widget.height /
+                        (3 + (widget.participants.length / 2).ceil())))),
+      ));
+    }
+    return childs;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+        colorFilter: ColorFilter.mode(Color(0xff696969), BlendMode.plus),
+        image: AssetImage('assets/images/background_picture.png'),
+      )),
+      alignment: Alignment.center,
+      width: widget.height / 5 * 7,
+      height: widget.height,
+      child: Wrap(
+          direction: Axis.horizontal, // 나열 방향
+          alignment: WrapAlignment.center, // 정렬 방식
+          spacing: widget.height / 12, // 좌우 간격
+          runSpacing: widget.height / 12, // 상하 간격
+          children: getList()),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,9 @@ import 'package:http/http.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:ourcohol/style.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
 class PartyInformation extends StatefulWidget {
   PartyInformation({super.key, this.rebuild1, this.rebuild2, this.updateParty});
@@ -23,6 +26,9 @@ class _PartyInformationState extends State<PartyInformation> {
   TextEditingController _nameComtroller = TextEditingController();
 
   var inputId;
+
+  //Create an instance of ScreenshotController
+  ScreenshotController screenshotController = ScreenshotController();
 
   deleteParticipant(participantId) async {
     Response response;
@@ -54,8 +60,7 @@ class _PartyInformationState extends State<PartyInformation> {
   }
 
   finishParty() async {
-    await widget.updateParty(
-        'ended_at', context.read<PartyProvider>().ended_at);
+    await widget.updateParty('ended_at', context.read<PartyProvider>().ended_at);
   }
 
   addParticipant(userId) async {
@@ -181,6 +186,10 @@ class _PartyInformationState extends State<PartyInformation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          // Navigator.of(context, rootNavigator: false)
+          //     .push(MaterialPageRoute(builder: (c) => TmpPicture()));
+        }),
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.white,
@@ -341,7 +350,8 @@ class _PartyInformationState extends State<PartyInformation> {
                                             context.read<PartyProvider>().name =
                                                 text;
                                           });
-                                          await widget.updateParty('name', text);
+                                          await widget.updateParty(
+                                              'name', text);
                                         },
                                       ),
                                     ),
@@ -400,7 +410,8 @@ class _PartyInformationState extends State<PartyInformation> {
                                                 .read<PartyProvider>()
                                                 .place = text;
                                           });
-                                          await widget.updateParty('place', text);
+                                          await widget.updateParty(
+                                              'place', text);
                                         },
                                       ),
                                     ),
@@ -654,9 +665,9 @@ class _PartyInformationState extends State<PartyInformation> {
                       Navigator.pop(context);
                     } else {
                       // 술자리 끝내기
-
                       context.read<PartyProvider>().ended_at =
                           DateTime.now().toString();
+
                       finishParty();
                       Navigator.pop(context);
                     }
@@ -679,3 +690,4 @@ class _PartyInformationState extends State<PartyInformation> {
         )));
   }
 }
+

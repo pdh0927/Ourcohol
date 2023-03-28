@@ -72,7 +72,6 @@ class _ActivePartyState extends State<ActiveParty> {
   }
 
   addPicture() async {
-    print('addPicture');
     http.StreamedResponse response;
     try {
       if (Platform.isIOS) {
@@ -542,7 +541,6 @@ class _ActivePartyState extends State<ActiveParty> {
 
   @override
   Widget build(BuildContext context) {
-    print(context.read<PartyProvider>().image_memory);
     count = 0;
     return Scaffold(
       appBar: AppBar(
