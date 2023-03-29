@@ -1,6 +1,6 @@
-from datetime import timezone
 import datetime
 from django.shortcuts import render
+from pytz import utc
 from requests import Response
 from rest_framework import viewsets
 from .models import Party, Participant
@@ -33,11 +33,30 @@ class ParticipantViewSet(viewsets.ModelViewSet):
             .filter(party=request.data.get("party"))
             .filter(user=request.data.get("user"))
         )
+
         if instance.count() > 0:
             return Response(
                 {"message": "already enrolled user"},
                 status=status.HTTP_208_ALREADY_REPORTED,
             )
+
+        instance = self.get_queryset().filter(user=request.data.get("user"))
+        if instance.count() > 0:
+            partyId = instance[len(instance) - 1].party.id
+            party = Party.objects.all().filter(id=partyId)
+
+            end_time = party[0].ended_at.replace(tzinfo=utc)
+            standard_time = datetime.datetime(
+                datetime.datetime.now().year,
+                datetime.datetime.now().month,
+                datetime.datetime.now().day,
+                12,
+            ).replace(tzinfo=utc)
+            if end_time > standard_time:
+                return Response(
+                    {"message": "can't enroll user"},
+                    status=status.HTTP_409_CONFLICT,
+                )
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
