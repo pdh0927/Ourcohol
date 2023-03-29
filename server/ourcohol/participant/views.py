@@ -55,7 +55,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
             if end_time > standard_time:
                 return Response(
                     {"message": "can't enroll user"},
-                    status=status.HTTP_226_IM_USED,
+                    status=status.HTTP_409_CONFLICT,
                 )
 
         serializer = self.get_serializer(data=request.data)
@@ -117,35 +117,36 @@ class ParticipantViewSet(viewsets.ModelViewSet):
 
         resultQs = []
         for source in qs:
-            if (
-                str(source.party.created_at.year) == year
-                and str(source.party.created_at.month) == month
-            ):  # 같은년 같은달
-                resultQs.append(source)
-            if (int(month) - 1) == 0:  # 이전년 이전달
+            if source.party.started_at != None:
                 if (
-                    source.party.created_at.year == (int(year) - 1)
-                    and source.party.created_at.month == 12
-                ):
+                    str(source.party.started_at.year) == year
+                    and str(source.party.started_at.month) == month
+                ):  # 같은년 같은달
                     resultQs.append(source)
-            else:  # 같은년 이전달
-                if (
-                    str(source.party.created_at.year) == year
-                    and source.party.created_at.month == int(month) - 1
-                ):
-                    resultQs.append(source)
-            if (int(month) + 1) == 13:  # 다음년 다음달
-                if (
-                    source.party.created_at.year == int(year) + 1
-                    and source.party.created_at.month == 1
-                ):
-                    resultQs.append(source)
-            else:  # 같은년 다음달
-                if (
-                    str(source.party.created_at.year) == year
-                    and source.party.created_at.month == int(month) + 1
-                ):
-                    resultQs.append(source)
+                if (int(month) - 1) == 0:  # 이전년 이전달
+                    if (
+                        source.party.started_at.year == (int(year) - 1)
+                        and source.party.started_at.month == 12
+                    ):
+                        resultQs.append(source)
+                else:  # 같은년 이전달
+                    if (
+                        str(source.party.started_at.year) == year
+                        and source.party.started_at.month == int(month) - 1
+                    ):
+                        resultQs.append(source)
+                if (int(month) + 1) == 13:  # 다음년 다음달
+                    if (
+                        source.party.started_at.year == int(year) + 1
+                        and source.party.started_at.month == 1
+                    ):
+                        resultQs.append(source)
+                else:  # 같은년 다음달
+                    if (
+                        str(source.party.started_at.year) == year
+                        and source.party.started_at.month == int(month) + 1
+                    ):
+                        resultQs.append(source)
 
         serializer = ParticipantPartySerializer(resultQs, many=True)
 
