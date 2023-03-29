@@ -73,6 +73,26 @@ class _PopupMenuState extends State<PopupMenu> {
           },
         );
         return null;
+      } else if (response.statusCode == 409) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('초대할 수 없는 사용자 '),
+              content: const Text('사용자가 이미 다른 파티에 등록되어 있습니다'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return null;
       } else {
         context
             .read<PartyProvider>()
