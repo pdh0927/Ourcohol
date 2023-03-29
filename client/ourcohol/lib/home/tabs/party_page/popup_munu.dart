@@ -292,7 +292,7 @@ class _PopupMenuState extends State<PopupMenu> {
                                         rebuild2: widget.rebuild2,
                                         updateParty: widget.updateParty,
                                       )));
-                          widget.rebuild2();
+                          widget.rebuild1();
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

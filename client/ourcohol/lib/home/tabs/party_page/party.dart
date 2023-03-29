@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:ourcohol/home/tabs/party_page/active_party.dart';
 import 'package:ourcohol/home/tabs/party_page/unactive_party.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
@@ -19,11 +20,11 @@ class Party extends StatefulWidget {
 }
 
 class _PartyState extends State<Party> {
-  rebuild1() async {
+  rebuild1() {
     setState(() {});
   }
 
-  rebuild2() async {
+  rebuild2() {
     setState(() {
       context.read<PartyProvider>().initPartyInformation();
 
@@ -67,6 +68,7 @@ class _PartyState extends State<Party> {
         context.read<PartyProvider>().initPartyInformation();
       }
 
+      print(party);
       return party;
     } else {
       response = await http.get(
@@ -104,6 +106,45 @@ class _PartyState extends State<Party> {
     }
   }
 
+  updateParty(String key, String value) async {
+    http.Response response;
+    try {
+      if (Platform.isIOS) {
+        response = await patch(
+            Uri.parse(
+                "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
+            body: {
+              key: value
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      } else {
+        response = await patch(
+            Uri.parse(
+                "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/"),
+            body: {
+              key: value
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      }
+
+      if (response.statusCode == 200) {
+        print('update success');
+        return null;
+      } else {
+        print('update fail');
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   var _future;
   @override
   void initState() {
@@ -121,13 +162,20 @@ class _PartyState extends State<Party> {
           } else {
             if (context.read<PartyProvider>().partyId == -1) {
               return NoParty();
-            } else if (context.read<PartyProvider>().started_at == '') {
-              return UnactiveParty();
+            } else if (context.read<PartyProvider>().started_at == null) {
+              return UnactiveParty(
+                updateParty: updateParty,
+                rebuild1: rebuild1,
+                rebuild2: rebuild2,
+              );
             } else if (DateTime.parse(context.read<PartyProvider>().ended_at)
                 .isBefore(DateTime.now())) {
               return NoParty();
             } else {
-              return ActiveParty(rebuild1: rebuild1, rebuild2: rebuild2);
+              return ActiveParty(
+                  updateParty: updateParty,
+                  rebuild1: rebuild1,
+                  rebuild2: rebuild2);
             }
           }
         });

@@ -18,7 +18,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class ActiveParty extends StatefulWidget {
-  ActiveParty({super.key, this.rebuild1, this.rebuild2});
+  ActiveParty({super.key, this.updateParty, this.rebuild1, this.rebuild2});
+  var updateParty;
   var rebuild1;
   var rebuild2;
   @override
@@ -31,45 +32,6 @@ class _ActivePartyState extends State<ActiveParty> {
   int beerStandard = 3;
   int kingAlcohol = -1;
   int lastAlcohol = 999999;
-
-  updateParty(String key, String value) async {
-    http.Response response;
-    try {
-      if (Platform.isIOS) {
-        response = await patch(
-            Uri.parse(
-                "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
-            body: {
-              key: value
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      } else {
-        response = await patch(
-            Uri.parse(
-                "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/"),
-            body: {
-              key: value
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      }
-
-      if (response.statusCode == 200) {
-        print('update success');
-        return null;
-      } else {
-        print('update fail');
-        return null;
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   addPicture() async {
     http.StreamedResponse response;
@@ -449,6 +411,7 @@ class _ActivePartyState extends State<ActiveParty> {
 
   Future _modifyAlcohol(String modifyType, String alcoholType) async {
     http.Response response;
+    http.Response response2;
     if (Platform.isIOS) {
       response = await http.get(
           Uri.parse(
@@ -459,10 +422,28 @@ class _ActivePartyState extends State<ActiveParty> {
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
+      response2 = await http.get(
+          Uri.parse(
+              'http://127.0.0.1:8000/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
     } else {
       response = await http.get(
           Uri.parse(
               'http://10.0.2.2:8000/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+      response2 = await http.get(
+          Uri.parse(
+              'http://10.0.2.2:8000/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -485,7 +466,7 @@ class _ActivePartyState extends State<ActiveParty> {
                       .read<PartyProvider>()
                       .myPaticipantIndex]['drank_beer'] ==
                   0)) {
-        // 더 먹으면 사망합니다 알림
+        // 먹고빼라 알림
         return;
       }
     } else {
@@ -550,7 +531,7 @@ class _ActivePartyState extends State<ActiveParty> {
           PopupMenu(
               rebuild1: widget.rebuild1,
               rebuild2: widget.rebuild2,
-              updateParty: updateParty)
+              updateParty: widget.updateParty)
         ],
       ),
       floatingActionButton: PlusMenu(modifyAlcohol: modifyAlcohol),
