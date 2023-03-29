@@ -24,6 +24,43 @@ class PartyViewSet(viewsets.ModelViewSet):
             return PartyRetrieveSerializer
         return PartyPostSerializer
 
+    # 소주 1잔 추가
+    @action(detail=False, methods=["get"], url_path=r"add/soju/(?P<pk>\d+)")
+    def addSoju(self, request, pk):
+        instance = self.get_object()
+        instance.drank_soju += 1
+        instance.save()
+
+        return Response(instance.drank_soju)
+
+    # 소주 1잔 빼기
+    @action(detail=False, methods=["get"], url_path=r"minus/soju/(?P<pk>\d+)")
+    def minusSoju(self, request, pk):
+        instance = self.get_object()
+        instance.drank_soju -= 1
+        instance.save()
+
+        return Response(instance.drank_soju)
+
+    # 맥주 1잔 추가
+    @action(detail=False, methods=["get"], url_path=r"add/beer/(?P<pk>\d+)")
+    def addBeer(self, request, pk):
+        print(pk)
+        instance = self.get_object()
+        instance.drank_beer += 1
+        instance.save()
+
+        return Response(instance.drank_beer)
+
+    # 맥주 1잔 뺴기
+    @action(detail=False, methods=["get"], url_path=r"minus/beer/(?P<pk>\d+)")
+    def minusBeer(self, request, pk):
+        instance = self.get_object()
+        instance.drank_beer -= 1
+        instance.save()
+
+        return Response(instance.drank_beer)
+
     # active party 불러오기
     # todo : user.partys().1개로 불러오기로 수정
     # @action(detail=False, methods=["get"], url_path=r"active/(?P<pk>\d+)")
