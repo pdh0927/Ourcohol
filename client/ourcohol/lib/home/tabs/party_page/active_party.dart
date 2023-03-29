@@ -501,11 +501,13 @@ class _ActivePartyState extends State<ActiveParty> {
                   .read<PartyProvider>()
                   .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_soju']++;
+          context.read<PartyProvider>().drank_soju++;
         } else {
           context
                   .read<PartyProvider>()
                   .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_soju']--;
+          context.read<PartyProvider>().drank_soju--;
         }
       } else {
         if (modifyType == 'add') {
@@ -513,11 +515,13 @@ class _ActivePartyState extends State<ActiveParty> {
                   .read<PartyProvider>()
                   .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_beer']++;
+          context.read<PartyProvider>().drank_beer++;
         } else {
           context
                   .read<PartyProvider>()
                   .participants[context.read<PartyProvider>().myPaticipantIndex]
               ['drank_beer']--;
+          context.read<PartyProvider>().drank_beer--;
         }
       }
     });
