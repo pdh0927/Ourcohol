@@ -55,7 +55,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
             if end_time > standard_time:
                 return Response(
                     {"message": "can't enroll user"},
-                    status=status.HTTP_409_CONFLICT,
+                    status=status.HTTP_226_IM_USED,
                 )
 
         serializer = self.get_serializer(data=request.data)
