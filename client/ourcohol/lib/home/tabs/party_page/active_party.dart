@@ -268,22 +268,25 @@ class _ActivePartyState extends State<ActiveParty> {
                                                       right: 13 / 393 * 100.w),
                                                   child: Column(children: [
                                                     Container(
-                                                      width: (100.w - 50) / 9,
-                                                      height: (100.w - 50) / 9,
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              bottom: 3),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(100),
-                                                      ),
-                                                      child: Text('소주병',
-                                                          style: textStyle24),
-                                                    ),
+                                                        width: (100.w - 50) / 9,
+                                                        height:
+                                                            (100.w - 50) / 9,
+                                                        margin: const EdgeInsets
+                                                            .only(bottom: 3),
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                        ),
+                                                        child: Image.asset(
+                                                          'assets/images/soju_bottle.png',
+                                                          fit: BoxFit.fill,
+                                                        )),
                                                     Text(
                                                         'X${(context.read<PartyProvider>().participants[i]['drank_soju'] / sojuStandard).toInt()}',
                                                         style: textStyle23)
@@ -299,21 +302,23 @@ class _ActivePartyState extends State<ActiveParty> {
                                                   0
                                               ? Column(children: [
                                                   Container(
-                                                    width: (100.w - 50) / 9,
-                                                    height: (100.w - 50) / 9,
-                                                    alignment: Alignment.center,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            bottom: 3),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                    ),
-                                                    child: Text('소주잔',
-                                                        style: textStyle24),
-                                                  ),
+                                                      width: (100.w - 50) / 9,
+                                                      height: (100.w - 50) / 9,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 3),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                      ),
+                                                      child: Image.asset(
+                                                        'assets/images/soju.png',
+                                                        fit: BoxFit.fill,
+                                                      )),
                                                   Text(
                                                       'X${context.read<PartyProvider>().participants[i]['drank_soju'] % sojuStandard}',
                                                       style: textStyle23)
@@ -336,19 +341,21 @@ class _ActivePartyState extends State<ActiveParty> {
                                               right: 13 / 393 * 100.w),
                                           child: Column(children: [
                                             Container(
-                                              width: (100.w - 50) / 9,
-                                              height: (100.w - 50) / 9,
-                                              alignment: Alignment.center,
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 3),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                              ),
-                                              child: Text('맥주병',
-                                                  style: textStyle24),
-                                            ),
+                                                width: (100.w - 50) / 9,
+                                                height: (100.w - 50) / 9,
+                                                alignment: Alignment.center,
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 3),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                ),
+                                                child: Image.asset(
+                                                  'assets/images/beer_bottle.png',
+                                                  fit: BoxFit.fill,
+                                                )),
                                             Text(
                                                 'X${(context.read<PartyProvider>().participants[i]['drank_beer'] / beerStandard).toInt()}',
                                                 style: textStyle23)
@@ -361,19 +368,20 @@ class _ActivePartyState extends State<ActiveParty> {
                                           0
                                       ? Column(children: [
                                           Container(
-                                            width: (100.w - 50) / 9,
-                                            height: (100.w - 50) / 9,
-                                            alignment: Alignment.center,
-                                            margin: const EdgeInsets.only(
-                                                bottom: 3),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                            ),
-                                            child:
-                                                Text('맥주잔', style: textStyle24),
-                                          ),
+                                              width: (100.w - 50) / 9,
+                                              height: (100.w - 50) / 9,
+                                              alignment: Alignment.center,
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 3),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                              child: Image.asset(
+                                                'assets/images/beer.png',
+                                                fit: BoxFit.fill,
+                                              )),
                                           Text(
                                               'X${context.read<PartyProvider>().participants[i]['drank_beer'] % beerStandard}',
                                               style: textStyle23)
