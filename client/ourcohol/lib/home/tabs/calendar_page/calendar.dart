@@ -926,6 +926,7 @@ class _TmpPictureState extends State<TmpPicture> {
     return Container(
       decoration: const BoxDecoration(
           image: DecorationImage(
+        fit: BoxFit.fill,
         colorFilter: ColorFilter.mode(Color(0xff696969), BlendMode.plus),
         image: AssetImage('assets/images/background_picture.png'),
       )),
