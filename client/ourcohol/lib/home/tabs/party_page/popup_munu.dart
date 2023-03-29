@@ -53,7 +53,7 @@ class _PopupMenuState extends State<PopupMenu> {
             });
       }
 
-      if (response.statusCode == 208) {
+      if (response.statusCode == 406) {
         showDialog<void>(
           context: context,
           barrierDismissible: false, // user must tap button!
@@ -73,7 +73,7 @@ class _PopupMenuState extends State<PopupMenu> {
           },
         );
         return null;
-      } else if (response.statusCode == 207) {
+      } else if (response.statusCode == 409) {
         showDialog<void>(
           context: context,
           barrierDismissible: false, // user must tap button!
