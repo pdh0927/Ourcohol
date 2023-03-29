@@ -46,18 +46,14 @@ class _PlusMenuState extends State<PlusMenu> {
       }),
       children: [
         SpeedDialChild(
-            child: Text('맥주'),
-            label: '맥주 한잔',
-            labelStyle: textStyle14,
+            child: Image.asset('assets/images/beer.png', fit: BoxFit.fill),
             labelBackgroundColor: Colors.transparent,
             labelShadow: [],
             onTap: () {
               widget.modifyAlcohol('add', 'beer');
             }),
         SpeedDialChild(
-            child: Text('소주'),
-            label: '소주 한잔',
-            labelStyle: textStyle14,
+            child: Image.asset('assets/images/soju.png', fit: BoxFit.fill),
             labelBackgroundColor: Colors.transparent,
             labelShadow: [],
             onTap: () async {
