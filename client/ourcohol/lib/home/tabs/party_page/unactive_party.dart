@@ -28,8 +28,44 @@ class _UnactivePartyState extends State<UnactiveParty> {
   var inputId;
 
   startParty() async {
-    await widget.updateParty(
-        'started_at', context.read<PartyProvider>().started_at);
+    http.Response response;
+    try {
+      if (Platform.isIOS) {
+        response = await patch(
+            Uri.parse(
+                "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
+            body: {
+              'started_at': context.read<PartyProvider>().started_at,
+              'ended_at': context.read<PartyProvider>().ended_at,
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      } else {
+        response = await patch(
+            Uri.parse(
+                "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/"),
+            body: {
+              'started_at': context.read<PartyProvider>().started_at,
+              'ended_at': context.read<PartyProvider>().ended_at,
+            },
+            headers: {
+              'Authorization':
+                  'Bearer ${context.read<UserProvider>().tokenAccess}',
+            });
+      }
+
+      if (response.statusCode == 200) {
+        print('update success');
+        return null;
+      } else {
+        print('update fail');
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   deleteParticipant(participantId) async {
@@ -124,7 +160,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
             });
       }
       print(response.statusCode);
-      if (response.statusCode == 208) {
+      if (response.statusCode == 406) {
         showDialog<void>(
           context: context,
           barrierDismissible: false, // user must tap button!
@@ -132,6 +168,26 @@ class _UnactivePartyState extends State<UnactiveParty> {
             return AlertDialog(
               title: const Text('이미 초대된 사용자 '),
               content: const Text('다른 사용자를 초대해주세요'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return null;
+      } else if (response.statusCode == 409) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('초대할 수 없는 사용자 '),
+              content: const Text('사용자가 이미 다른 파티에 등록되어 있습니다'),
               actions: <Widget>[
                 TextButton(
                   child: const Text('Approve'),
@@ -627,7 +683,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                                                             .white)),
                                                                 onPressed:
                                                                     () async {
-                                                                  await addParticipant(
+                                                                  addParticipant(
                                                                       int.parse(
                                                                           inputId));
                                                                   Navigator.pop(
@@ -667,7 +723,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
                         SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Container(
-                                width: 100.w - 32,
+                              
                                 height: 120 / 852 * 100.h + 1,
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -694,6 +750,10 @@ class _UnactivePartyState extends State<UnactiveParty> {
                           // 술자리 시작하기
                           context.read<PartyProvider>().started_at =
                               DateTime.now().toString();
+                          context.read<PartyProvider>().ended_at =
+                              DateTime.now()
+                                  .add(const Duration(hours: 12))
+                                  .toString();
                           await startParty();
                           widget.rebuild2();
                         }

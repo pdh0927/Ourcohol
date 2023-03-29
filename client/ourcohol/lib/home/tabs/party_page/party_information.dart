@@ -88,7 +88,7 @@ class _PartyInformationState extends State<PartyInformation> {
             });
       }
       print(response.statusCode);
-      if (response.statusCode == 208) {
+      if (response.statusCode == 406) {
         showDialog<void>(
           context: context,
           barrierDismissible: false, // user must tap button!
@@ -96,6 +96,26 @@ class _PartyInformationState extends State<PartyInformation> {
             return AlertDialog(
               title: const Text('이미 초대된 사용자 '),
               content: const Text('다른 사용자를 초대해주세요'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return null;
+      } else if (response.statusCode == 409) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('초대할 수 없는 사용자 '),
+              content: const Text('사용자가 이미 다른 파티에 등록되어 있습니다'),
               actions: <Widget>[
                 TextButton(
                   child: const Text('Approve'),
@@ -161,7 +181,7 @@ class _PartyInformationState extends State<PartyInformation> {
         margin: EdgeInsets.only(
             left: i == 0 ? 16 : 0,
             right: i != context.read<PartyProvider>().participants.length - 1
-                ? 40
+                ? 35 / 393 * 100.w
                 : 16,
             top: 5,
             bottom: 5),
@@ -849,7 +869,7 @@ class _PartyInformationState extends State<PartyInformation> {
                                                                             .white)),
                                                                 onPressed:
                                                                     () async {
-                                                                  await addParticipant(
+                                                                  addParticipant(
                                                                       int.parse(
                                                                           inputId));
                                                                   Navigator.pop(
@@ -889,7 +909,6 @@ class _PartyInformationState extends State<PartyInformation> {
                         SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Container(
-                                width: 100.w - 32,
                                 height: 120 / 852 * 100.h,
                                 margin: const EdgeInsets.only(bottom: 10),
                                 child: Row(
