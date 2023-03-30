@@ -102,7 +102,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
     if (Platform.isIOS) {
       response = await delete(
           Uri.parse(
-              "http://127.0.0.1:8000/api/participant/${context.read<PartyProvider>().partyId}/"),
+              "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -112,7 +112,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
     } else {
       response = await delete(
           Uri.parse(
-              "http://10.0.2.2:8000/api/participant/${context.read<PartyProvider>().partyId}/"),
+              "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/"),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -222,7 +222,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
         margin: EdgeInsets.only(
             left: i == 0 ? 16 : 0,
             right: i != context.read<PartyProvider>().participants.length - 1
-                ? 40
+                ? 35 / 393 * 100.w
                 : 16,
             top: 5,
             bottom: 5),
@@ -267,21 +267,25 @@ class _UnactivePartyState extends State<UnactiveParty> {
                           .myPaticipantIndex]['is_host'] ==
                       true &&
                   i != context.read<PartyProvider>().myPaticipantIndex)
-              ? MaterialButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () async {
-                    await deleteParticipant(
-                        context.read<PartyProvider>().participants[i]['id']);
-                    setState(() {
-                      context.read<PartyProvider>().participants.removeAt(i);
-                    });
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 60 / 393 * 100.w, bottom: 40 / 852 * 100.h),
-                    child: const Icon(FlutterRemix.close_circle_fill,
+              ? Container(
+                  height: 30,
+                  width: 20,
+                  margin: EdgeInsets.only(
+                      left: 60 / 393 * 100.w, bottom: 90 / 852 * 100.h),
+                  child: IconButton(
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    onPressed: () async {
+                      await deleteParticipant(
+                          context.read<PartyProvider>().participants[i]['id']);
+                      setState(() {
+                        context.read<PartyProvider>().participants.removeAt(i);
+                      });
+                    },
+                    icon: const Icon(FlutterRemix.close_circle_fill,
                         color: Color(0xffEC5959), size: 20),
-                  ))
+                  ),
+                )
               : const SizedBox(height: 0, width: 0)
         ]),
       ));
@@ -327,7 +331,8 @@ class _UnactivePartyState extends State<UnactiveParty> {
                 padding: EdgeInsets.zero,
                 onPressed: () async {
                   await deleteParty();
-                  widget.rebuild2();
+                  context.read<PartyProvider>().initPartyInformation();
+                  widget.rebuild1();
                 },
                 child: const Icon(FlutterRemix.close_circle_fill,
                     color: Colors.grey))
@@ -683,11 +688,12 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                                                             .white)),
                                                                 onPressed:
                                                                     () async {
-                                                                  addParticipant(
-                                                                      int.parse(
-                                                                          inputId));
                                                                   Navigator.pop(
                                                                       context);
+                                                                  await addParticipant(
+                                                                      int.parse(
+                                                                          inputId));
+
                                                                   setState(
                                                                       () {});
                                                                   widget
@@ -720,14 +726,15 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                             height: 1.3)))
                               ]),
                         ),
-                        SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Container(
-                              
-                                height: 120 / 852 * 100.h + 1,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: getParticipants()))),
+                        SizedBox(
+                          height: 120 / 852 * 100.h + 1,
+                          width: 100.w,
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: getParticipants())),
+                        ),
                       ],
                     )),
                 Container(

@@ -161,7 +161,7 @@ class _PartyState extends State<Party> {
             return const CupertinoActivityIndicator();
           } else {
             if (context.read<PartyProvider>().partyId == -1) {
-              return NoParty();
+              return NoParty(rebuild1: rebuild1);
             } else if (context.read<PartyProvider>().started_at == null) {
               return UnactiveParty(
                 updateParty: updateParty,
@@ -169,8 +169,8 @@ class _PartyState extends State<Party> {
                 rebuild2: rebuild2,
               );
             } else if (DateTime.parse(context.read<PartyProvider>().ended_at)
-                .isBefore(DateTime.now())) {
-              return NoParty();
+                .isAfter(DateTime.now())) {
+              return NoParty(rebuild1: rebuild1);
             } else {
               return ActiveParty(
                   updateParty: updateParty,

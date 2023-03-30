@@ -140,37 +140,6 @@ class _PartyInformationState extends State<PartyInformation> {
     }
   }
 
-  deleteParty() async {
-    Response response;
-    if (Platform.isIOS) {
-      response = await delete(
-          Uri.parse(
-              "http://127.0.0.1:8000/api/participant/${context.read<PartyProvider>().partyId}/"),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    } else {
-      response = await delete(
-          Uri.parse(
-              "http://10.0.2.2:8000/api/participant/${context.read<PartyProvider>().partyId}/"),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    }
-
-    if (response.statusCode == 204) {
-      print('삭제 성공');
-    } else {
-      print('삭제 실패');
-    }
-  }
-
   getParticipants() {
     List<Widget> childs = [];
 
@@ -226,21 +195,24 @@ class _PartyInformationState extends State<PartyInformation> {
                           .myPaticipantIndex]['is_host'] ==
                       true &&
                   i != context.read<PartyProvider>().myPaticipantIndex)
-              ? MaterialButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () async {
-                    await deleteParticipant(
-                        context.read<PartyProvider>().participants[i]['id']);
-                    setState(() {
-                      context.read<PartyProvider>().participants.removeAt(i);
-                    });
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 60 / 393 * 100.w, bottom: 40 / 852 * 100.h),
-                    child: const Icon(FlutterRemix.close_circle_fill,
+              ? Container(
+                  height: 30,
+                  width: 20,
+                  margin: EdgeInsets.only(
+                      left: 60 / 393 * 100.w, bottom: 90 / 852 * 100.h),
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () async {
+                      await deleteParticipant(
+                          context.read<PartyProvider>().participants[i]['id']);
+                      setState(() {
+                        context.read<PartyProvider>().participants.removeAt(i);
+                      });
+                    },
+                    icon: const Icon(FlutterRemix.close_circle_fill,
                         color: Color(0xffEC5959), size: 20),
-                  ))
+                  ),
+                )
               : const SizedBox(height: 0, width: 0)
         ]),
       ));
@@ -279,6 +251,7 @@ class _PartyInformationState extends State<PartyInformation> {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   Navigator.pop(context);
+                  widget.rebuild1();
                 },
                 child: const Icon(FlutterRemix.close_circle_fill,
                     color: Colors.grey))
@@ -869,15 +842,14 @@ class _PartyInformationState extends State<PartyInformation> {
                                                                             .white)),
                                                                 onPressed:
                                                                     () async {
-                                                                  addParticipant(
-                                                                      int.parse(
-                                                                          inputId));
                                                                   Navigator.pop(
                                                                       context);
+                                                                  await addParticipant(
+                                                                      int.parse(
+                                                                          inputId));
+
                                                                   setState(
                                                                       () {});
-                                                                  widget
-                                                                      .rebuild1;
                                                                 })
                                                             : Container(
                                                                 width: 100.w -
@@ -906,14 +878,16 @@ class _PartyInformationState extends State<PartyInformation> {
                                             height: 1.3)))
                               ]),
                         ),
-                        SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Container(
-                                height: 120 / 852 * 100.h,
-                                margin: const EdgeInsets.only(bottom: 10),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: getParticipants()))),
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          height: 120 / 852 * 100.h,
+                          width: 100.w,
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: getParticipants())),
+                        ),
                       ],
                     )),
                 Container(
@@ -933,14 +907,13 @@ class _PartyInformationState extends State<PartyInformation> {
                                   .myPaticipantIndex]['id']);
                           Navigator.pop(context);
                         } else {
-                          await deleteParty();
-                          widget.rebuild2();
                           // 술자리 끝내기
                           context.read<PartyProvider>().ended_at =
                               DateTime.now().toString();
                           finishParty();
                           Navigator.pop(context);
-                          widget.rebuild2();
+                          context.read<PartyProvider>().initPartyInformation();
+                          widget.rebuild1();
                         }
                       },
                       child: Container(

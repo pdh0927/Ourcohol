@@ -25,6 +25,39 @@ class PopupMenu extends StatefulWidget {
 
 class _PopupMenuState extends State<PopupMenu> {
   var inputId;
+  finishParty() async {
+    await widget.updateParty(
+        'ended_at', context.read<PartyProvider>().ended_at);
+  }
+
+  deleteParticipant(participantId) async {
+    Response response;
+    if (Platform.isIOS) {
+      response = await delete(
+          Uri.parse("http://127.0.0.1:8000/api/participant/${participantId}/"),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    } else {
+      response = await delete(
+          Uri.parse("http://10.0.2.2:8000/api/participant/${participantId}/"),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    }
+
+    if (response.statusCode == 204) {
+      print('삭제 성공');
+    } else {
+      print('삭제 실패');
+    }
+  }
 
   addParticipant(userId) async {
     Response response;
@@ -242,9 +275,10 @@ class _PopupMenuState extends State<PopupMenu> {
                                                             color:
                                                                 Colors.white)),
                                                     onPressed: () async {
+                                                      Navigator.pop(context);
                                                       await addParticipant(
                                                           int.parse(inputId));
-                                                      Navigator.pop(context);
+
                                                       Navigator.pop(context);
 
                                                       widget.rebuild1();
@@ -328,16 +362,44 @@ class _PopupMenuState extends State<PopupMenu> {
                   child: MaterialButton(
                       minWidth: 80,
                       padding: EdgeInsets.zero,
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (context.read<PartyProvider>().participants[context
+                                .read<PartyProvider>()
+                                .myPaticipantIndex]['is_host'] ==
+                            false) {
+                          Navigator.pop(context);
+                          await deleteParticipant(
+                              context.read<PartyProvider>().participants[context
+                                  .read<PartyProvider>()
+                                  .myPaticipantIndex]['id']);
+
+                          context.read<PartyProvider>().initPartyInformation();
+                          widget.rebuild1();
+                        } else {
+                          // 술자리 끝내기
+                          Navigator.pop(context);
+                          context.read<PartyProvider>().ended_at =
+                              DateTime.now().toString();
+                          await finishParty();
+
+                          context.read<PartyProvider>().initPartyInformation();
+                          widget.rebuild1();
+                        }
+                      },
                       child: Container(
-                        height: 30,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xff131313),
-                        ),
-                        child: Text('술자리 끝내기', style: textStyle26),
-                      ))),
+                          height: 30,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color(0xff131313),
+                          ),
+                          child: context.read<PartyProvider>().participants[
+                                      context
+                                          .read<PartyProvider>()
+                                          .myPaticipantIndex]['is_host'] ==
+                                  true
+                              ? Text("술자리 끝내기", style: textStyle26)
+                              : Text("술자리 나가기", style: textStyle26)))),
             ]);
   }
 }
