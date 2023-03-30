@@ -79,9 +79,33 @@ class _CalendarState extends State<Calendar> {
     return childs;
   }
 
+  getCalendarBody() {
+    var week = 0;
+    flag = false;
+    countThisMonth = 0;
+    List<Widget> childs = [];
+    while (flag == false) {
+      childs.add(Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: getDateList(week)));
+      childs.add(const Divider(
+        thickness: 1.5,
+        height: 0,
+        color: Color(0xffCACACA),
+      ));
+      week++;
+      if (int.parse(calendarData[year.toString()]![month.toString()]!) ==
+          countThisMonth) {
+        flag = true;
+      }
+    }
+    return childs;
+  }
+
   int countParty = 0;
   int countThisMonth = 0;
-  bool finishFlag = false;
+  bool flag = false;
+
   List<Widget> getDateList(week) {
     int lastWeekDay = 0;
     List<Widget> childs = [];
@@ -93,7 +117,6 @@ class _CalendarState extends State<Calendar> {
         // 이번 달
         if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
           for (int j = 0; j < myPartyList.length; j++) {
-            print(context.read<PartyProvider>().image_memory);
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
             if (parsedDate.year == year &&
@@ -234,10 +257,6 @@ class _CalendarState extends State<Calendar> {
         }
         lastWeekDay++;
         countThisMonth++;
-        if (int.parse(calendarData[year.toString()]![month.toString()]!) ==
-            countThisMonth) {
-          finishFlag = true;
-        }
       } else if (i - startDayOfWeek + 1 <= 0) {
         // 이전달
         if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
@@ -648,8 +667,6 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     setState(() {
       countParty = 0;
-      countThisMonth = 0;
-      finishFlag = false;
     });
 
     return Container(
@@ -681,10 +698,10 @@ class _CalendarState extends State<Calendar> {
                             onDateTimeChanged: (DateTime newDate) {
                               setState(() {
                                 setWeekDay(newDate.year, newDate.month);
+
                                 year = newDate.year;
                                 month = newDate.month;
-                                countThisMonth = 0;
-                                finishFlag = false;
+
                                 selectedYear = newDate.year;
                                 selectedMonth = newDate.month;
                                 selectedDay = newDate.day;
@@ -726,76 +743,9 @@ class _CalendarState extends State<Calendar> {
                         if (snapshot.hasData == false) {
                           return const CupertinoActivityIndicator();
                         } else {
-                          return Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(0),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(1),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(2),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(3),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            finishFlag == false
-                                ? Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: getDateList(4),
-                                      ),
-                                      const Divider(
-                                        thickness: 1.5,
-                                        height: 0,
-                                        color: Color(0xffCACACA),
-                                      )
-                                    ],
-                                  )
-                                : const SizedBox(height: 0),
-                            finishFlag == false
-                                ? Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: getDateList(5),
-                                      ),
-                                      const Divider(
-                                        thickness: 1.5,
-                                        height: 0,
-                                        color: Color(0xffCACACA),
-                                      )
-                                    ],
-                                  )
-                                : const SizedBox(height: 0),
-                          ]);
+                          return Column(
+                            children: getCalendarBody(),
+                          );
                         }
                       }),
                 ],
