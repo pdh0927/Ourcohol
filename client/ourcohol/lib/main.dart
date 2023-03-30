@@ -10,6 +10,7 @@ void main() {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (c) => UserProvider()),
+        ChangeNotifierProvider(create: (c) => PartyProvider()),
       ],
       child: Sizer(builder: (context, orientation, deviceType) {
         return MaterialApp(
@@ -17,7 +18,7 @@ void main() {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: MyApp(),
+          home: const MyApp(),
         );
       })));
 }

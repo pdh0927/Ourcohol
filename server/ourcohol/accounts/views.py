@@ -3,14 +3,15 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .models import User
 from .serializers import UserSerializer
-from rest_framework.decorators import action    
-from rest_framework.permissions import IsAuthenticated, AllowAny     
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer    
-from rest_framework.response import Response       
-from rest_framework import status    
-from django.contrib.auth import authenticate, login  
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate, login
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from rest_framework.views import APIView
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -65,13 +66,13 @@ class UserViewSet(viewsets.ModelViewSet):
     #         return res
     #     else:
     #         return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
     # def get_permissions(self):
     #     if self.action == 'login' or self.action == 'create':
     #         return [AllowAny() ]
     #     return super(UserViewSet, self).get_permissions()
-    
-    
+
+
 class ConfirmEmailView(APIView):
     permission_classes = [AllowAny]
 
@@ -80,10 +81,10 @@ class ConfirmEmailView(APIView):
         confirmation.confirm(self.request)
         # A React Router Route will handle the failure scenario
         # return HttpResponseRedirect('/') # 인증성공
-        return render(self.request,'account/email/email_verity_success.html')
+        return render(self.request, "account/email/email_verity_success.html")
 
     def get_object(self, queryset=None):
-        key = self.kwargs['key']
+        key = self.kwargs["key"]
         email_confirmation = EmailConfirmationHMAC.from_key(key)
         if not email_confirmation:
             if queryset is None:
@@ -92,12 +93,10 @@ class ConfirmEmailView(APIView):
                 email_confirmation = queryset.get(key=key.lower())
             except EmailConfirmation.DoesNotExist:
                 # A React Router Route will handle the failure scenario
-                return HttpResponseRedirect('/') # 인증실패
+                return HttpResponseRedirect("/")  # 인증실패
         return email_confirmation
 
     def get_queryset(self):
         qs = EmailConfirmation.objects.all_valid()
         qs = qs.select_related("email_address__user")
         return qs
-
-

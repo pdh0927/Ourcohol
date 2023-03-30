@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,9 +79,33 @@ class _CalendarState extends State<Calendar> {
     return childs;
   }
 
+  getCalendarBody() {
+    var week = 0;
+    flag = false;
+    countThisMonth = 0;
+    List<Widget> childs = [];
+    while (flag == false) {
+      childs.add(Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: getDateList(week)));
+      childs.add(const Divider(
+        thickness: 1.5,
+        height: 0,
+        color: Color(0xffCACACA),
+      ));
+      week++;
+      if (int.parse(calendarData[year.toString()]![month.toString()]!) ==
+          countThisMonth) {
+        flag = true;
+      }
+    }
+    return childs;
+  }
+
   int countParty = 0;
   int countThisMonth = 0;
-  bool finishFlag = false;
+  bool flag = false;
+
   List<Widget> getDateList(week) {
     int lastWeekDay = 0;
     List<Widget> childs = [];
@@ -135,18 +160,30 @@ class _CalendarState extends State<Calendar> {
                                           color: Colors.red,
                                           fontWeight: FontWeight.w700,
                                           height: 1.3)),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 0.59.h),
-                                width: (100.w - 32) / 7 - 0.59.h * 2,
-                                height: (100.w - 32) / 7 - 0.59.h * 2,
-                                child: Image.memory(
-                                  base64Decode(
-                                      myPartyList[j]['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: (100.w - 32) / 7 - 0.59.h * 2,
-                                  height: (100.w - 32) / 7 - 0.59.h * 2,
-                                ),
-                              )
+                              (context.read<PartyProvider>().image_memory !=
+                                          null &&
+                                      context
+                                              .read<PartyProvider>()
+                                              .image_memory !=
+                                          '')
+                                  ? Container(
+                                      margin: EdgeInsets.only(bottom: 0.59.h),
+                                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                                      child: Image.memory(
+                                        base64Decode(myPartyList[j]['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: (100.w - 32) / 7 - 0.59.h * 2,
+                                        height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
                       ),
                       onPressed: () {
@@ -220,10 +257,6 @@ class _CalendarState extends State<Calendar> {
         }
         lastWeekDay++;
         countThisMonth++;
-        if (int.parse(calendarData[year.toString()]![month.toString()]!) ==
-            countThisMonth) {
-          finishFlag = true;
-        }
       } else if (i - startDayOfWeek + 1 <= 0) {
         // 이전달
         if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
@@ -285,18 +318,30 @@ class _CalendarState extends State<Calendar> {
                                           (i - startDayOfWeek + 1))
                                       .toString(),
                                   style: textStyle5),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 0.59.h),
-                                width: (100.w - 32) / 7 - 0.59.h * 2,
-                                height: (100.w - 32) / 7 - 0.59.h * 2,
-                                child: Image.memory(
-                                  base64Decode(
-                                      myPartyList[j]['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: (100.w - 32) / 7 - 0.59.h * 2,
-                                  height: (100.w - 32) / 7 - 0.59.h * 2,
-                                ),
-                              )
+                              (context.read<PartyProvider>().image_memory !=
+                                          null &&
+                                      context
+                                              .read<PartyProvider>()
+                                              .image_memory !=
+                                          '')
+                                  ? Container(
+                                      margin: EdgeInsets.only(bottom: 0.59.h),
+                                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                                      child: Image.memory(
+                                        base64Decode(myPartyList[j]['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: (100.w - 32) / 7 - 0.59.h * 2,
+                                        height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
                       ),
                       onPressed: () {
@@ -419,18 +464,30 @@ class _CalendarState extends State<Calendar> {
                             children: [
                               Text((i - 7 * week - lastWeekDay + 1).toString(),
                                   style: textStyle5),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 0.59.h),
-                                width: (100.w - 32) / 7 - 0.59.h * 2,
-                                height: (100.w - 32) / 7 - 0.59.h * 2,
-                                child: Image.memory(
-                                  base64Decode(
-                                      myPartyList[j]['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: (100.w - 32) / 7 - 0.59.h * 2,
-                                  height: (100.w - 32) / 7 - 0.59.h * 2,
-                                ),
-                              )
+                              (context.read<PartyProvider>().image_memory !=
+                                          null &&
+                                      context
+                                              .read<PartyProvider>()
+                                              .image_memory !=
+                                          '')
+                                  ? Container(
+                                      margin: EdgeInsets.only(bottom: 0.59.h),
+                                      width: (100.w - 32) / 7 - 0.59.h * 2,
+                                      height: (100.w - 32) / 7 - 0.59.h * 2,
+                                      child: Image.memory(
+                                        base64Decode(myPartyList[j]['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: (100.w - 32) / 7 - 0.59.h * 2,
+                                        height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: ((100.w - 32) / 7 - 0.59.h * 2),
+                                      width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
                       ),
                       onPressed: () {
@@ -565,18 +622,30 @@ class _CalendarState extends State<Calendar> {
   var partyMemory;
   var myPartyList = [];
   Future getMyPartyList() async {
-    http.Response response = await http.get(
-        Uri.parse(
-            'http://127.0.0.1:8000/api/party/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-        });
-    if (json.decode(utf8.decode(response.bodyBytes)) != null) {
-      print('test');
-      print(json.decode(utf8.decode(response.bodyBytes)));
+    http.Response response;
+    if (Platform.isIOS) {
+      response = await http.get(
+          Uri.parse(
+              'http://127.0.0.1:8000/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    } else {
+      response = await http.get(
+          Uri.parse(
+              'http://10.0.2.2:8000/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    }
 
+    if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
       setState(() {
         myPartyList = json.decode(utf8.decode(response.bodyBytes)).toList();
       });
@@ -592,16 +661,12 @@ class _CalendarState extends State<Calendar> {
     partyMemory = null;
     _future = getMyPartyList();
     super.initState();
-    print(context.read<UserProvider>().userId);
-    print(context.read<UserProvider>().tokenAccess);
   }
 
   @override
   Widget build(BuildContext context) {
     setState(() {
       countParty = 0;
-      countThisMonth = 0;
-      finishFlag = false;
     });
 
     return Container(
@@ -633,10 +698,10 @@ class _CalendarState extends State<Calendar> {
                             onDateTimeChanged: (DateTime newDate) {
                               setState(() {
                                 setWeekDay(newDate.year, newDate.month);
+
                                 year = newDate.year;
                                 month = newDate.month;
-                                countThisMonth = 0;
-                                finishFlag = false;
+
                                 selectedYear = newDate.year;
                                 selectedMonth = newDate.month;
                                 selectedDay = newDate.day;
@@ -678,76 +743,9 @@ class _CalendarState extends State<Calendar> {
                         if (snapshot.hasData == false) {
                           return const CupertinoActivityIndicator();
                         } else {
-                          return Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(0),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(1),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(2),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: getDateList(3),
-                            ),
-                            const Divider(
-                              thickness: 1.5,
-                              height: 0,
-                              color: Color(0xffCACACA),
-                            ),
-                            finishFlag == false
-                                ? Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: getDateList(4),
-                                      ),
-                                      const Divider(
-                                        thickness: 1.5,
-                                        height: 0,
-                                        color: Color(0xffCACACA),
-                                      )
-                                    ],
-                                  )
-                                : const SizedBox(height: 0),
-                            finishFlag == false
-                                ? Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: getDateList(5),
-                                      ),
-                                      const Divider(
-                                        thickness: 1.5,
-                                        height: 0,
-                                        color: Color(0xffCACACA),
-                                      )
-                                    ],
-                                  )
-                                : const SizedBox(height: 0),
-                          ]);
+                          return Column(
+                            children: getCalendarBody(),
+                          );
                         }
                       }),
                 ],
@@ -789,18 +787,30 @@ class _CalendarState extends State<Calendar> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 8),
-                                width: 42.w,
-                                height: 30.w,
-                                child: Image.memory(
-                                  base64Decode(
-                                      partyMemory['party']['image_memory']),
-                                  fit: BoxFit.fill,
-                                  width: 42.w,
-                                  height: 30.w,
-                                ),
-                              ),
+                              (context.read<PartyProvider>().image_memory !=
+                                          null &&
+                                      context
+                                              .read<PartyProvider>()
+                                              .image_memory !=
+                                          '')
+                                  ? Container(
+                                      margin: const EdgeInsets.only(right: 8),
+                                      width: 42.w,
+                                      height: 30.w,
+                                      child: Image.memory(
+                                        base64Decode(partyMemory['party']
+                                            ['image_memory']),
+                                        fit: BoxFit.fill,
+                                        width: 42.w,
+                                        height: 30.w,
+                                      ),
+                                    )
+                                  : TmpPicture(
+                                      participants: context
+                                          .read<PartyProvider>()
+                                          .participants,
+                                      height: 30.w,
+                                      width: 42.w),
                               partyMemory['party']['comments'].length == 0
                                   ? Expanded(
                                       child: Container(
@@ -834,6 +844,72 @@ class _CalendarState extends State<Calendar> {
                       child: Text('내 기억을 떠올려 보세요 :)', style: textStyle9)),
             )
           ])),
+    );
+  }
+}
+
+class TmpPicture extends StatefulWidget {
+  TmpPicture({super.key, this.participants, this.height, this.width});
+  var participants;
+  var height;
+  var width;
+  @override
+  State<TmpPicture> createState() => _TmpPictureState();
+}
+
+class _TmpPictureState extends State<TmpPicture> {
+  getList() {
+    List<Widget> childs = [];
+    for (int i = 0; i < widget.participants.length; i++) {
+      childs.add(Container(
+        child: (widget.participants[i]['user']['image_memory'] != null
+            ? Container(
+                width: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
+                height: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: MemoryImage(base64Decode(
+                            widget.participants[i]['user']['image_memory'])),
+                        fit: BoxFit.fill)))
+            : Container(
+                width: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
+                height: widget.width /
+                    (4 * (widget.participants.length / 4).ceil()),
+                decoration: BoxDecoration(
+                  color: Color(colorList[widget.participants[i]['id'] % 7]),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Icon(FlutterRemix.user_2_fill,
+                    color: Colors.white,
+                    size: widget.width /
+                        (5 * (widget.participants.length / 4).ceil())))),
+      ));
+    }
+    return childs;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+        fit: BoxFit.fill,
+        colorFilter: ColorFilter.mode(Color(0xff696969), BlendMode.plus),
+        image: AssetImage('assets/images/background_picture.png'),
+      )),
+      alignment: Alignment.center,
+      width: widget.width,
+      height: widget.height,
+      child: Wrap(
+          direction: Axis.horizontal, // 나열 방향
+          alignment: WrapAlignment.center, // 정렬 방식
+          spacing: widget.width / 20, // 좌우 간격
+          runSpacing: widget.width / 20, // 상하 간격
+          children: getList()),
     );
   }
 }

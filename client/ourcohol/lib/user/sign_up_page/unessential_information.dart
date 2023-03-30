@@ -1,21 +1,23 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:http/http.dart';
+
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ourcohol/home/home.dart';
-import 'package:ourcohol/provider_ourcohol.dart';
+
 import 'package:ourcohol/style.dart';
 import 'package:ourcohol/user/login.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
+
 import 'package:sizer/sizer.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+
+import '../../provider_ourcohol.dart';
 
 class UnessentialInformation extends StatefulWidget {
   UnessentialInformation({super.key, this.user});
@@ -28,7 +30,7 @@ class UnessentialInformation extends StatefulWidget {
 class _UnessentialInformationState extends State<UnessentialInformation> {
   @override
   void initState() {
-    randomNumber = Random().nextInt(100000);
+    randomNumber = Random().nextInt(10000);
     tempNickname = '알쓰 $randomNumber호';
     super.initState();
   }
@@ -37,19 +39,7 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
   int randomNumber = 0;
   String tempNickname = '';
 
-  List<int> colorList = [
-    0xffE92311,
-    0xff131313,
-    0xffF6E431,
-    0xff5AC13C,
-    0xff2410DC,
-    0xff861CB2,
-    0xffF86A1B
-  ];
-
   File? resultImage;
-  ScreenshotController screenshotController = ScreenshotController();
-
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
@@ -58,10 +48,11 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
       File? img = File(image.path);
 
       img = await cropImage(imageFile: img);
+
       setState(() {
         resultImage = img;
       });
-    } on PlatformException catch (e) {
+    } catch (e) {
       print(e);
     }
   }
@@ -78,22 +69,91 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
     }
   }
 
-  postRequest(user) async {
-    try {
-      Response response = await post(
-          Uri.parse(
-              "http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/"),
-          body: user);
-      print(user);
-      if (response.statusCode == 200) {
-        var userData =
-            Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
+  // postRequest(user) async {
+  //   http.StreamedResponse response;
+  //   try {
+  //     if (Platform.isIOS) {
+  //       String url =
+  //           "http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/";
+  //       var request = http.MultipartRequest('POST', Uri.parse(url));
+  //       request.fields.addAll({
+  //         'email': user['email'],
+  //         'password1': user['password1'],
+  //         'password2': user['password2'],
+  //         'nickname': user['nickname'],
+  //       });
+  //       request.files
+  //           .add(await http.MultipartFile.fromPath('image', resultImage!.path));
 
-        print('회원가입 Successfully');
-        return userData;
+  //       response = await request.send();
+  //     } else {
+  //       print('ㅇ이거');
+  //       String url =
+  //           "http://10.0.2.2:8000/api/accounts/dj-rest-auth/registration/";
+  //       var request = http.MultipartRequest('POST', Uri.parse(url));
+
+  //       request.files
+  //           .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+  //       request.fields.addAll({
+  //         'email': user['email'],
+  //         'password1': user['password1'],
+  //         'password2': user['password2'],
+  //         'nickname': user['nickname']
+  //       });
+  //       response = await request.send();
+  //     }
+  //     // if (response.statusCode == 200) {
+
+  //     //   print('회원가입 Successfully');
+  //     //   return userData;
+  //     // } else {
+  //     //   return null;
+  //     // }
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+  Future<void> postRequest(user) async {
+    http.StreamedResponse response;
+    try {
+      if (Platform.isIOS) {
+        var dio = Dio();
+        var formData = FormData.fromMap({
+          'email': user['email'],
+          'password1': user['password1'],
+          'password2': user['password2'],
+          'nickname': user['nickname'],
+          'image': await MultipartFile.fromFile(resultImage!.path)
+        });
+        print(resultImage!.path);
+
+        // 업로드 요청
+        final response = await dio.post(
+            'http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/',
+            data: formData);
       } else {
-        return null;
+        print('ㅇ이거');
+        String url =
+            "http://10.0.2.2:8000/api/accounts/dj-rest-auth/registration/";
+        var request = http.MultipartRequest('POST', Uri.parse(url));
+
+        request.files
+            .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+        request.fields.addAll({
+          'email': user['email'],
+          'password1': user['password1'],
+          'password2': user['password2'],
+          'nickname': user['nickname']
+        });
+        response = await request.send();
       }
+      // if (response.statusCode == 200) {
+
+      //   print('회원가입 Successfully');
+      //   return userData;
+      // } else {
+      //   return null;
+      // }
     } catch (e) {
       print(e.toString());
     }
@@ -155,11 +215,15 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                               ),
                               Container(
                                 width: 100.w - 32,
-                                height: (100.w - 32) / 7,
-                                margin: const EdgeInsets.only(bottom: 25),
+                                height: (100.w - 32) / 5.5,
+                                margin: const EdgeInsets.only(bottom: 30),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5)),
                                 child: TextField(
+                                  textAlignVertical: TextAlignVertical.bottom,
+                                  maxLength: 8,
+                                  maxLengthEnforcement:
+                                      MaxLengthEnforcement.enforced,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     focusedBorder: OutlineInputBorder(
@@ -211,20 +275,30 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
-                                        child: Container(
-                                          width: 100,
-                                          height: 100,
-                                          decoration: BoxDecoration(
-                                            color: Color(
-                                                colorList[randomNumber % 7]),
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                          ),
-                                          child: const Icon(
-                                              FlutterRemix.user_2_fill,
-                                              color: Colors.white,
-                                              size: 70),
-                                        )),
+                                        child: resultImage != null
+                                            ? Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        image: FileImage(
+                                                            resultImage!),
+                                                        fit: BoxFit.fill)),
+                                              )
+                                            : Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: BoxDecoration(
+                                                  color: Color(colorList[
+                                                      randomNumber % 7]),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                    FlutterRemix.user_2_fill,
+                                                    color: Colors.white,
+                                                    size: 70),
+                                              )),
                                     MaterialButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
@@ -356,9 +430,8 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                     width: 100.w - 32,
                     height: 44,
                     margin: const EdgeInsets.only(top: 16),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
                     child: MaterialButton(
                         padding: const EdgeInsets.all(0),
                         color: const Color(0xff131313),
@@ -369,18 +442,33 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                             style:
                                 TextStyle(fontSize: 16, color: Colors.white)),
                         onPressed: () async {
-                          // widget.user['image'] =
-                          //     (resultImage == null) ? null : resultImage;
                           widget.user['nickname'] = (inputNickname == '')
                               ? tempNickname
                               : inputNickname;
-
-                          await postRequest(widget.user);
-
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const Login()));
+                          showDialog<void>(
+                            context: context,
+                            barrierDismissible: false, // user must tap button!
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('이메일 인증'),
+                                content:
+                                    const Text('가입한 이메일의 메일을 통하여 간단한 인증하면 끝'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Approve'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          await postRequest(widget.user);
                         }),
-                  ),
+                  )
                 ],
               )
             ])));

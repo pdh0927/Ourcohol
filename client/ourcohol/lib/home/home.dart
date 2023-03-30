@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:ourcohol/home/tabs/calendar_page/calendar.dart';
+import 'package:ourcohol/home/tabs/party_page/party.dart';
 import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> _widgetOptions = <Widget>[
     Text('Index 0: Tips'),
     Calendar(),
-    Text('Index 2: Party'),
+    Party(),
     Text('Index 3: My'),
   ];
 
@@ -29,9 +30,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Center(child: _widgetOptions[_selectedIndex])),
+      body: SafeArea(
+          left: false,
+          right: false,
+          child: Center(child: _widgetOptions[_selectedIndex])),
       bottomNavigationBar: SizedBox(
-        height: 10.h,
+        height: 11.h,
         width: 100.w,
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -53,8 +57,8 @@ class _HomeState extends State<Home> {
             )
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xff131313),
-          unselectedItemColor: Color(0xffCACACA),
+          selectedItemColor: const Color(0xff131313),
+          unselectedItemColor: const Color(0xffCACACA),
           showSelectedLabels: true,
           showUnselectedLabels: true,
           onTap: _onItemTapped,

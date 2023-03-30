@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +32,17 @@ class _LoginState extends State<Login> {
   }
 
   login(String email, String password) async {
+    Response response;
     try {
-      Response response = await post(
-          Uri.parse("http://127.0.0.1:8000/api/accounts/dj-rest-auth/login/"),
-          body: {'email': email, 'password': password});
+      if (Platform.isIOS) {
+        response = await post(
+            Uri.parse("http://127.0.0.1:8000/api/accounts/dj-rest-auth/login/"),
+            body: {'email': email, 'password': password});
+      } else {
+        response = await post(
+            Uri.parse("http://10.0.2.2:8000/api/accounts/dj-rest-auth/login/"),
+            body: {'email': email, 'password': password});
+      }
 
       if (response.statusCode == 200) {
         var userData =
@@ -51,12 +59,21 @@ class _LoginState extends State<Login> {
   }
 
   findPassword() async {
-    // 브라우저를 열 링크
-    final url =
-        Uri.parse('http://127.0.0.1:8000/api/accounts/auth/password_reset/');
+    if (Platform.isIOS) {
+      // 브라우저를 열 링크
+      final url =
+          Uri.parse('http://127.0.0.1:8000/api/accounts/auth/password_reset/');
 
-    // 인앱 브라우저 실행
-    await launchUrl(url);
+      // 인앱 브라우저 실행
+      await launchUrl(url);
+    } else {
+      // 브라우저를 열 링크
+      final url =
+          Uri.parse('http://10.0.2.2:8000/api/accounts/auth/password_reset/');
+
+      // 인앱 브라우저 실행
+      await launchUrl(url);
+    }
   }
 
   @override
@@ -64,21 +81,25 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: SafeArea(
         child: Container(
+          width: 100.w - 32,
+          margin: const EdgeInsets.only(right: 16, left: 16),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 45.5.w,
+                width: 50.w,
                 height: 6.h,
-                child: Text('OURcohol', style: TextStyle(fontSize: 41)),
+                child: Text('OURcohol',
+                    style: TextStyle(fontSize: 40 / 852 * 100.h)),
               ),
               Column(
                 children: [
                   Container(
                     width: 100.w - 32,
                     height: (100.w - 32) / 7,
-                    margin: EdgeInsets.only(bottom: 17),
+                    margin: const EdgeInsets.only(bottom: 17),
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(5)),
                     child: TextField(
