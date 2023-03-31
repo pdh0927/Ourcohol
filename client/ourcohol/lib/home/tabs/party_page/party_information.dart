@@ -281,7 +281,7 @@ class _PartyInformationState extends State<PartyInformation> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: 100.w - 40 - 66 / 303 * 100.w,
+                              width: (100.w - 40 - 66) / 393 * 100.w,
                               height: 40,
                               margin: const EdgeInsets.only(bottom: 20),
                               decoration: BoxDecoration(
@@ -342,7 +342,7 @@ class _PartyInformationState extends State<PartyInformation> {
                               ),
                             ),
                             Container(
-                              width: 100.w - 40 - 66 / 303 * 100.w,
+                              width: (100.w - 40 - 66) / 393 * 100.w,
                               height: 40,
                               decoration: BoxDecoration(
                                   color: const Color(0xffFFFFFF),
@@ -405,7 +405,7 @@ class _PartyInformationState extends State<PartyInformation> {
                         ),
                       ),
                       Container(
-                        width: 100.w - 40 - 66 / 303 * 100.w,
+                        width: (100.w - 40 - 66) / 393 * 100.w,
                         margin: EdgeInsets.only(bottom: 20 / 852 * 100.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -534,7 +534,7 @@ class _PartyInformationState extends State<PartyInformation> {
                         ),
                       ),
                       Container(
-                        width: 100.w - 40 - 66 / 303 * 100.w,
+                        width: (100.w - 40 - 66) / 393 * 100.w,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -910,7 +910,7 @@ class _PartyInformationState extends State<PartyInformation> {
                           // 술자리 끝내기
                           context.read<PartyProvider>().ended_at =
                               DateTime.now().toString();
-                          finishParty();
+                          await finishParty();
                           Navigator.pop(context);
                           context.read<PartyProvider>().initPartyInformation();
                           widget.rebuild1();
