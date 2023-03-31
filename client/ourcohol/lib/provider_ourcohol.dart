@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
   int userId = -1;
+  String image_memory = '';
   String email = '';
   String tokenAccess = '';
   String tokenRefresh = '';
   String nickname = '';
 
-  setUserInformation(userId, email, nickname, tokenAccess, tokenRefresh) {
+  setUserInformation(
+      userId, email, nickname, image_memory, tokenAccess, tokenRefresh) {
     this.userId = userId;
     this.email = email;
     this.nickname = nickname;
+    this.image_memory = image_memory;
     this.tokenAccess = tokenAccess;
     this.tokenRefresh = tokenRefresh;
 
