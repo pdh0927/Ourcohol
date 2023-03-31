@@ -7,7 +7,6 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../provider_ourcohol.dart';
@@ -245,15 +244,15 @@ class _UnactivePartyState extends State<UnactiveParty> {
                 : Container(
                     width: 80 / 393 * 100.w,
                     height: 80 / 393 * 100.w,
-                    margin: const EdgeInsets.only(bottom: 5),
+                    margin: const EdgeInsets.only(bottom: 8),
                     decoration: BoxDecoration(
                       color: Color(colorList[
                           context.read<PartyProvider>().participants[i]['id'] %
                               7]),
                       borderRadius: BorderRadius.circular(100),
                     ),
-                    child: const Icon(FlutterRemix.user_2_fill,
-                        color: Colors.white, size: 40))),
+                    child: Icon(FlutterRemix.user_2_fill,
+                        color: Colors.white, size: 40 / 393 * 100.w))),
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -411,7 +410,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
                             ]),
                       ),
                       Container(
-                        width: 100.w - 40 - 66 / 303 * 100.w,
+                        width: (100.w - 40 - 66) / 393 * 100.w,
                         height: 40,
                         margin: const EdgeInsets.only(bottom: 20),
                         decoration: BoxDecoration(
@@ -466,7 +465,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
                         ),
                       ),
                       Container(
-                        width: 100.w - 40 - 66 / 303 * 100.w,
+                        width: (100.w - 40 - 66) / 393 * 100.w,
                         height: 40,
                         decoration: BoxDecoration(
                             color: const Color(0xffFFFFFF),
@@ -727,7 +726,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
                               ]),
                         ),
                         SizedBox(
-                          height: 120 / 852 * 100.h + 1,
+                          height: 120 / 393 * 100.w + 1,
                           width: 100.w,
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
