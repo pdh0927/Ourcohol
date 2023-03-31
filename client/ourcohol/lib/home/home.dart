@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:ourcohol/home/tabs/calendar_page/calendar.dart';
+import 'package:ourcohol/home/tabs/my_information_page/my_information.dart';
 import 'package:ourcohol/home/tabs/party_page/party.dart';
 import 'package:sizer/sizer.dart';
 
@@ -18,7 +19,7 @@ class _HomeState extends State<Home> {
     Text('Index 0: Tips'),
     Calendar(),
     Party(),
-    Text('Index 3: My'),
+    MyInformation(),
   ];
 
   void _onItemTapped(int index) {
