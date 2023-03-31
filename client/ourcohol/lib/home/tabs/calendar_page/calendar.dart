@@ -116,6 +116,7 @@ class _CalendarState extends State<Calendar> {
               int.parse(calendarData[year.toString()]![month.toString()]!)) {
         // 이번 달
         if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
+          // party가 있었을 때
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -124,7 +125,6 @@ class _CalendarState extends State<Calendar> {
                 parsedDate.day == i - startDayOfWeek + 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  // height: 9.h,
                   height: 0.59.h * 2 +
                       12 * 1.3 +
                       1 +
@@ -199,7 +199,6 @@ class _CalendarState extends State<Calendar> {
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  // height: 9.h,
                   height: 0.59.h * 2 +
                       12 * 1.3 +
                       1 +
@@ -230,9 +229,15 @@ class _CalendarState extends State<Calendar> {
             }
           }
         } else {
+          // party가 없었을 때
           childs.add(Container(
               width: (100.w - 32) / 7,
-              height: 9.h,
+              height: 0.59.h * 2 +
+                  12 * 1.3 +
+                  1 +
+                  0.59.h +
+                  (100.w - 32) / 7 -
+                  0.59.h * 2,
               padding: EdgeInsets.fromLTRB(0.59.h, 0.59.h, 0.59.h, 0.3.h),
               alignment: Alignment.center,
               child: Column(
@@ -274,7 +279,6 @@ class _CalendarState extends State<Calendar> {
                         (i - startDayOfWeek + 1)))) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  // height: 9.h,
                   height: 0.59.h * 2 +
                       12 * 1.3 +
                       1 +
@@ -362,7 +366,6 @@ class _CalendarState extends State<Calendar> {
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  // height: 9.h,
                   height: 0.59.h * 2 +
                       12 * 1.3 +
                       1 +
@@ -395,7 +398,6 @@ class _CalendarState extends State<Calendar> {
         } else {
           childs.add(Container(
               width: (100.w - 32) / 7,
-              // height: 9.h,
               height: 0.59.h * 2 +
                   12 * 1.3 +
                   1 +
@@ -435,7 +437,6 @@ class _CalendarState extends State<Calendar> {
                 parsedDate.day == (i - 7 * week - lastWeekDay + 1)) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  // height: 9.h,
                   height: 0.59.h * 2 +
                       12 * 1.3 +
                       1 +
@@ -503,7 +504,6 @@ class _CalendarState extends State<Calendar> {
             } else if (j == myPartyList.length - 1) {
               childs.add(Container(
                   width: (100.w - 32) / 7,
-                  // height: 9.h,
                   height: 0.59.h * 2 +
                       12 * 1.3 +
                       1 +
@@ -529,7 +529,6 @@ class _CalendarState extends State<Calendar> {
         } else {
           childs.add(Container(
               width: (100.w - 32) / 7,
-              // height: 9.h,
               height: 0.59.h * 2 +
                   12 * 1.3 +
                   1 +
