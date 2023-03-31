@@ -626,9 +626,27 @@ class _ActivePartyState extends State<ActiveParty> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                              alignment: Alignment.centerLeft,
-                              margin: const EdgeInsets.only(bottom: 10),
-                              child: Text('우리들의 테이블', style: textStyle14)),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('우리들의 테이블', style: textStyle14),
+                                Container(
+                                  width: 25,
+                                  height: 25,
+                                  child: MaterialButton(
+                                    minWidth: 0,
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      widget.rebuild2();
+                                    },
+                                    child: const Icon(FlutterRemix.refresh_line,
+                                        size: 20),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                           Container(
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
