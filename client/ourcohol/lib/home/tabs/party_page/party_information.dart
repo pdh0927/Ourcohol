@@ -910,7 +910,7 @@ class _PartyInformationState extends State<PartyInformation> {
                           // 술자리 끝내기
                           context.read<PartyProvider>().ended_at =
                               DateTime.now().toString();
-                          finishParty();
+                          await finishParty();
                           Navigator.pop(context);
                           context.read<PartyProvider>().initPartyInformation();
                           widget.rebuild1();

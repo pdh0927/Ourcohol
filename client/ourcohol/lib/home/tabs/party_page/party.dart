@@ -160,6 +160,7 @@ class _PartyState extends State<Party> {
           if (snapshot.hasData == false) {
             return const CupertinoActivityIndicator();
           } else {
+            DateTime now = DateTime.now();
             if (context.read<PartyProvider>().partyId == -1) {
               return NoParty(rebuild1: rebuild1);
             } else if (context.read<PartyProvider>().started_at == null) {
@@ -168,8 +169,10 @@ class _PartyState extends State<Party> {
                 rebuild1: rebuild1,
                 rebuild2: rebuild2,
               );
-            } else if (DateTime.parse(context.read<PartyProvider>().ended_at)
-                .isAfter(DateTime.now())) {
+            } else if ((DateTime.parse(context.read<PartyProvider>().ended_at)
+                    .toUtc())
+                .isBefore(DateTime.utc(now.year, now.month, now.day, now.hour,
+                    now.minute, now.second))) {
               return NoParty(rebuild1: rebuild1);
             } else {
               return ActiveParty(
