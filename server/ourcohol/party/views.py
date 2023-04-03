@@ -24,6 +24,8 @@ class PartyViewSet(viewsets.ModelViewSet):
             return PartyRetrieveSerializer
         return PartyPostSerializer
 
+    # def create(self):
+
     # 소주 1잔 추가
     @action(detail=False, methods=["get"], url_path=r"add/soju/(?P<pk>\d+)")
     def addSoju(self, request, pk):
