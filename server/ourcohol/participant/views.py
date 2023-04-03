@@ -49,11 +49,15 @@ class ParticipantViewSet(viewsets.ModelViewSet):
                 end_time = party[0].ended_at.replace(tzinfo=utc)
                 now_time = datetime.datetime.now().replace(tzinfo=utc)
                 if end_time > now_time:
+                    print(end_time)
+                    print(now_time)
+
                     return Response(
-                        {"message": "can't enroll user"},
+                        {"message": "can't craete two party today"},
                         status=status.HTTP_409_CONFLICT,
                     )
             else:  # 예전에 만든 파티에 소속되어 있으나 시작된 파티가 아닐 때
+                print("2")
                 return Response(
                     {"message": "can't enroll user"},
                     status=status.HTTP_409_CONFLICT,
