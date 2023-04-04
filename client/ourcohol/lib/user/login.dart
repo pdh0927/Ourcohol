@@ -151,7 +151,7 @@ class _LoginState extends State<Login> {
                         hintText: '비밀번호를 입력해주세요',
                         hintStyle: const TextStyle(color: Color(0xff686868)),
                         filled: true,
-                        fillColor: Color(0xffE0E0E0),
+                        fillColor: const Color(0xffE0E0E0),
                         suffixIcon: IconButton(
                           icon: Icon(
                             visible ? Icons.visibility : Icons.visibility_off,
@@ -212,30 +212,32 @@ class _LoginState extends State<Login> {
                   Container(
                     height: 30,
                     margin: EdgeInsets.only(
-                        top: (inputEmail != '' && inputPassword != '') ? 0 : 5,
-                        left: 13,
-                        right: 13),
+                      top: (inputEmail != '' && inputPassword != '') ? 0 : 5,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         MaterialButton(
                             height: 30,
-                            padding: const EdgeInsets.all(3),
+                            padding: const EdgeInsets.all(0),
                             onPressed: () async {
                               await findPassword();
                             },
-                            child: Text("비밀번호 찾기", style: textStyle11)),
+                            child: Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text("비밀번호 찾기", style: textStyle11))),
                         MaterialButton(
-                            minWidth: 53,
                             height: 30,
-                            padding: const EdgeInsets.all(3),
+                            minWidth: 60,
+                            padding: const EdgeInsets.all(0),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
                                       const EssentialInformation()));
                             },
-                            child: SizedBox(
-                                width: 50,
+                            child: Container(
+                                alignment: Alignment.centerRight,
+                                width: 60,
                                 child: Text("회원가입", style: textStyle11))),
                       ],
                     ),
