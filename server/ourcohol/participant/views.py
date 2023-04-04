@@ -53,7 +53,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
                     print(now_time)
 
                     return Response(
-                        {"message": "can't craete two party today"},
+                        {"message": "can't enroll two party in today"},
                         status=status.HTTP_409_CONFLICT,
                     )
             else:  # 예전에 만든 파티에 소속되어 있으나 시작된 파티가 아닐 때
@@ -94,7 +94,6 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     # 맥주 1잔 추가
     @action(detail=False, methods=["get"], url_path=r"add/beer/(?P<pk>\d+)")
     def addBeer(self, request, pk):
-        print(pk)
         instance = self.get_object()
         instance.drank_beer += 1
         instance.save()
