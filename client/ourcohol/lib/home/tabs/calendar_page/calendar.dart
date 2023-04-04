@@ -771,12 +771,7 @@ class _CalendarState extends State<Calendar> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              (context.read<PartyProvider>().image_memory !=
-                                          null &&
-                                      context
-                                              .read<PartyProvider>()
-                                              .image_memory !=
-                                          '')
+                              partyMemory['party']['image_memory'] != null
                                   ? Container(
                                       margin: const EdgeInsets.only(right: 8),
                                       width: 42.w,
