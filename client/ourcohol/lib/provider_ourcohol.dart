@@ -64,6 +64,12 @@ class PartyProvider extends ChangeNotifier {
     this.drank_beer = drank_beer;
     this.drank_soju = drank_soju;
 
+    setMyParticipantIndex(userId);
+
+    notifyListeners();
+  }
+
+  setMyParticipantIndex(userId) {
     if (partyId != -1) {
       for (int i = 0; i < participants.length; i++) {
         if (participants[i]['user']['id'] == userId) {
@@ -72,8 +78,6 @@ class PartyProvider extends ChangeNotifier {
         }
       }
     }
-
-    notifyListeners();
   }
 
   initPartyInformation() {
