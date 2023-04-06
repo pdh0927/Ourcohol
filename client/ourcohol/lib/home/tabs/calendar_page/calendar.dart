@@ -174,9 +174,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: myPartyList[j]['party']
+                                          ['participants'],
                                       height: ((100.w - 32) / 7 - 0.59.h * 2),
                                       width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
@@ -331,9 +330,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: myPartyList[j]['party']
+                                          ['participants'],
                                       height: ((100.w - 32) / 7 - 0.59.h * 2),
                                       width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
@@ -469,9 +467,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: myPartyList[j]['party']
+                                          ['participants'],
                                       height: ((100.w - 32) / 7 - 0.59.h * 2),
                                       width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
@@ -785,9 +782,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: partyMemory['party']
+                                          ['participants'],
                                       height: 30.w,
                                       width: 42.w),
                               partyMemory['party']['comments'].length == 0
