@@ -68,7 +68,6 @@ class _PartyState extends State<Party> {
         context.read<PartyProvider>().initPartyInformation();
       }
 
-      print(party);
       return party;
     } else {
       response = await http.get(

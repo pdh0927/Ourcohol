@@ -116,7 +116,7 @@ class _NoPartyState extends State<NoParty> {
                   'Bearer ${context.read<UserProvider>().tokenAccess}',
             });
       }
-      print(response.statusCode);
+
       if (response.statusCode == 406) {
         return null;
       } else {
