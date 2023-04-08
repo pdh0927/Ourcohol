@@ -54,6 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
             "id",
             "email",
             "nickname",
+            "image",
             "image_memory",
             "type_alcohol",
             "amount_alcohol",
