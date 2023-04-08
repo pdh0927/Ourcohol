@@ -185,6 +185,8 @@ class _LoginState extends State<Login> {
                                   userData['user']['email'],
                                   userData['user']['nickname'],
                                   userData['user']['image_memory'],
+                                  userData['user']['type_alcohol'],
+                                  userData['user']['amount_alcohol'],
                                   userData['access_token'],
                                   userData['refresh_token']);
                               Navigator.of(context).push(MaterialPageRoute(
