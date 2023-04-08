@@ -7,13 +7,17 @@ class UserProvider extends ChangeNotifier {
   String tokenAccess = '';
   String tokenRefresh = '';
   String nickname = '';
+  String type_alcohol = '';
+  double amount_alcohol = -1;
 
-  setUserInformation(
-      userId, email, nickname, image_memory, tokenAccess, tokenRefresh) {
+  setUserInformation(userId, email, nickname, image_memory, type_alcohol,
+      amount_alcohol, tokenAccess, tokenRefresh) {
     this.userId = userId;
     this.email = email;
     this.nickname = nickname;
     this.image_memory = image_memory;
+    this.type_alcohol = type_alcohol;
+    this.amount_alcohol = amount_alcohol;
     this.tokenAccess = tokenAccess;
     this.tokenRefresh = tokenRefresh;
 
