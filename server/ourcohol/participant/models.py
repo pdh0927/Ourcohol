@@ -13,7 +13,7 @@ class Participant(models.Model):
     )
     drank_beer = models.IntegerField(default=0)
     drank_soju = models.IntegerField(default=0)
-    amount_alcohol = models.IntegerField(default=1)
+
     is_host = models.BooleanField(default=False)
 
     def __str__(self):
