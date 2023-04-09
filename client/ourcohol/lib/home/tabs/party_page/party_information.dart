@@ -502,8 +502,8 @@ class _PartyInformationState extends State<PartyInformation> {
                                         ]),
                                       )
                                     : const SizedBox(height: 0, width: 0),
-                                context.read<PartyProvider>().drank_beer %
-                                            sojuStandard >
+                                (context.read<PartyProvider>().drank_beer %
+                                            beerStandard) >
                                         0
                                     ? Container(
                                         margin: EdgeInsets.only(
@@ -523,7 +523,7 @@ class _PartyInformationState extends State<PartyInformation> {
                                                 fit: BoxFit.fill,
                                               )),
                                           Text(
-                                              'X${context.read<PartyProvider>().drank_beer % sojuStandard}',
+                                              'X${context.read<PartyProvider>().drank_beer % beerStandard}',
                                               style: textStyle23)
                                         ]),
                                       )
@@ -644,7 +644,7 @@ class _PartyInformationState extends State<PartyInformation> {
                                                         .read<PartyProvider>()
                                                         .myPaticipantIndex]
                                                 ['drank_beer'] %
-                                            sojuStandard >
+                                            beerStandard >
                                         0
                                     ? Container(
                                         margin: EdgeInsets.only(
