@@ -19,6 +19,16 @@ class PlusMenu extends StatefulWidget {
 
 class _PlusMenuState extends State<PlusMenu> {
   var flag = false;
+  var totalAlcohol;
+
+  @override
+  void initState() {
+    totalAlcohol = (context.read<UserProvider>().type_alcohol == 'soju'
+            ? 0.169 * 360
+            : 0.045 * 500) *
+        context.read<UserProvider>().amount_alcohol;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +61,38 @@ class _PlusMenuState extends State<PlusMenu> {
             labelShadow: [],
             onTap: () {
               widget.modifyAlcohol('add', 'beer');
+              if ((context.read<PartyProvider>().participants[context
+                              .read<PartyProvider>()
+                              .myPaticipantIndex]['drank_soju'] *
+                          0.169 *
+                          360 /
+                          8 +
+                      context.read<PartyProvider>().participants[context
+                              .read<PartyProvider>()
+                              .myPaticipantIndex]['drank_beer'] *
+                          0.045 *
+                          500 /
+                          3) >
+                  totalAlcohol) {
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('주량 초과 알림'),
+                      content: const Text('니 더 먹으면 꽐라됨 ㅅㄱ'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Approve'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             }),
         SpeedDialChild(
             child: Image.asset('assets/images/soju.png', fit: BoxFit.fill),
@@ -58,6 +100,38 @@ class _PlusMenuState extends State<PlusMenu> {
             labelShadow: [],
             onTap: () async {
               widget.modifyAlcohol('add', 'soju');
+              if ((context.read<PartyProvider>().participants[context
+                              .read<PartyProvider>()
+                              .myPaticipantIndex]['drank_soju'] *
+                          0.169 *
+                          360 /
+                          8 +
+                      context.read<PartyProvider>().participants[context
+                              .read<PartyProvider>()
+                              .myPaticipantIndex]['drank_beer'] *
+                          0.045 *
+                          500 /
+                          3) >
+                  totalAlcohol) {
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('주량 초과 알림'),
+                      content: const Text('니 더 먹으면 꽐라됨 ㅅㄱ'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Approve'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             }),
       ],
     );

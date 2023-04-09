@@ -39,6 +39,10 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    type_alcohol = models.CharField(
+        default="soju", max_length=100, null=False, blank=False
+    )
+    amount_alcohol = models.FloatField(default=1)
 
     # 헬퍼 클래스 사용
     objects = UserManager()

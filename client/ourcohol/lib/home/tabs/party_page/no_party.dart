@@ -57,9 +57,31 @@ class _NoPartyState extends State<NoParty> {
             json.decode(utf8.decode(response.bodyBytes))['drank_beer'],
             json.decode(utf8.decode(response.bodyBytes))['drank_soju'],
             context.read<UserProvider>().userId);
+
         await addParticipant(context.read<UserProvider>().userId);
+        context
+            .read<PartyProvider>()
+            .setMyParticipantIndex(context.read<UserProvider>().userId);
       } else {
         print('파티 생성 실패');
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('파티 중복 생성'),
+              content: const Text('하루에 2개의 파티를 생성할 수 없습니다'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (e) {
       print(e.toString());
@@ -94,7 +116,7 @@ class _NoPartyState extends State<NoParty> {
                   'Bearer ${context.read<UserProvider>().tokenAccess}',
             });
       }
-      print(response.statusCode);
+
       if (response.statusCode == 406) {
         return null;
       } else {

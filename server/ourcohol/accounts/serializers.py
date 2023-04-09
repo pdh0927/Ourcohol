@@ -14,7 +14,14 @@ class UserRegisterSerializer(RegisterSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "password", "nickname", "image"]
+        fields = [
+            "email",
+            "password",
+            "nickname",
+            "image",
+            "type_alcohol",
+            "amount_alcohol",
+        ]
 
     # override get_cleaned_data of RegisterSerializer
     def get_cleaned_data(self):
@@ -43,7 +50,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "email", "nickname", "image_memory"]
+        fields = [
+            "id",
+            "email",
+            "nickname",
+            "image",
+            "image_memory",
+            "type_alcohol",
+            "amount_alcohol",
+        ]
 
     def get_image_memory(self, user: User):
         return Base64Encoding.encoding_image(user)

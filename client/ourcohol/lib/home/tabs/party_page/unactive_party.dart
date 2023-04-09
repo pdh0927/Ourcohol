@@ -22,7 +22,8 @@ class UnactiveParty extends StatefulWidget {
 }
 
 class _UnactivePartyState extends State<UnactiveParty> {
-  TextEditingController _nameComtroller = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _placeController = TextEditingController();
 
   var inputId;
 
@@ -294,8 +295,10 @@ class _UnactivePartyState extends State<UnactiveParty> {
 
   @override
   void initState() {
-    _nameComtroller =
+    _nameController =
         TextEditingController(text: context.read<PartyProvider>().name);
+    _placeController =
+        TextEditingController(text: context.read<PartyProvider>().place);
     super.initState();
   }
 
@@ -432,7 +435,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                 height: 40,
                                 alignment: Alignment.center,
                                 child: TextField(
-                                  controller: _nameComtroller,
+                                  controller: _nameController,
                                   textAlign: TextAlign.end,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   decoration: InputDecoration(
@@ -445,10 +448,9 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                         borderSide:
                                             BorderSide(style: BorderStyle.none),
                                         gapPadding: 0),
-                                    hintText:
-                                        context.read<PartyProvider>().name,
+                                    hintText: '모임명을 입력해주세요',
                                     hintStyle: const TextStyle(
-                                        color: Color(0xff131313)),
+                                        color: Color(0xff686868)),
                                     filled: true,
                                     fillColor: Colors.transparent,
                                   ),
@@ -486,6 +488,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                 height: 40,
                                 alignment: Alignment.center,
                                 child: TextField(
+                                  controller: _placeController,
                                   textAlign: TextAlign.end,
                                   textAlignVertical: TextAlignVertical.bottom,
                                   decoration: InputDecoration(
@@ -498,10 +501,9 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                         borderSide:
                                             BorderSide(style: BorderStyle.none),
                                         gapPadding: 0),
-                                    hintText:
-                                        context.read<PartyProvider>().place,
+                                    hintText: '징소를 입력해주세요',
                                     hintStyle: const TextStyle(
-                                        color: Color(0xff131313)),
+                                        color: Color(0xff686868)),
                                     filled: true,
                                     fillColor: Colors.transparent,
                                   ),

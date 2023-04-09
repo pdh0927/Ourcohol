@@ -160,12 +160,7 @@ class _CalendarState extends State<Calendar> {
                                           color: Colors.red,
                                           fontWeight: FontWeight.w700,
                                           height: 1.3)),
-                              (context.read<PartyProvider>().image_memory !=
-                                          null &&
-                                      context
-                                              .read<PartyProvider>()
-                                              .image_memory !=
-                                          '')
+                              myPartyList[j]['party']['image_memory'] != null
                                   ? Container(
                                       margin: EdgeInsets.only(bottom: 0.59.h),
                                       width: (100.w - 32) / 7 - 0.59.h * 2,
@@ -179,9 +174,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: myPartyList[j]['party']
+                                          ['participants'],
                                       height: ((100.w - 32) / 7 - 0.59.h * 2),
                                       width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
@@ -322,12 +316,7 @@ class _CalendarState extends State<Calendar> {
                                           (i - startDayOfWeek + 1))
                                       .toString(),
                                   style: textStyle5),
-                              (context.read<PartyProvider>().image_memory !=
-                                          null &&
-                                      context
-                                              .read<PartyProvider>()
-                                              .image_memory !=
-                                          '')
+                              myPartyList[j]['party']['image_memory'] != null
                                   ? Container(
                                       margin: EdgeInsets.only(bottom: 0.59.h),
                                       width: (100.w - 32) / 7 - 0.59.h * 2,
@@ -341,9 +330,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: myPartyList[j]['party']
+                                          ['participants'],
                                       height: ((100.w - 32) / 7 - 0.59.h * 2),
                                       width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
@@ -465,12 +453,7 @@ class _CalendarState extends State<Calendar> {
                             children: [
                               Text((i - 7 * week - lastWeekDay + 1).toString(),
                                   style: textStyle5),
-                              (context.read<PartyProvider>().image_memory !=
-                                          null &&
-                                      context
-                                              .read<PartyProvider>()
-                                              .image_memory !=
-                                          '')
+                              myPartyList[j]['party']['image_memory'] != null
                                   ? Container(
                                       margin: EdgeInsets.only(bottom: 0.59.h),
                                       width: (100.w - 32) / 7 - 0.59.h * 2,
@@ -484,9 +467,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: myPartyList[j]['party']
+                                          ['participants'],
                                       height: ((100.w - 32) / 7 - 0.59.h * 2),
                                       width: ((100.w - 32) / 7 - 0.59.h * 2))
                             ]),
@@ -786,12 +768,7 @@ class _CalendarState extends State<Calendar> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              (context.read<PartyProvider>().image_memory !=
-                                          null &&
-                                      context
-                                              .read<PartyProvider>()
-                                              .image_memory !=
-                                          '')
+                              partyMemory['party']['image_memory'] != null
                                   ? Container(
                                       margin: const EdgeInsets.only(right: 8),
                                       width: 42.w,
@@ -805,9 +782,8 @@ class _CalendarState extends State<Calendar> {
                                       ),
                                     )
                                   : TmpPicture(
-                                      participants: context
-                                          .read<PartyProvider>()
-                                          .participants,
+                                      participants: partyMemory['party']
+                                          ['participants'],
                                       height: 30.w,
                                       width: 42.w),
                               partyMemory['party']['comments'].length == 0
