@@ -13,7 +13,7 @@ class Participant(models.Model):
     )
     drank_beer = models.IntegerField(default=0)
     drank_soju = models.IntegerField(default=0)
-
+    alarm_flag = models.BooleanField(default=True)
     is_host = models.BooleanField(default=False)
 
     def __str__(self):
