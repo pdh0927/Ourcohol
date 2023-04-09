@@ -301,7 +301,31 @@ class _MyInformationState extends State<MyInformation> {
                   ],
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 20),
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 20),
+                    padding: EdgeInsets.only(left: 15, right: 15),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all()),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('초대 코드',
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xff131313),
+                                fontWeight: FontWeight.w700,
+                                height: 1.3)),
+                        Text('${context.read<UserProvider>().userId}',
+                            style: const TextStyle(
+                                fontSize: 18,
+                                color: Color(0xff131313),
+                                fontWeight: FontWeight.w700,
+                                height: 1.3))
+                      ],
+                    )),
+                Container(
+                  margin: const EdgeInsets.only(top: 25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
