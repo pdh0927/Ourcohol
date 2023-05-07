@@ -95,7 +95,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'OURcohol_database',  # db 이름
         'USER': 'root',     # 로그인-유저 명
-        'PASSWORD': 'qkrehdghks1!',  # 로그인-비밀번호
+        'PASSWORD': my_settings.DATABASE_PASSWORD,  # 로그인-비밀번호
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
