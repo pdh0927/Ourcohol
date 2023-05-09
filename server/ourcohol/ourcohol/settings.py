@@ -39,16 +39,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     # Installed Librarys
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
-    "rest_auth",
     "dj_rest_auth",
+    "dj_rest_auth.registration",
     "allauth",
     "allauth.account",
-    "dj_rest_auth.registration",
     "allauth.socialaccount",
+    
     # My Apps
     "party",
     "accounts",
@@ -144,65 +145,40 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-REST_USE_JWT = True
-JWT_AUTH_COOKIE = "my-app-auth"
-JWT_AUTH_REFRESH_COOKIE = "my-refresh-token"
 
-SITE_ID = 1
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_NICKNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = "email"
 
+SITE_ID = 1 # 해당 도메인의 id
+ACCOUNT_UNIQUE_EMAIL = True # User email unique 사용 여부
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None    # User username type
+ACCOUNT_USERNAME_REQUIRED = False   # User username 필수 여부
+ACCOUNT_EMAIL_REQUIRED = True   # User email 필수 여부
+ACCOUNT_NICKNAME_REQUIRED = True    # User nickname 필수 여부
+ACCOUNT_AUTHENTICATION_METHOD = "email"    # 로그인 인증 수단
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_HTTPONLY': False,  # refresh_token를 사용할 예정이라면, False로 설정을 바꿔야한다.
+    
+    'USER_DETAILS_SERIALIZER': 'accounts.serializers.UserSerializer',
+}
+
+REST_USE_JWT = True # JWT 사용 여부
+JWT_AUTH_COOKIE = "my-app-auth" # 호출할 Cookie Key값
+JWT_AUTH_REFRESH_COOKIE = "my-refresh-token"    # Refresh Token Cookie Key 값
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
-    "DEFAULT_AUTHENTICATION_CLASSES": ["dj_rest_auth.jwt_auth.JWTCookieAuthentication"],
-}
-
-REST_AUTH_REGISTER_SERIALIZERS = {
-    "REGISTER_SERIALIZER": "accounts.serializers.UserRegisterSerializer"
-}
-
-REST_AUTH_SERIALIZERS = {
-    "USER_DETAILS_SERIALIZER": "accounts.serializers.UserSerializer",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ],
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=100000),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
-    "ALGORITHM": "HS256",
-    "SIGNING_KEY": settings.SECRET_KEY,
-    "VERIFYING_KEY": "",
-    "AUDIENCE": None,
-    "ISSUER": None,
-    "JSON_ENCODER": None,
-    "JWK_URL": None,
-    "LEEWAY": 0,
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-    "USER_ID_FIELD": "id",
-    "USER_ID_CLAIM": "user_id",
-    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    "TOKEN_TYPE_CLAIM": "token_type",
-    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
-    "JTI_CLAIM": "jti",
-    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
-    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
-    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
-    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
-    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
-    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
-    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # access 토큰의 만료 시간입니다. 이 경우에는 토큰이 발급된 후 5분간 유효합니다.
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # refresh 토큰의 만료 시간입니다. 이 경우에는 토큰이 발급된 후 1일간 유효합니다.
+    
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -215,10 +191,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # URL_FRONT = 'http://****' # 공개적인 웹페이지가 있다면 등록
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # 유저가 받은 링크를 클릭하면 회원가입 완료되게끔
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = (
-    "mandatory"  # mandatory : email 인증필요, none : email 인증 필요 없음
-)
-# ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # mandatory : email 인증필요, none : email 인증 필요 없음
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 # 이메일에 자동으로 표시되는 사이트 정보
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "OURcohol[이메일 인증]"

@@ -1,10 +1,13 @@
+from django.urls import exceptions
+from django.conf import settings
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import LoginSerializer as DefaultLoginSerializer
 from .models import User
 from allauth.account.adapter import get_adapter
 import base64
-
+from django.contrib.auth import authenticate
 
 class UserRegisterSerializer(RegisterSerializer):
     nickname = serializers.CharField(
@@ -25,6 +28,7 @@ class UserRegisterSerializer(RegisterSerializer):
 
     # override get_cleaned_data of RegisterSerializer
     def get_cleaned_data(self):
+        
         return {
             "password1": self.validated_data.get("password1", ""),
             "password2": self.validated_data.get("password2", ""),
@@ -41,10 +45,12 @@ class UserRegisterSerializer(RegisterSerializer):
         user.nickname = self.cleaned_data.get("nickname")
         user.image = self.cleaned_data.get("image")
         user.save()
+        print(user)
         adapter.save_user(request, user, self)
         return user
 
 
+    
 class UserSerializer(serializers.ModelSerializer):
     image_memory = serializers.SerializerMethodField()
 
@@ -71,3 +77,6 @@ class Base64Encoding:
                 return base64.b64encode(loadedfile.read())
         else:
             return
+        
+
+   

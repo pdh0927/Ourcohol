@@ -160,6 +160,7 @@ class _PartyState extends State<Party> {
             return const CupertinoActivityIndicator();
           } else {
             DateTime now = DateTime.now();
+            print(context.read<PartyProvider>().ended_at.runtimeType);
             if (context.read<PartyProvider>().partyId == -1) {
               return NoParty(rebuild1: rebuild1);
             } else if (context.read<PartyProvider>().started_at == null) {

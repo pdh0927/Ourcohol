@@ -2,19 +2,18 @@ from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 from . import views
 from dj_rest_auth.registration.views import VerifyEmailView
-from django.contrib.auth.models import User
 from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
 router.register('', views.UserViewSet)
 
 urlpatterns = [
-    # list, detail
-    path('', include(router.urls)),
-
     # 일반 회원 회원가입/로그인
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+
+    # list, detail
+    path('', include(router.urls)),
     
     # email 인증
     # 유효한 이메일이 유저에게 전달
