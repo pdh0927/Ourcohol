@@ -8,4 +8,5 @@ urlpatterns = [
     path("api/accounts/", include("accounts.urls")),
     path("api/party/", include("party.urls")),
     path("api/participant/", include("participant.urls")),
+    path('', views.home, name='home'),
 ]
