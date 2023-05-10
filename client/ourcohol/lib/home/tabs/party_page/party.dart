@@ -35,6 +35,7 @@ class _PartyState extends State<Party> {
   Future getRecentParty() async {
     var party = {};
     http.Response response;
+
     if (Platform.isIOS) {
       response = await http.get(
           Uri.parse(
