@@ -7,13 +7,12 @@ from rest_framework.permissions import AllowAny
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from rest_framework.views import APIView
 
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
     
-    
+
 class ConfirmEmailView(APIView):
     permission_classes = [AllowAny]
 
