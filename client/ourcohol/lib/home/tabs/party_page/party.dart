@@ -35,65 +35,61 @@ class _PartyState extends State<Party> {
   Future getRecentParty() async {
     var party = {};
     http.Response response;
-    try {
-      if (Platform.isIOS) {
-        response = await http.get(
-            Uri.parse(
-                'http://127.0.0.1:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
+
+    if (Platform.isIOS) {
+      response = await http.get(
+          Uri.parse(
+              'http://127.0.0.1:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    } else {
+      response = await http.get(
+          Uri.parse(
+              'http://10.0.2.2:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+    }
+
+    if (response.statusCode == 200) {
+      if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
+        party =
+            json.decode(utf8.decode(response.bodyBytes)).toList()[0]['party'];
+
+        context.read<PartyProvider>().setPartyInformation(
+            party['id'],
+            party['image_memory'] ?? '',
+            party['participants'] ?? [],
+            party['comments'] ?? [],
+            party['name'],
+            party['place'],
+            party['image'] ?? '',
+            party['created_at'] ?? '',
+            party['started_at'] ?? '',
+            party['ended_at'] ?? '',
+            party['drank_beer'],
+            party['drank_soju'],
+            context.read<UserProvider>().userId);
+        print('update success');
       } else {
-        response = await http.get(
-            Uri.parse(
-                'http://10.0.2.2:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
+        print("2");
+        context.read<PartyProvider>().initPartyInformation();
       }
-
-      if (response.statusCode == 200) {
-        if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
-          party =
-              json.decode(utf8.decode(response.bodyBytes)).toList()[0]['party'];
-
-          context.read<PartyProvider>().setPartyInformation(
-              party['id'],
-              party['image_memory'],
-              party['participants'],
-              party['comments'],
-              party['name'],
-              party['place'],
-              party['image'],
-              party['created_at'],
-              party['started_at'],
-              party['ended_at'],
-              party['drank_beer'],
-              party['drank_soju'],
-              context.read<UserProvider>().userId);
-          print('update success');
-
-          return party;
-        } else {
-          context.read<PartyProvider>().initPartyInformation();
-        }
-        return null;
-      } else if (response.statusCode == 401) {
-        print('token expired');
-        // 여기에 새로 getrecentparty api 호출해야하는데
-        // 그보다 큰 getrecentparty 함수를 만들고 그 안에서 실제 getrecentparty 호출해서 만료됐으면 refresh하고 다시 getrecentparty 호출하는 방법이 좋을듯
-        return null;
-      } else {
-        print('fail to get');
-      }
-    } catch (e) {
-      print(e.toString());
+      return party;
+    } else if (response.statusCode == 401) {
+      print('token expired');
+      // 여기에 새로 getrecentparty api 호출해야하는데
+      // 그보다 큰 getrecentparty 함수를 만들고 그 안에서 실제 getrecentparty 호출해서 만료됐으면 refresh하고 다시 getrecentparty 호출하는 방법이 좋을듯
+      return null;
+    } else {
+      print('fail to get');
     }
   }
 
@@ -168,10 +164,9 @@ class _PartyState extends State<Party> {
             return const CupertinoActivityIndicator();
           } else {
             DateTime now = DateTime.now();
-            print(context.read<PartyProvider>().ended_at.runtimeType);
             if (context.read<PartyProvider>().partyId == -1) {
               return NoParty(rebuild1: rebuild1);
-            } else if (context.read<PartyProvider>().started_at == null) {
+            } else if (context.read<PartyProvider>().started_at == "") {
               return UnactiveParty(
                 updateParty: updateParty,
                 rebuild1: rebuild1,

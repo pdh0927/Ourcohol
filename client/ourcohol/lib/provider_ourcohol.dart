@@ -78,6 +78,7 @@ class PartyProvider extends ChangeNotifier {
       for (int i = 0; i < participants.length; i++) {
         if (participants[i]['user']['id'] == userId) {
           myPaticipantIndex = i;
+
           notifyListeners();
         }
       }
