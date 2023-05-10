@@ -3,6 +3,8 @@ from rest_framework.routers import DefaultRouter
 from . import views
 from dj_rest_auth.registration.views import VerifyEmailView
 from django.contrib.auth import views as auth_views
+from rest_framework_simplejwt.views import TokenRefreshView
+
 
 router = DefaultRouter()
 router.register('', views.UserViewSet)
@@ -11,6 +13,8 @@ urlpatterns = [
     # 일반 회원 회원가입/로그인
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+
+    path('jwt-token-auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # list, detail
     path('', include(router.urls)),
