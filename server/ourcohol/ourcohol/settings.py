@@ -176,9 +176,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # access 토큰의 만료 시간입니다. 이 경우에는 토큰이 발급된 후 5분간 유효합니다.
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # refresh 토큰의 만료 시간입니다. 이 경우에는 토큰이 발급된 후 1일간 유효합니다.
-    
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=36500),  # access 토큰의 만료 시간입니다. # 우선 무한대의 유효기간을 가짐
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=36500),  # refresh 토큰의 만료 시간입니다. # 우선 무한대의 유효기간을 가짐
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
