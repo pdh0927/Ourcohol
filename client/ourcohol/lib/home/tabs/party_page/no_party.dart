@@ -18,73 +18,67 @@ class NoParty extends StatefulWidget {
 class _NoPartyState extends State<NoParty> {
   createParty() async {
     Response response;
-    try {
-      if (Platform.isIOS) {
-        response =
-            await post(Uri.parse("http://127.0.0.1:8000/api/party/"), body: {
-          'name': '대환장파티',
-          'place': '우리집 자취방',
-        }, headers: {
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-        });
-      } else {
-        response = await post(
-            Uri.parse("http://10.0.2.2:8000/api/participant/"),
-            body: {
-              'name': '대환장파티',
-              'place': '우리집 자취방',
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      }
-      print(response.statusCode);
-      if (response.statusCode == 201) {
-        print('파티 생성 완료');
 
-        context.read<PartyProvider>().setPartyInformation(
-            json.decode(utf8.decode(response.bodyBytes))['id'],
-            json.decode(utf8.decode(response.bodyBytes))['image_memory'],
-            [],
-            json.decode(utf8.decode(response.bodyBytes))['comments'],
-            json.decode(utf8.decode(response.bodyBytes))['name'],
-            json.decode(utf8.decode(response.bodyBytes))['place'],
-            json.decode(utf8.decode(response.bodyBytes))['image'],
-            json.decode(utf8.decode(response.bodyBytes))['created_at'],
-            json.decode(utf8.decode(response.bodyBytes))['started_at'],
-            json.decode(utf8.decode(response.bodyBytes))['ended_at'],
-            json.decode(utf8.decode(response.bodyBytes))['drank_beer'],
-            json.decode(utf8.decode(response.bodyBytes))['drank_soju'],
-            context.read<UserProvider>().userId);
+    if (Platform.isIOS) {
+      response =
+          await post(Uri.parse("http://127.0.0.1:8000/api/party/"), body: {
+        'name': '대환장파티',
+        'place': '우리집 자취방',
+      }, headers: {
+        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+      });
+    } else {
+      response =
+          await post(Uri.parse("http://10.0.2.2:8000/api/participant/"), body: {
+        'name': '대환장파티',
+        'place': '우리집 자취방',
+      }, headers: {
+        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+      });
+    }
+    print(response.statusCode);
+    if (response.statusCode == 201) {
+      print('파티 생성 완료');
 
-        await addParticipant(context.read<UserProvider>().userId);
-        context
-            .read<PartyProvider>()
-            .setMyParticipantIndex(context.read<UserProvider>().userId);
-      } else {
-        print('파티 생성 실패');
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('파티 중복 생성'),
-              content: const Text('하루에 2개의 파티를 생성할 수 없습니다'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Approve'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } catch (e) {
-      print(e.toString());
+      context.read<PartyProvider>().setPartyInformation(
+          json.decode(utf8.decode(response.bodyBytes))['id'],
+          json.decode(utf8.decode(response.bodyBytes))['image_memory'] ?? '',
+          [],
+          json.decode(utf8.decode(response.bodyBytes))['comments'] ?? [],
+          json.decode(utf8.decode(response.bodyBytes))['name'],
+          json.decode(utf8.decode(response.bodyBytes))['place'],
+          json.decode(utf8.decode(response.bodyBytes))['image'] ?? '',
+          json.decode(utf8.decode(response.bodyBytes))['created_at'] ?? '',
+          json.decode(utf8.decode(response.bodyBytes))['started_at'] ?? '',
+          json.decode(utf8.decode(response.bodyBytes))['ended_at'] ?? '',
+          json.decode(utf8.decode(response.bodyBytes))['drank_beer'],
+          json.decode(utf8.decode(response.bodyBytes))['drank_soju'],
+          context.read<UserProvider>().userId);
+
+      await addParticipant(context.read<UserProvider>().userId);
+      context
+          .read<PartyProvider>()
+          .setMyParticipantIndex(context.read<UserProvider>().userId);
+    } else {
+      print('파티 생성 실패');
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('파티 중복 생성'),
+            content: const Text('하루에 2개의 파티를 생성할 수 없습니다'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Approve'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

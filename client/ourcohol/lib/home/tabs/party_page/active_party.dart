@@ -569,7 +569,7 @@ class _ActivePartyState extends State<ActiveParty> {
                               margin: const EdgeInsets.only(bottom: 10),
                               child: Text(context.read<PartyProvider>().name,
                                   style: textStyle22)),
-                          context.read<PartyProvider>().image_memory != null
+                          context.read<PartyProvider>().image_memory != ''
                               ? Container(
                                   margin: const EdgeInsets.only(left: 15),
                                   width: 100.w - 32 - 50,
