@@ -3,7 +3,9 @@ from django.urls import path, include
 from ourcohol import views
 
 urlpatterns = [
+
     path('', views.home, name='home'),
+
     path("admin/", admin.site.urls),
     path("api/accounts/", include("accounts.urls")),
     path("api/party/", include("party.urls")),
