@@ -87,11 +87,11 @@ WSGI_APPLICATION = "ourcohol.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # engine: mysql
-        'NAME' : my_settings.DATABASE_NAME, # DB Name
-        'USER' : my_settings.DATABASE_USER, # DB User
-        'PASSWORD' : my_settings.DATABASE_PASSWORD, # Password
-        'HOST': my_settings.DATABASE_HOST, # 생성한 데이터베이스 엔드포인트
-        'PORT': my_settings.DATABASE_PORT, # 데이터베이스 포트
+        'NAME' : 'ourcohol-db', # DB Name
+        'USER' : 'dh', # DB User
+        'PASSWORD' :'VeAfAgzen8ySG2juCPq3', # Password
+        'HOST':'ourcohol-db.civfil7mmaw0.ap-northeast-2.rds.amazonaws.com', # 생성한 데이터베이스 엔드포인트
+        'PORT': '3306', # 데이터베이스 포트
         'OPTIONS': {
             'sql_mode': 'STRICT_ALL_TABLES'  # Strict Mode 활성화
         }
