@@ -180,15 +180,17 @@ class _LoginState extends State<Login> {
                                 await login(inputEmail, inputPassword);
 
                             if (userData != null) {
+                              print(userData['user']['image_memory']);
                               context.read<UserProvider>().setUserInformation(
                                   userData['user']['id'],
                                   userData['user']['email'],
                                   userData['user']['nickname'],
-                                  userData['user']['image_memory'],
+                                  userData['user']['image_memory'] ?? '',
                                   userData['user']['type_alcohol'],
                                   userData['user']['amount_alcohol'],
                                   userData['access'],
                                   userData['refresh']);
+
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const Home()));
                             } else {
