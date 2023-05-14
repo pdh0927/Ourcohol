@@ -604,27 +604,14 @@ class _CalendarState extends State<Calendar> {
   var myPartyList = [];
   Future getMyPartyList() async {
     http.Response response;
-    if (Platform.isIOS) {
-      response = await http.get(
-          Uri.parse(
-              'http://127.0.0.1:8000/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    } else {
-      response = await http.get(
-          Uri.parse(
-              'http://10.0.2.2:8000/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    }
+    response = await http.get(
+        Uri.parse(
+            'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+        });
 
     if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
       setState(() {
