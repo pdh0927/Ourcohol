@@ -32,7 +32,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
     try {
       response = await patch(
           Uri.parse(
-              "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/${context.read<PartyProvider>().partyId}/"),
+              "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
           body: {
             'started_at': context.read<PartyProvider>().started_at,
             'ended_at': context.read<PartyProvider>().ended_at,
@@ -41,7 +41,6 @@ class _UnactivePartyState extends State<UnactiveParty> {
             'Authorization':
                 'Bearer ${context.read<UserProvider>().tokenAccess}',
           });
-
       if (response.statusCode == 200) {
         print('update success');
         return null;
@@ -58,7 +57,8 @@ class _UnactivePartyState extends State<UnactiveParty> {
     Response response;
 
     response = await delete(
-        Uri.parse("http://127.0.0.1:8000/${participantId}/"),
+        Uri.parse(
+            "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${participantId}/"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -77,7 +77,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
 
     response = await delete(
         Uri.parse(
-            "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/${context.read<PartyProvider>().partyId}/"),
+            "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
