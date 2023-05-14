@@ -36,27 +36,14 @@ class _PartyState extends State<Party> {
     var party = {};
     http.Response response;
 
-    if (Platform.isIOS) {
-      response = await http.get(
-          Uri.parse(
-              'http://127.0.0.1:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    } else {
-      response = await http.get(
-          Uri.parse(
-              'http://10.0.2.2:8000/api/participant/recent/${context.read<UserProvider>().userId}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    }
+    response = await http.get(
+        Uri.parse(
+            'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/recent/${context.read<UserProvider>().userId}/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+        });
 
     if (response.statusCode == 200) {
       if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
@@ -79,7 +66,6 @@ class _PartyState extends State<Party> {
             context.read<UserProvider>().userId);
         print('update success');
       } else {
-        print("2");
         context.read<PartyProvider>().initPartyInformation();
       }
       return party;
@@ -93,21 +79,21 @@ class _PartyState extends State<Party> {
     }
   }
 
-  tokenRefresh() async {
-    http.Response response;
-    if (Platform.isIOS) {
-      // print(context.read<UserProvider>().tokenRefresh);
-      response = await post(
-          Uri.parse(
-              'http://127.0.0.1:8000/api/accounts/jwt-token-auth/refresh/'),
-          body: {'refresh': context.read<UserProvider>().tokenRefresh});
-    } else {
-      response = await http.get(Uri.parse(
-          'http://10.0.2.2:8000/api/participant/recent/${context.read<UserProvider>().userId}/'));
-    }
-    context.read<UserProvider>().tokenAccess =
-        Map.castFrom(json.decode(utf8.decode(response.bodyBytes)))['access'];
-  }
+  // tokenRefresh() async {
+  //   http.Response response;
+  //   if (Platform.isIOS) {
+  //     // print(context.read<UserProvider>().tokenRefresh);
+  //     response = await post(
+  //         Uri.parse(
+  //             'http://127.0.0.1:8000/api/accounts/jwt-token-auth/refresh/'),
+  //         body: {'refresh': context.read<UserProvider>().tokenRefresh});
+  //   } else {
+  //     response = await http.get(Uri.parse(
+  //         'http://10.0.2.2:8000/api/participant/recent/${context.read<UserProvider>().userId}/'));
+  //   }
+  //   context.read<UserProvider>().tokenAccess =
+  //       Map.castFrom(json.decode(utf8.decode(response.bodyBytes)))['access'];
+  // }
 
   updateParty(String key, String value) async {
     http.Response response;
@@ -115,7 +101,7 @@ class _PartyState extends State<Party> {
       if (Platform.isIOS) {
         response = await patch(
             Uri.parse(
-                "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
+                "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
             body: {
               key: value
             },

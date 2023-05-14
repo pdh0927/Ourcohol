@@ -36,7 +36,7 @@ class _NoPartyState extends State<NoParty> {
         'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
       });
     }
-    print(response.statusCode);
+
     if (response.statusCode == 201) {
       print('파티 생성 완료');
 
