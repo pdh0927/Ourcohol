@@ -36,32 +36,20 @@ class _ActivePartyState extends State<ActiveParty> {
   addPicture() async {
     http.StreamedResponse response;
     try {
-      if (Platform.isIOS) {
-        String url =
-            "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/";
-        var request = http.MultipartRequest(
-          'PATCH',
-          Uri.parse(url),
-        );
-        request.headers.addAll({
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
-        });
-        request.files
-            .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+      String url =
+          "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/";
+      var request = http.MultipartRequest(
+        'PATCH',
+        Uri.parse(url),
+      );
+      request.headers.addAll({
+        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
+      });
+      request.files
+          .add(await http.MultipartFile.fromPath('image', resultImage!.path));
 
-        response = await request.send();
-      } else {
-        String url =
-            "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/";
-        var request = http.MultipartRequest('PATCH', Uri.parse(url));
-        request.headers.addAll({
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
-        });
-        request.files
-            .add(await http.MultipartFile.fromPath('image', resultImage!.path));
+      response = await request.send();
 
-        response = await request.send();
-      }
       if (response.statusCode == 200) {
         print('사진 잘 올리감');
       } else {
@@ -420,45 +408,24 @@ class _ActivePartyState extends State<ActiveParty> {
   Future _modifyAlcohol(String modifyType, String alcoholType) async {
     http.Response response;
     http.Response response2;
-    if (Platform.isIOS) {
-      response = await http.get(
-          Uri.parse(
-              'http://127.0.0.1:8000/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-      response2 = await http.get(
-          Uri.parse(
-              'http://127.0.0.1:8000/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    } else {
-      response = await http.get(
-          Uri.parse(
-              'http://10.0.2.2:8000/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-      response2 = await http.get(
-          Uri.parse(
-              'http://10.0.2.2:8000/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    }
+
+    response = await http.get(
+        Uri.parse(
+            'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+        });
+    response2 = await http.get(
+        Uri.parse(
+            'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+        });
+
     return;
   }
 
