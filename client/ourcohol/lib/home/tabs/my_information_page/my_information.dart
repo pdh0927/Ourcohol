@@ -95,49 +95,27 @@ class _MyInformationState extends State<MyInformation> {
   Future<void> modifyMyInformation(key, value) async {
     http.StreamedResponse response;
     try {
-      if (Platform.isIOS) {
-        var dio = Dio();
-        var formData;
-        if (key != 'image') {
-          formData = FormData.fromMap({key: value});
-        } else {
-          print(resultImage);
-          formData = FormData.fromMap(
-              {'image': await MultipartFile.fromFile(resultImage!.path)});
-        }
-        final options = Options(headers: {
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
-        });
-        // 업로드 요청
-        final response = await dio.patch(
-            'http://127.0.0.1:8000/api/accounts/${context.read<UserProvider>().userId}/',
-            data: formData,
-            options: options);
-        setState(() {
-          context.read<UserProvider>().image_memory =
-              response.data['image_memory'];
-        });
+      var dio = Dio();
+      var formData;
+      if (key != 'image') {
+        formData = FormData.fromMap({key: value});
       } else {
-        var dio = Dio();
-        var formData;
-        if (key != 'image') {
-          formData = FormData.fromMap({key: value});
-        } else {
-          formData = FormData.fromMap(
-              {'image': await MultipartFile.fromFile(resultImage!.path)});
-        }
-        final options = Options(headers: {
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
-        });
-        final response = await dio.patch(
-            'http://10.0.2.2:8000/api/accounts/${context.read<UserProvider>().userId}/',
-            data: formData,
-            options: options);
-        setState(() {
-          context.read<UserProvider>().image_memory =
-              response.data['image_memory'];
-        });
+        print(resultImage);
+        formData = FormData.fromMap(
+            {'image': await MultipartFile.fromFile(resultImage!.path)});
       }
+      final options = Options(headers: {
+        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
+      });
+      // 업로드 요청
+      final response = await dio.patch(
+          'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${context.read<UserProvider>().userId}/',
+          data: formData,
+          options: options);
+      setState(() {
+        context.read<UserProvider>().image_memory =
+            response.data['image_memory'];
+      });
     } catch (e) {
       print(e.toString());
     }
@@ -183,7 +161,7 @@ class _MyInformationState extends State<MyInformation> {
                   children: [
                     Stack(
                       children: [
-                        (context.read<UserProvider>().image_memory != null
+                        (context.read<UserProvider>().image_memory != ''
                             ? Container(
                                 width: 100 / 393 * 100.w,
                                 height: 100 / 393 * 100.w,
