@@ -10,7 +10,7 @@ class UserRegisterSerializer(RegisterSerializer):
     nickname = serializers.CharField(
         max_length=100,
     )
-    image = serializers.ImageField()
+    image = serializers.ImageField(required=False, allow_null=True)  # image 필드가 필수가 아님을 명시합니다.
 
     class Meta:
         model = User
@@ -30,7 +30,7 @@ class UserRegisterSerializer(RegisterSerializer):
             "password2": self.validated_data.get("password2", ""),
             "email": self.validated_data.get("email", ""),
             "nickname": self.validated_data.get("nickname", ""),
-            "image": self.validated_data.get("image", ""),
+            "image": self.validated_data.get("image", None),  # None이 기본값이 됩니다.
         }
 
     # override save method of RegisterSerializer
