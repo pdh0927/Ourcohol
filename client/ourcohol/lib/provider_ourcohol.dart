@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserProvider extends ChangeNotifier {
   int userId = -1;
@@ -10,6 +11,8 @@ class UserProvider extends ChangeNotifier {
   String type_alcohol = '';
   double amount_alcohol = -1;
 
+  final storage = FlutterSecureStorage(); // FlutterSecureStorage를 storage로 저장
+
   setUserInformation(userId, email, nickname, image_memory, type_alcohol,
       amount_alcohol, tokenAccess, tokenRefresh) {
     this.userId = userId;
@@ -20,6 +23,19 @@ class UserProvider extends ChangeNotifier {
     this.amount_alcohol = amount_alcohol;
     this.tokenAccess = tokenAccess;
     this.tokenRefresh = tokenRefresh;
+
+    notifyListeners();
+  }
+
+  initUserInformation() {
+    userId = -1;
+    image_memory = '';
+    email = '';
+    tokenAccess = '';
+    tokenRefresh = '';
+    nickname = '';
+    type_alcohol = '';
+    amount_alcohol = -1;
 
     notifyListeners();
   }
