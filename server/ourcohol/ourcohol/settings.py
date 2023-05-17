@@ -181,6 +181,7 @@ REST_AUTH = {
     'JWT_AUTH_HTTPONLY': False,  # refresh_token를 사용할 예정이라면, False로 설정을 바꿔야한다.
     
     'USER_DETAILS_SERIALIZER': 'accounts.serializers.UserSerializer',
+    'REGISTER_SERIALIZER' : 'accounts.serializers.UserRegisterSerializer'
 }
 
 REST_USE_JWT = True # JWT 사용 여부
