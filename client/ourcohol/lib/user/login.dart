@@ -35,9 +35,10 @@ class _LoginState extends State<Login> {
     // 데이터가 없을때는 null을 반환
     userInfo = await storage.read(key: 'login');
 
-    // user의 정보가 있다면 로그인 후 들어가는 첫 페이지로 넘어가게 합니다.
+    // user의 정보가 있다면 첫 페이지로 넘어가게 합니다.
     if (userInfo != null) {
       userInfo = jsonDecode(userInfo);
+      // 앱내에서 유저 변경 정보가 있을수도 있으니 Login말고 detail 가져오기로 정보 불러와서 povider에 저장
       await getUserInfo(userInfo['user']['id'], userInfo['access']);
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const Home()));
