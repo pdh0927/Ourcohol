@@ -116,44 +116,21 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
   Future<void> postRequest(user) async {
     http.StreamedResponse response;
     try {
-      if (Platform.isIOS) {
-        var dio = Dio();
-        var formData = FormData.fromMap({
-          'email': user['email'],
-          'password1': user['password1'],
-          'password2': user['password2'],
-          'nickname': user['nickname'],
-          'image': await MultipartFile.fromFile(resultImage!.path)
-        });
-        print(resultImage!.path);
+      var dio = Dio();
+      var formData = FormData.fromMap({
+        'email': user['email'],
+        'password1': user['password1'],
+        'password2': user['password2'],
+        'nickname': user['nickname'],
+        'image': resultImage == null
+            ? null
+            : await MultipartFile.fromFile(resultImage!.path)
+      });
 
-        // 업로드 요청
-        final response = await dio.post(
-            'http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/',
-            data: formData);
-      } else {
-        print('ㅇ이거');
-        String url =
-            "http://10.0.2.2:8000/api/accounts/dj-rest-auth/registration/";
-        var request = http.MultipartRequest('POST', Uri.parse(url));
-
-        request.files
-            .add(await http.MultipartFile.fromPath('image', resultImage!.path));
-        request.fields.addAll({
-          'email': user['email'],
-          'password1': user['password1'],
-          'password2': user['password2'],
-          'nickname': user['nickname']
-        });
-        response = await request.send();
-      }
-      // if (response.statusCode == 200) {
-
-      //   print('회원가입 Successfully');
-      //   return userData;
-      // } else {
-      //   return null;
-      // }
+      // 업로드 요청
+      final response = await dio.post(
+          'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/registration/',
+          data: formData);
     } catch (e) {
       print(e.toString());
     }
