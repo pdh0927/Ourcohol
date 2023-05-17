@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:ourcohol/home/home.dart';
 import 'package:ourcohol/style.dart';
@@ -20,15 +21,69 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  static final storage =
+      FlutterSecureStorage(); // FlutterSecureStorage를 storage로 저장
+  dynamic userInfo = ''; // storage에 있는 유저 정보를 저장
+
   bool visible = true;
   var inputEmail = '';
   var flagValidateEmail = false;
   var inputPassword = '';
 
+  _asyncMethod() async {
+    // read 함수로 key값에 맞는 정보를 불러오고 데이터타입은 String 타입
+    // 데이터가 없을때는 null을 반환
+    userInfo = await storage.read(key: 'login');
+
+    // user의 정보가 있다면 로그인 후 들어가는 첫 페이지로 넘어가게 합니다.
+    if (userInfo != null) {
+      userInfo = jsonDecode(userInfo);
+      await getUserInfo(userInfo['user']['id'], userInfo['access']);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const Home()));
+    } else {
+      print('로그인이 필요합니다');
+    }
+  }
+
   validateEmail() {
     setState(() {
       flagValidateEmail = EmailValidator.validate(inputEmail);
     });
+  }
+
+  getUserInfo(int userId, String accessToken) async {
+    Response response;
+    print(userId);
+    print(accessToken);
+    try {
+      response = await patch(
+          Uri.parse(
+              "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${accessToken}',
+          });
+      if (response.statusCode == 200) {
+        context.read<UserProvider>().setUserInformation(
+            userInfo['user']['id'],
+            userInfo['user']['email'],
+            userInfo['user']['nickname'],
+            userInfo['user']['image_memory'] ?? '',
+            userInfo['user']['type_alcohol'],
+            userInfo['user']['amount_alcohol'],
+            userInfo['access'],
+            userInfo['refresh']);
+        print('get information Successfully');
+        return null;
+      } else {
+        print(response.statusCode);
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   login(String email, String password) async {
@@ -41,7 +96,10 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200) {
         var userData =
             Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
-
+        await storage.write(
+          key: 'login',
+          value: jsonEncode(userData),
+        );
         print('Login Successfully');
         return userData;
       } else {
@@ -68,6 +126,15 @@ class _LoginState extends State<Login> {
       // 인앱 브라우저 실행
       await launchUrl(url);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 비동기로 flutter secure storage 정보를 불러오는 작업
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
   }
 
   @override
@@ -174,7 +241,6 @@ class _LoginState extends State<Login> {
                                 await login(inputEmail, inputPassword);
 
                             if (userData != null) {
-                              print(userData['user']['image_memory']);
                               context.read<UserProvider>().setUserInformation(
                                   userData['user']['id'],
                                   userData['user']['email'],
