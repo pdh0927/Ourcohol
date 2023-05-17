@@ -34,25 +34,15 @@ class _PartyInformationState extends State<PartyInformation> {
 
   deleteParticipant(participantId) async {
     Response response;
-    if (Platform.isIOS) {
-      response = await delete(
-          Uri.parse("http://127.0.0.1:8000/api/participant/${participantId}/"),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    } else {
-      response = await delete(
-          Uri.parse("http://10.0.2.2:8000/api/participant/${participantId}/"),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
-    }
+
+    response = await delete(
+        Uri.parse(
+            "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${participantId}/"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+        });
 
     if (response.statusCode == 204) {
       print('삭제 성공');
@@ -64,29 +54,18 @@ class _PartyInformationState extends State<PartyInformation> {
   addParticipant(userId) async {
     Response response;
     try {
-      if (Platform.isIOS) {
-        response = await post(
-            Uri.parse("http://127.0.0.1:8000/api/participant/"),
-            body: {
-              'user': userId.toString(),
-              'party': context.read<PartyProvider>().partyId.toString(),
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      } else {
-        response = await post(
-            Uri.parse("http://10.0.2.2:8000/api/participant/"),
-            body: {
-              'user': userId.toString(),
-              'party': context.read<PartyProvider>().partyId.toString(),
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      }
+      response = await post(
+          Uri.parse(
+              "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/"),
+          body: {
+            'user': userId.toString(),
+            'party': context.read<PartyProvider>().partyId.toString(),
+          },
+          headers: {
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
+
       print(response.statusCode);
       if (response.statusCode == 406) {
         showDialog<void>(

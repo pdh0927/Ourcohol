@@ -19,24 +19,17 @@ class _NoPartyState extends State<NoParty> {
   createParty() async {
     Response response;
 
-    if (Platform.isIOS) {
-      response =
-          await post(Uri.parse("http://127.0.0.1:8000/api/party/"), body: {
-        'name': '대환장파티',
-        'place': '우리집 자취방',
-      }, headers: {
-        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-      });
-    } else {
-      response =
-          await post(Uri.parse("http://10.0.2.2:8000/api/participant/"), body: {
-        'name': '대환장파티',
-        'place': '우리집 자취방',
-      }, headers: {
-        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-      });
-    }
-    print(response.statusCode);
+    response = await post(
+        Uri.parse(
+            "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/"),
+        body: {
+          'name': '대환장파티',
+          'place': '우리집 자취방',
+        },
+        headers: {
+          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+        });
+
     if (response.statusCode == 201) {
       print('파티 생성 완료');
 
@@ -85,31 +78,18 @@ class _NoPartyState extends State<NoParty> {
   addParticipant(userId) async {
     Response response;
     try {
-      if (Platform.isIOS) {
-        response = await post(
-            Uri.parse("http://127.0.0.1:8000/api/participant/"),
-            body: {
-              'user': userId.toString(),
-              'party': context.read<PartyProvider>().partyId.toString(),
-              'is_host': 'true'
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      } else {
-        response = await post(
-            Uri.parse("http://10.0.2.2:8000/api/participant/"),
-            body: {
-              'user': userId.toString(),
-              'party': context.read<PartyProvider>().partyId.toString(),
-              'is_host': 'true'
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      }
+      response = await post(
+          Uri.parse(
+              "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/"),
+          body: {
+            'user': userId.toString(),
+            'party': context.read<PartyProvider>().partyId.toString(),
+            'is_host': 'true'
+          },
+          headers: {
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
 
       if (response.statusCode == 406) {
         return null;

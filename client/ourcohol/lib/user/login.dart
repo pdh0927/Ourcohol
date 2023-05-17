@@ -34,16 +34,10 @@ class _LoginState extends State<Login> {
   login(String email, String password) async {
     Response response;
     try {
-      if (Platform.isIOS) {
-        response = await post(
-            Uri.parse("http://127.0.0.1:8000/api/accounts/dj-rest-auth/login/"),
-            body: {'email': email, 'password': password});
-      } else {
-        response = await post(
-            Uri.parse("http://10.0.2.2:8000/api/accounts/dj-rest-auth/login/"),
-            body: {'email': email, 'password': password});
-      }
-
+      response = await post(
+          Uri.parse(
+              "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
+          body: {'email': email, 'password': password});
       if (response.statusCode == 200) {
         var userData =
             Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
@@ -180,15 +174,17 @@ class _LoginState extends State<Login> {
                                 await login(inputEmail, inputPassword);
 
                             if (userData != null) {
+                              print(userData['user']['image_memory']);
                               context.read<UserProvider>().setUserInformation(
                                   userData['user']['id'],
                                   userData['user']['email'],
                                   userData['user']['nickname'],
-                                  userData['user']['image_memory'],
+                                  userData['user']['image_memory'] ?? '',
                                   userData['user']['type_alcohol'],
                                   userData['user']['amount_alcohol'],
                                   userData['access'],
                                   userData['refresh']);
+
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const Home()));
                             } else {
