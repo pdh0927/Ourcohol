@@ -63,6 +63,11 @@ class _MyInformationState extends State<MyInformation> {
     }
   }
 
+  logout() async {
+    context.read<UserProvider>().initUserInformation(); // provider 정보 초기화
+    await context.read<UserProvider>().storage.delete(key: 'login');
+  }
+
   getAmountAlcoholList() {
     List<PopupMenuEntry<double>> childs = [];
 
@@ -467,7 +472,14 @@ class _MyInformationState extends State<MyInformation> {
                           ))
                     ],
                   ),
-                )
+                ),
+                Container(
+                    child: MaterialButton(
+                        onPressed: () async {
+                          await logout();
+                          Navigator.pop(context);
+                        },
+                        child: Text('로그아웃'))),
               ],
             ),
           ),
