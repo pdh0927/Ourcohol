@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:ourcohol/home/tabs/calendar_page/party_detail.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 
 import 'package:ourcohol/style.dart';
@@ -743,10 +744,20 @@ class _CalendarState extends State<Calendar> {
                                 '${partyMemory['party']['name']}',
                                 style: textStyle6,
                               ),
-                              Text(
-                                '더 보기',
-                                style: textStyle7,
-                              ),
+                              Container(
+                                  width: 30,
+                                  child: MaterialButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () async {
+                                        Navigator.of(context,
+                                                rootNavigator: false)
+                                            .push(MaterialPageRoute(
+                                                builder: (c) => PartyDetail(partyMemory:partyMemory)));
+                                      },
+                                      child: Text(
+                                        '더 보기',
+                                        style: textStyle7,
+                                      ))),
                             ],
                           ),
                         ),
