@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:ourcohol/home/tabs/calendar_page/party_detail.dart';
+import 'package:ourcohol/home/tabs/calendar_page/party_memory.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 
 import 'package:ourcohol/style.dart';
@@ -605,9 +605,9 @@ class _CalendarState extends State<Calendar> {
   var myPartyList = [];
   Future getMyPartyList() async {
     http.Response response;
-    response = await http.get(
-        Uri.parse(
-            'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+    response = await http.get(Uri.parse(
+            // 'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+            'http://127.0.0.1:8000//api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -752,7 +752,8 @@ class _CalendarState extends State<Calendar> {
                                         Navigator.of(context,
                                                 rootNavigator: false)
                                             .push(MaterialPageRoute(
-                                                builder: (c) => PartyDetail(partyMemory:partyMemory)));
+                                                builder: (c) => PartyDetail(
+                                                    partyMemory: partyMemory)));
                                       },
                                       child: Text(
                                         '더 보기',
