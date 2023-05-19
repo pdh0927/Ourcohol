@@ -57,14 +57,13 @@ class _LoginState extends State<Login> {
     print(userId);
     print(accessToken);
     try {
-      response = await patch(
-          Uri.parse(
-              "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${accessToken}',
-          });
+      response = await patch(Uri.parse(
+          // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
+          "http://127.0.0.1:8000//api/accounts/${userId}/"), headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${accessToken}',
+      });
       if (response.statusCode == 200) {
         context.read<UserProvider>().setUserInformation(
             userInfo['user']['id'],
@@ -89,10 +88,12 @@ class _LoginState extends State<Login> {
   login(String email, String password) async {
     Response response;
     try {
-      response = await post(
-          Uri.parse(
-              "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
-          body: {'email': email, 'password': password});
+      response = await post(Uri.parse(
+          // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
+          "http://127.0.0.1:8000//api/accounts/dj-rest-auth/login/"), body: {
+        'email': email,
+        'password': password
+      });
       if (response.statusCode == 200) {
         var userData =
             Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));

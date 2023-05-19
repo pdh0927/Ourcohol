@@ -30,17 +30,14 @@ class _UnactivePartyState extends State<UnactiveParty> {
   startParty() async {
     http.Response response;
     try {
-      response = await patch(
-          Uri.parse(
-              "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
-          body: {
-            'started_at': context.read<PartyProvider>().started_at,
-            'ended_at': context.read<PartyProvider>().ended_at,
-          },
-          headers: {
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
+      response = await patch(Uri.parse(
+          // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
+          "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"), body: {
+        'started_at': context.read<PartyProvider>().started_at,
+        'ended_at': context.read<PartyProvider>().ended_at,
+      }, headers: {
+        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+      });
       if (response.statusCode == 200) {
         print('update success');
         return null;
@@ -56,14 +53,13 @@ class _UnactivePartyState extends State<UnactiveParty> {
   deleteParticipant(participantId) async {
     Response response;
 
-    response = await delete(
-        Uri.parse(
-            "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${participantId}/"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-        });
+    response = await delete(Uri.parse(
+        // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${participantId}/"),
+        "http://127.0.0.1:8000/api/participant/${participantId}/"), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+    });
 
     if (response.statusCode == 204) {
       print('삭제 성공');
@@ -75,9 +71,9 @@ class _UnactivePartyState extends State<UnactiveParty> {
   deleteParty() async {
     Response response;
 
-    response = await delete(
-        Uri.parse(
-            "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
+    response = await delete(Uri.parse(
+            // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
+            "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -99,19 +95,15 @@ class _UnactivePartyState extends State<UnactiveParty> {
   addParticipant(userId) async {
     Response response;
     try {
-      response = await post(
-          Uri.parse(
-              "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/"),
-          body: {
-            'user': userId.toString(),
-            'party': context.read<PartyProvider>().partyId.toString(),
-          },
-          headers: {
-            'Authorization':
-                'Bearer ${context.read<UserProvider>().tokenAccess}',
-          });
+      response = await post(Uri.parse(
+          // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/"),
+          "http://127.0.0.1:8000/api/participant/"), body: {
+        'user': userId.toString(),
+        'party': context.read<PartyProvider>().partyId.toString(),
+      }, headers: {
+        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+      });
 
-      print(response.statusCode);
       if (response.statusCode == 406) {
         showDialog<void>(
           context: context,
@@ -298,7 +290,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
+                Container( 
                   width: 100.w - 50,
                   height: (100.w - 40) * 1.1,
                   margin:

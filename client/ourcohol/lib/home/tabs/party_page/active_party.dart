@@ -37,7 +37,8 @@ class _ActivePartyState extends State<ActiveParty> {
     http.StreamedResponse response;
     try {
       String url =
-          "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/";
+          // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/";
+          "http://127.0.0.1:8000/api/party/${context.read<PartyProvider>().partyId}/";
       var request = http.MultipartRequest(
         'PATCH',
         Uri.parse(url),
@@ -409,17 +410,17 @@ class _ActivePartyState extends State<ActiveParty> {
     http.Response response;
     http.Response response2;
 
-    response = await http.get(
-        Uri.parse(
-            'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
+    response = await http.get(Uri.parse(
+            // 'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
+            'http://127.0.0.1:8000/api/participant/${modifyType}/${alcoholType}/${context.read<PartyProvider>().participants[context.read<PartyProvider>().myPaticipantIndex]['id']}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
         });
-    response2 = await http.get(
-        Uri.parse(
-            'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
+    response2 = await http.get(Uri.parse(
+            // 'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
+            'http://127.0.0.1:8000/api/party/${modifyType}/${alcoholType}/${context.read<PartyProvider>().partyId}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
