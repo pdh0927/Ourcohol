@@ -84,26 +84,26 @@ WSGI_APPLICATION = "ourcohol.wsgi.application"
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # engine: mysql
-        'NAME' : 'ourcohol-db', # DB Name
-        'USER' : 'dh', # DB User
-        'PASSWORD' :'VeAfAgzen8ySG2juCPq3', # Password
-        'HOST':'ourcohol-db.civfil7mmaw0.ap-northeast-2.rds.amazonaws.com', # 생성한 데이터베이스 엔드포인트
-        'PORT': '3306', # 데이터베이스 포트
-        'OPTIONS': {
-            'sql_mode': 'STRICT_ALL_TABLES'  # Strict Mode 활성화
-        }
-    }
-}
-
 # DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', # engine: mysql
+#         'NAME' : 'ourcohol-db', # DB Name
+#         'USER' : 'dh', # DB User
+#         'PASSWORD' :'VeAfAgzen8ySG2juCPq3', # Password
+#         'HOST':'ourcohol-db.civfil7mmaw0.ap-northeast-2.rds.amazonaws.com', # 생성한 데이터베이스 엔드포인트
+#         'PORT': '3306', # 데이터베이스 포트
+#         'OPTIONS': {
+#             'sql_mode': 'STRICT_ALL_TABLES'  # Strict Mode 활성화
+#         }
 #     }
 # }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 
 # local
 # DATABASES = {
