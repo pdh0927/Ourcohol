@@ -126,7 +126,7 @@ class _CalendarState extends State<Calendar> {
 
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
-                DateTime.parse(myPartyList[j]['party']['created_at']);
+                DateTime.parse(myPartyList[j]['party']['started_at']);
             if (parsedDate.year == year &&
                 parsedDate.month == month &&
                 parsedDate.day == i - startDayOfWeek + 1) {
