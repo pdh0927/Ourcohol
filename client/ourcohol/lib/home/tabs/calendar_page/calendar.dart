@@ -29,6 +29,12 @@ class _CalendarState extends State<Calendar> {
   int selectedMonth = -1;
   int selectedDay = -1;
 
+  rebuild() {
+    setDate();
+    partyMemory = null;
+    _future = getMyPartyList();
+  }
+
   setDate() {
     DateTime? date = DateTime.now();
     setState(() {
@@ -110,7 +116,6 @@ class _CalendarState extends State<Calendar> {
   List<Widget> getDateList(week) {
     int lastWeekDay = 0;
     List<Widget> childs = [];
-
     for (int i = week * 7; i < week * 7 + 7; i++) {
       if (i - startDayOfWeek + 1 > 0 &&
           i - startDayOfWeek + 1 <=
@@ -118,6 +123,7 @@ class _CalendarState extends State<Calendar> {
         // 이번 달
         if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
           // party가 있었을 때
+
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
                 DateTime.parse(myPartyList[j]['party']['created_at']);
@@ -753,7 +759,8 @@ class _CalendarState extends State<Calendar> {
                                                 rootNavigator: false)
                                             .push(MaterialPageRoute(
                                                 builder: (c) => PartyDetail(
-                                                    partyMemory: partyMemory)));
+                                                    partyMemory: partyMemory,
+                                                    rebuild: rebuild)));
                                       },
                                       child: Text(
                                         '더 보기',
@@ -869,6 +876,7 @@ class _TmpPictureState extends State<TmpPicture> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 0.59.h),
       decoration: const BoxDecoration(
           image: DecorationImage(
         fit: BoxFit.fill,
