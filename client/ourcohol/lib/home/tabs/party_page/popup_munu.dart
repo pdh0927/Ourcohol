@@ -67,11 +67,18 @@ class _PopupMenuState extends State<PopupMenu> {
           barrierDismissible: false, // user must tap button!
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('이미 초대된 사용자 '),
-              content: const Text('다른 사용자를 초대해주세요'),
+              title: const Text('이미 초대된 사용자',
+                  style: TextStyle(fontSize: 20, color: Color(0xff131313))),
+              content: const Text('다른 사용자를 초대해주세요.',
+                  style: TextStyle(fontSize: 17, color: Color(0xff131313))),
+              contentPadding:
+                  EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 5),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('Approve'),
+                  child: const Text(
+                    '확인',
+                    style: TextStyle(fontSize: 20, color: Color(0xff131313)),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -80,6 +87,7 @@ class _PopupMenuState extends State<PopupMenu> {
             );
           },
         );
+
         return null;
       } else if (response.statusCode == 409) {
         showDialog<void>(
@@ -87,11 +95,18 @@ class _PopupMenuState extends State<PopupMenu> {
           barrierDismissible: false, // user must tap button!
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('초대할 수 없는 사용자 '),
-              content: const Text('사용자가 이미 다른 파티에 등록되어 있습니다'),
+              title: const Text('초대할 수 없는 사용자',
+                  style: TextStyle(fontSize: 20, color: Color(0xff131313))),
+              content: const Text('사용자가 이미 다른 파티에 등록되어 있습니다.',
+                  style: TextStyle(fontSize: 17, color: Color(0xff131313))),
+              contentPadding:
+                  EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 5),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('Approve'),
+                  child: const Text(
+                    '확인',
+                    style: TextStyle(fontSize: 20, color: Color(0xff131313)),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -100,6 +115,7 @@ class _PopupMenuState extends State<PopupMenu> {
             );
           },
         );
+
         return null;
       } else {
         context
