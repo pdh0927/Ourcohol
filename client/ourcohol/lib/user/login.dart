@@ -104,6 +104,31 @@ class _LoginState extends State<Login> {
         print('Login Successfully');
         return userData;
       } else {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('잘못된 로그인 정보',
+                  style: TextStyle(fontSize: 20, color: Color(0xff131313))),
+              content: const Text('이메일 혹은 비밀번호가 잘못되었습니다.',
+                  style: TextStyle(fontSize: 17, color: Color(0xff131313))),
+              contentPadding:
+                  EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 5),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    '확인',
+                    style: TextStyle(fontSize: 20, color: Color(0xff131313)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
         return null;
       }
     } catch (e) {

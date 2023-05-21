@@ -430,12 +430,25 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                             barrierDismissible: false, // user must tap button!
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('이메일 인증'),
-                                content:
-                                    const Text('가입한 이메일의 메일을 통하여 간단한 인증하면 끝'),
+                                title: const Text('이메일 인증',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Color(0xff131313))),
+                                content: const Text(
+                                    '가입한 이메일의 메일을 통하여 간단한 인증을 하고 로그인해 주시기 바랍니다.',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: Color(0xff131313))),
+                                contentPadding: EdgeInsets.only(
+                                    top: 20, right: 20, left: 20, bottom: 5),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: const Text('Approve'),
+                                    child: const Text(
+                                      '확인',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Color(0xff131313)),
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -444,6 +457,7 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
                               );
                             },
                           );
+
                           await postRequest(widget.user);
                         }),
                   )
