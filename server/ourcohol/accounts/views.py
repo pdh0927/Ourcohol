@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from rest_framework.decorators import action
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -30,6 +31,18 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'email': email, 'duplicate': True}, status=status.HTTP_200_OK)
 
         return Response({'email': email, 'duplicate': False}, status=status.HTTP_200_OK)
+    
+    
+    def partial_update(self, request, pk=None):
+        user = self.get_object()
+        image_file = request.FILES.get('image')  # Assumes 'image' is the image data sent by the client
+
+        if image_file and isinstance(image_file, InMemoryUploadedFile):
+            user.replace_image(image_file)
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return super().partial_update(request, pk)
 
 class ConfirmEmailView(APIView):
     permission_classes = [AllowAny]
