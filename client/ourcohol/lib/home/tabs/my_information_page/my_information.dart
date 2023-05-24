@@ -108,7 +108,6 @@ class _MyInformationState extends State<MyInformation> {
         formData = FormData.fromMap(
             {'image': await MultipartFile.fromFile(resultImage!.path)});
       }
-      print('3');
       final options = Options(headers: {
         'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
       });
@@ -118,7 +117,6 @@ class _MyInformationState extends State<MyInformation> {
           'http://127.0.0.1:8000/api/accounts/${context.read<UserProvider>().userId}/',
           data: formData,
           options: options);
-      print(response.data);
 
       setState(() {
         context.read<UserProvider>().image_memory =

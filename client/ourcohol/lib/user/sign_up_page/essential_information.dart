@@ -49,10 +49,9 @@ class _EssentialInformationState extends State<EssentialInformation> {
     Response response;
     try {
       response = await post(Uri.parse(
-          // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/check-email/"),
-          "http://127.0.0.1:8000/api/accounts/check-email/"), body: {
-        'email': inputEmail
-      });
+              // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/check-email/"),
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/check-email/"),
+          body: {'email': inputEmail});
 
       if (response.statusCode == 200) {
         print(response.body);

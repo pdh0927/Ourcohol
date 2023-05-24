@@ -611,9 +611,9 @@ class _CalendarState extends State<Calendar> {
   var myPartyList = [];
   Future getMyPartyList() async {
     http.Response response;
-    response = await http.get(Uri.parse(
-            // 'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
-            'http://127.0.0.1:8000//api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+    response = await http.get(
+        Uri.parse(
+            'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

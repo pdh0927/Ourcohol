@@ -34,7 +34,8 @@ class _PopupMenuState extends State<PopupMenu> {
     Response response;
 
     response = await delete(
-        Uri.parse("http://127.0.0.1:8000/api/participant/${participantId}/"),
+        Uri.parse(
+            "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/${participantId}/"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -51,7 +52,9 @@ class _PopupMenuState extends State<PopupMenu> {
   addParticipant(userId) async {
     Response response;
     try {
-      response = await post(Uri.parse("http://127.0.0.1:8000/api/participant/"),
+      response = await post(
+          Uri.parse(
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/"),
           body: {
             'user': userId.toString(),
             'party': context.read<PartyProvider>().partyId.toString(),

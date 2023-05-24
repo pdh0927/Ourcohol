@@ -58,12 +58,13 @@ class _LoginState extends State<Login> {
     print(accessToken);
     try {
       response = await patch(Uri.parse(
-          // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
-          "http://127.0.0.1:8000//api/accounts/${userId}/"), headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ${accessToken}',
-      });
+              // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${accessToken}',
+          });
       if (response.statusCode == 200) {
         context.read<UserProvider>().setUserInformation(
             userInfo['user']['id'],
@@ -89,11 +90,9 @@ class _LoginState extends State<Login> {
     Response response;
     try {
       response = await post(Uri.parse(
-          // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
-          "http://127.0.0.1:8000//api/accounts/dj-rest-auth/login/"), body: {
-        'email': email,
-        'password': password
-      });
+              // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
+          body: {'email': email, 'password': password});
       if (response.statusCode == 200) {
         var userData =
             Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
@@ -139,8 +138,8 @@ class _LoginState extends State<Login> {
   findPassword() async {
     if (Platform.isIOS) {
       // 브라우저를 열 링크
-      final url =
-          Uri.parse('http://127.0.0.1:8000/api/accounts/auth/password_reset/');
+      final url = Uri.parse(
+          'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/auth/password_reset/');
 
       // 인앱 브라우저 실행
       await launchUrl(url);

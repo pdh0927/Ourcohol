@@ -22,7 +22,7 @@ class _NoPartyState extends State<NoParty> {
 
     response = await post(Uri.parse(
         // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/"),
-        "http://127.0.0.1:8000/api/party/"), body: {
+        "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/"), body: {
       'name': '대환장파티',
       'place': '우리집 자취방',
     }, headers: {
@@ -86,7 +86,7 @@ class _NoPartyState extends State<NoParty> {
     try {
       response = await post(Uri.parse(
           // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/"),
-          "http://127.0.0.1:8000/api/participant/"), body: {
+          "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/"), body: {
         'user': userId.toString(),
         'party': context.read<PartyProvider>().partyId.toString(),
         'is_host': 'true'

@@ -192,7 +192,7 @@ class _PartyDetailState extends State<PartyDetail> {
 
     response = await post(Uri.parse(
         // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/comment/"),
-        "http://127.0.0.1:8000/api/comment/"), body: {
+        "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/comment/"), body: {
       'content': content,
       'user': user.toString(),
       'party': party.toString()
