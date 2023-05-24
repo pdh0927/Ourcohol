@@ -11,6 +11,10 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from rest_framework.decorators import action
 from django.core.files.uploadedfile import InMemoryUploadedFile
+import boto3
+from botocore.exceptions import NoCredentialsError
+from django.core.files.storage import default_storage
+from django.conf import settings
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -34,14 +38,38 @@ class UserViewSet(viewsets.ModelViewSet):
     
     
     def partial_update(self, request, pk=None):
+
         user = self.get_object()
-        image_file = request.FILES.get('image')  # Assumes 'image' is the image data sent by the client
+        image_file = request.FILES.get('image')
 
         if image_file and isinstance(image_file, InMemoryUploadedFile):
-            user.replace_image(image_file)
+            # 이미지를 S3에 업로드
+
+            s3 = boto3.client('s3')
+            bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+            file_name = f'{image_file.name}'  # S3에 저장할 파일 경로와 이름
+            try:
+                s3.upload_fileobj(image_file, bucket_name, file_name)
+            except NoCredentialsError:
+                return Response({'error': 'Failed to upload image to S3'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # 기존 이미지 삭제
+            if user.image :
+                try:
+
+                    # S3에서 기존 이미지 삭제
+                    s3.delete_object(Bucket=bucket_name, Key=user.image.name)
+                except NoCredentialsError:
+
+                    return Response({'error': 'Failed to delete image from S3'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            # 업로드된 이미지 URL을 사용자 객체에 저장
+            user.image = file_name
+            user.save()
+
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        
+
         return super().partial_update(request, pk)
 
 class ConfirmEmailView(APIView):
