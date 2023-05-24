@@ -1,13 +1,13 @@
 branch-defaults:
   default:
-    environment: ourcohol-dev
+    environment: ourcohol-server-dev
     group_suffix: null
 environment-defaults:
   ourcohol-server-dev:
     branch: null
     repository: null
 global:
-  application_name: ourcohol
+  application_name: ourcohol-server
   branch: null
   default_ec2_keyname: null
   default_platform: Python 3.9 running on 64bit Amazon Linux 2023
