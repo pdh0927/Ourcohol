@@ -105,18 +105,21 @@ class _MyInformationState extends State<MyInformation> {
       if (key != 'image') {
         formData = FormData.fromMap({key: value});
       } else {
-        print(resultImage);
         formData = FormData.fromMap(
             {'image': await MultipartFile.fromFile(resultImage!.path)});
       }
+      print('3');
       final options = Options(headers: {
         'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}'
       });
+
       // 업로드 요청
       final response = await dio.patch(
-          'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${context.read<UserProvider>().userId}/',
+          'http://127.0.0.1:8000/api/accounts/${context.read<UserProvider>().userId}/',
           data: formData,
           options: options);
+      print(response.data);
+
       setState(() {
         context.read<UserProvider>().image_memory =
             response.data['image_memory'];
