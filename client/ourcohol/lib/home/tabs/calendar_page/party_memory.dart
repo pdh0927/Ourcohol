@@ -338,7 +338,7 @@ class _PartyDetailState extends State<PartyDetail> {
       }
 
       childs.add(Container(
-          width: 100.w - 52,
+          width: 100.w - 42,
           margin: EdgeInsets.only(
               bottom:
                   i == widget.partyMemory['party']['participants'].length - 1
@@ -558,7 +558,7 @@ class _PartyDetailState extends State<PartyDetail> {
                         width: 100.w - 32,
                         margin: const EdgeInsets.only(top: 10),
                         padding: const EdgeInsets.only(
-                            top: 15, bottom: 15, left: 10, right: 10),
+                            top: 15, bottom: 15, left: 5, right: 5),
                         alignment: Alignment.topCenter,
                         decoration: BoxDecoration(
                             color: const Color(0xffE0E0E0),
