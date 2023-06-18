@@ -160,6 +160,9 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3ManifestStaticStorage'
 AWS_STORAGE_BUCKET_NAME = my_settings.AWS_STORAGE_BUCKET_NAME
+AWS_ACCESS_KEY_ID = my_settings.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = my_settings.AWS_SECRET_ACCESS_KEY
+
 
 SITE_ID = 1 # 해당 도메인의 id
 ACCOUNT_UNIQUE_EMAIL = True # User email unique 사용 여부
