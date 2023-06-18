@@ -6,6 +6,7 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:ourcohol/style.dart';
+import 'package:ourcohol/user/sign_up_page/pos_information.dart';
 import 'package:ourcohol/user/sign_up_page/unessential_information.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -410,7 +411,49 @@ class _EssentialInformationState extends State<EssentialInformation> {
                                           child: MaterialButton(
                                               minWidth: 22,
                                               padding: const EdgeInsets.all(0),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog<void>(
+                                                  context: context,
+                                                  barrierDismissible:
+                                                      false, // user must tap button!
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text('이용약관',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color: Color(
+                                                                  0xff131313))),
+                                                      content:
+                                                          SingleChildScrollView(
+                                                              child:
+                                                                  TermsOfUse()),
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              top: 20,
+                                                              right: 20,
+                                                              left: 20,
+                                                              bottom: 5),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child: const Text(
+                                                            '확인',
+                                                            style: TextStyle(
+                                                                fontSize: 20,
+                                                                color: Color(
+                                                                    0xff131313)),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
                                               child: const Icon(
                                                   FlutterRemix
                                                       .arrow_right_s_line,
@@ -464,7 +507,50 @@ class _EssentialInformationState extends State<EssentialInformation> {
                                           child: MaterialButton(
                                               minWidth: 22,
                                               padding: const EdgeInsets.all(0),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog<void>(
+                                                  context: context,
+                                                  barrierDismissible:
+                                                      false, // user must tap button!
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          '개인정보 처리방침',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color: Color(
+                                                                  0xff131313))),
+                                                      content:
+                                                          SingleChildScrollView(
+                                                              child:
+                                                                  PrivacyPolicy()),
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              top: 20,
+                                                              right: 20,
+                                                              left: 20,
+                                                              bottom: 5),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child: const Text(
+                                                            '확인',
+                                                            style: TextStyle(
+                                                                fontSize: 20,
+                                                                color: Color(
+                                                                    0xff131313)),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
                                               child: const Icon(
                                                   FlutterRemix
                                                       .arrow_right_s_line,
