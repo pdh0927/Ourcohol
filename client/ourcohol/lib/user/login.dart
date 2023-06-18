@@ -31,8 +31,6 @@ class _LoginState extends State<Login> {
     // read 함수로 key값에 맞는 정보를 불러오고 데이터타입은 String 타입
     // 데이터가 없을때는 null을 반환
     userInfo = await context.read<UserProvider>().storage.read(key: 'login');
-    print('info');
-    print(userInfo);
 
     // user의 정보가 있다면 첫 페이지로 넘어가게 합니다.
     if (userInfo != null) {
@@ -54,11 +52,9 @@ class _LoginState extends State<Login> {
 
   getUserInfo(int userId, String accessToken) async {
     Response response;
-    print(userId);
-    print(accessToken);
     try {
       response = await patch(Uri.parse(
-              // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
+              // ""http://127.0.0.1:8000/api/accounts/${userId}/"),
               "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
           headers: {
             'Content-Type': 'application/json',
@@ -90,7 +86,7 @@ class _LoginState extends State<Login> {
     Response response;
     try {
       response = await post(Uri.parse(
-              // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
+              // "http://127.0.0.1:8000/api/accounts/dj-rest-auth/login/"),
               "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
           body: {'email': email, 'password': password});
       if (response.statusCode == 200) {
@@ -136,21 +132,12 @@ class _LoginState extends State<Login> {
   }
 
   findPassword() async {
-    if (Platform.isIOS) {
-      // 브라우저를 열 링크
-      final url = Uri.parse(
-          'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/auth/password_reset/');
+    // 브라우저를 열 링크
+    final url = Uri.parse(
+        'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/auth/password_reset/');
 
-      // 인앱 브라우저 실행
-      await launchUrl(url);
-    } else {
-      // 브라우저를 열 링크
-      final url =
-          Uri.parse('http://10.0.2.2:8000/api/accounts/auth/password_reset/');
-
-      // 인앱 브라우저 실행
-      await launchUrl(url);
-    }
+    // 인앱 브라우저 실행
+    await launchUrl(url);
   }
 
   @override
