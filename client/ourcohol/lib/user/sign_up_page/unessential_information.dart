@@ -129,7 +129,7 @@ class _UnessentialInformationState extends State<UnessentialInformation> {
 
       // 업로드 요청
       final response = await dio.post(
-          // 'http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/registration/',
+          // 'http://127.0.0.1:8000/api/accounts/dj-rest-auth/registration/',
           'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/registration/',
           data: formData);
     } catch (e) {
