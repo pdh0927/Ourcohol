@@ -13,19 +13,16 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "술자리 예절",
-          style: TextStyle(
-              fontSize: 23,
-              color: Color(0xff131313),
-              fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: true,
-        iconTheme: const IconThemeData(
-            color: Color(
-                0xff131313)), // This will change the color of the leading icon
-      ),
+          title: const Text(
+            "술자리 예절",
+            style: TextStyle(
+                fontSize: 23,
+                color: Color(0xff131313),
+                fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: true,
+          iconTheme: const IconThemeData(color: Color(0xff131313))),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
