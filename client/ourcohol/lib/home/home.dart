@@ -3,6 +3,7 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:ourcohol/home/tabs/calendar_page/calendar.dart';
 import 'package:ourcohol/home/tabs/my_information_page/my_information.dart';
 import 'package:ourcohol/home/tabs/party_page/party.dart';
+import 'package:ourcohol/home/tabs/tips_page/tips.dart';
 import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Index 0: Tips'),
+    Tips(),
     Calendar(),
     Party(),
     MyInformation(),
