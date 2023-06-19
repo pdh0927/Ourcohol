@@ -20,10 +20,29 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  dynamic userInfo = ''; // storage에 있는 유저 정보를 저장
+
   bool visible = true;
   var inputEmail = '';
   var flagValidateEmail = false;
   var inputPassword = '';
+
+  _asyncMethod() async {
+    // read 함수로 key값에 맞는 정보를 불러오고 데이터타입은 String 타입
+    // 데이터가 없을때는 null을 반환
+    userInfo = await context.read<UserProvider>().storage.read(key: 'login');
+
+    // user의 정보가 있다면 첫 페이지로 넘어가게 합니다.
+    if (userInfo != null) {
+      userInfo = jsonDecode(userInfo);
+      // 앱내에서 유저 변경 정보가 있을수도 있으니 Login말고 detail 가져오기로 정보 불러와서 povider에 저장
+      await getUserInfo(userInfo['user']['id'], userInfo['access']);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const Home()));
+    } else {
+      print('로그인이 필요합니다');
+    }
+  }
 
   validateEmail() {
     setState(() {
@@ -31,20 +50,80 @@ class _LoginState extends State<Login> {
     });
   }
 
+  getUserInfo(int userId, String accessToken) async {
+    Response response;
+    try {
+      response = await patch(Uri.parse(
+              // ""http://127.0.0.1:8000/api/accounts/${userId}/"),
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${accessToken}',
+          });
+      if (response.statusCode == 200) {
+        context.read<UserProvider>().setUserInformation(
+            userInfo['user']['id'],
+            userInfo['user']['email'],
+            userInfo['user']['nickname'],
+            userInfo['user']['image_memory'] ?? '',
+            userInfo['user']['type_alcohol'],
+            userInfo['user']['amount_alcohol'],
+            userInfo['access'],
+            userInfo['refresh']);
+        print('get information Successfully');
+        return null;
+      } else {
+        print(response.statusCode);
+        return null;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   login(String email, String password) async {
     Response response;
     try {
-      response = await post(
-          Uri.parse(
-              "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
+      response = await post(Uri.parse(
+              // "http://127.0.0.1:8000/api/accounts/dj-rest-auth/login/"),
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
           body: {'email': email, 'password': password});
       if (response.statusCode == 200) {
         var userData =
             Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
-
+        await context.read<UserProvider>().storage.write(
+              key: 'login',
+              value: jsonEncode(userData),
+            );
         print('Login Successfully');
         return userData;
       } else {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('잘못된 로그인 정보',
+                  style: TextStyle(fontSize: 20, color: Color(0xff131313))),
+              content: const Text('이메일 혹은 비밀번호가 잘못되었습니다.',
+                  style: TextStyle(fontSize: 17, color: Color(0xff131313))),
+              contentPadding:
+                  EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 5),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    '확인',
+                    style: TextStyle(fontSize: 20, color: Color(0xff131313)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
         return null;
       }
     } catch (e) {
@@ -53,21 +132,21 @@ class _LoginState extends State<Login> {
   }
 
   findPassword() async {
-    if (Platform.isIOS) {
-      // 브라우저를 열 링크
-      final url =
-          Uri.parse('http://127.0.0.1:8000/api/accounts/auth/password_reset/');
+    // 브라우저를 열 링크
+    final url = Uri.parse(
+        'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/auth/password_reset/');
 
-      // 인앱 브라우저 실행
-      await launchUrl(url);
-    } else {
-      // 브라우저를 열 링크
-      final url =
-          Uri.parse('http://10.0.2.2:8000/api/accounts/auth/password_reset/');
+    // 인앱 브라우저 실행
+    await launchUrl(url);
+  }
 
-      // 인앱 브라우저 실행
-      await launchUrl(url);
-    }
+  @override
+  void initState() {
+    super.initState();
+    // 비동기로 flutter secure storage 정보를 불러오는 작업
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
   }
 
   @override
@@ -174,7 +253,6 @@ class _LoginState extends State<Login> {
                                 await login(inputEmail, inputPassword);
 
                             if (userData != null) {
-                              print(userData['user']['image_memory']);
                               context.read<UserProvider>().setUserInformation(
                                   userData['user']['id'],
                                   userData['user']['email'],

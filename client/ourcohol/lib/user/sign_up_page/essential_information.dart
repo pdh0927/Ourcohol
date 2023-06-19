@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:http/http.dart';
+import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:ourcohol/style.dart';
+import 'package:ourcohol/user/sign_up_page/pos_information.dart';
 import 'package:ourcohol/user/sign_up_page/unessential_information.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class EssentialInformation extends StatefulWidget {
@@ -17,6 +23,7 @@ class _EssentialInformationState extends State<EssentialInformation> {
   bool visible2 = true;
   String inputEmail = '';
   int flagValidateEmail = -1; // -1 : 판별x, 0 : false, 1 : true
+  int flagDuplicateEmail = -1; // -1 : 판별x, 0 : 중복, 1 : 사용가능
   String inputPassword1 = '';
   String inputPassword2 = '';
   int flagValidatePassword = -1; // -1 : 판별x, 0 : false, 1 : true
@@ -25,7 +32,7 @@ class _EssentialInformationState extends State<EssentialInformation> {
   bool secondCheck = false;
   var user = {};
 
-  validateEmail1() {
+  validateEmail() {
     if (inputEmail != '') {
       if (!EmailValidator.validate(inputEmail)) {
         setState(() {
@@ -36,6 +43,31 @@ class _EssentialInformationState extends State<EssentialInformation> {
           flagValidateEmail = 1;
         });
       }
+    }
+  }
+
+  checkDuplicateEmail() async {
+    Response response;
+    try {
+      response = await post(Uri.parse(
+              // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/accounts/check-email/"),
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/check-email/"),
+          body: {'email': inputEmail});
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        if (json.decode(utf8.decode(response.bodyBytes))['duplicate'] == true) {
+          setState(() {
+            flagDuplicateEmail = 0;
+          });
+        } else {
+          setState(() {
+            flagDuplicateEmail = 1;
+          });
+        }
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -116,9 +148,12 @@ class _EssentialInformationState extends State<EssentialInformation> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5)),
                               child: Focus(
-                                onFocusChange: (bool hasFocus) {
+                                onFocusChange: (bool hasFocus) async {
                                   if (hasFocus == false) {
-                                    validateEmail1();
+                                    await validateEmail();
+                                    if (flagValidateEmail == 1) {
+                                      checkDuplicateEmail();
+                                    }
                                   } else {}
                                 },
                                 child: TextField(
@@ -149,68 +184,10 @@ class _EssentialInformationState extends State<EssentialInformation> {
                                 ),
                               ),
                             ),
-                            flagValidateEmail == -1
-                                ? Container(
-                                    width: 100.w - 32,
-                                    margin: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 8),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        const Icon(
-                                            FlutterRemix.checkbox_circle_fill,
-                                            color: Colors.white),
-                                        Container(
-                                            margin:
-                                                const EdgeInsets.only(left: 6),
-                                            child: const Text(
-                                                'email 형식이 맞지 않습니다',
-                                                style: TextStyle(
-                                                    color: Colors.white))),
-                                      ],
-                                    ),
-                                  )
-                                : (flagValidateEmail == 0
-                                    ? Container(
-                                        width: 100.w - 32,
-                                        margin: const EdgeInsets.only(
-                                            left: 16, right: 16, bottom: 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            const Icon(
-                                                FlutterRemix
-                                                    .checkbox_circle_fill,
-                                                color: Color(0xffD74646)),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 6),
-                                                child: Text('email 형식이 맞지 않습니다',
-                                                    style: textStyle17)),
-                                          ],
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 100.w - 32,
-                                        margin: const EdgeInsets.only(
-                                            left: 16, right: 16, bottom: 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            const Icon(
-                                                FlutterRemix
-                                                    .checkbox_circle_fill,
-                                                color: Color(0xff57AC6A)),
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 6),
-                                                child: Text('이메일 형식 따봉',
-                                                    style: textStyle15))
-                                          ],
-                                        ),
-                                      )),
+                            EmailCheckBox(
+                              flagValidateEmail: flagValidateEmail,
+                              flagDuplicateEmail: flagDuplicateEmail,
+                            ),
                             Container(
                                 margin: const EdgeInsets.only(bottom: 14),
                                 child: Text('비밀번호*', style: textStyle14)),
@@ -312,26 +289,7 @@ class _EssentialInformationState extends State<EssentialInformation> {
                               ),
                             ),
                             flagValidatePassword == -1
-                                ? Container(
-                                    width: 100.w - 32,
-                                    margin: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 40),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        const Icon(
-                                            FlutterRemix.checkbox_circle_fill,
-                                            color: Colors.white),
-                                        Container(
-                                            margin:
-                                                const EdgeInsets.only(left: 6),
-                                            child: const Text(
-                                                'email 형식이 맞지 않습니다',
-                                                style: TextStyle(
-                                                    color: Colors.white))),
-                                      ],
-                                    ),
-                                  )
+                                ? SizedBox(height: 0, width: 0)
                                 : (flagValidatePassword == 0
                                     ? Container(
                                         width: 100.w - 32,
@@ -453,7 +411,49 @@ class _EssentialInformationState extends State<EssentialInformation> {
                                           child: MaterialButton(
                                               minWidth: 22,
                                               padding: const EdgeInsets.all(0),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog<void>(
+                                                  context: context,
+                                                  barrierDismissible:
+                                                      false, // user must tap button!
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text('이용약관',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color: Color(
+                                                                  0xff131313))),
+                                                      content:
+                                                          SingleChildScrollView(
+                                                              child:
+                                                                  TermsOfUse()),
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              top: 20,
+                                                              right: 20,
+                                                              left: 20,
+                                                              bottom: 5),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child: const Text(
+                                                            '확인',
+                                                            style: TextStyle(
+                                                                fontSize: 20,
+                                                                color: Color(
+                                                                    0xff131313)),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
                                               child: const Icon(
                                                   FlutterRemix
                                                       .arrow_right_s_line,
@@ -507,7 +507,50 @@ class _EssentialInformationState extends State<EssentialInformation> {
                                           child: MaterialButton(
                                               minWidth: 22,
                                               padding: const EdgeInsets.all(0),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog<void>(
+                                                  context: context,
+                                                  barrierDismissible:
+                                                      false, // user must tap button!
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          '개인정보 처리방침',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color: Color(
+                                                                  0xff131313))),
+                                                      content:
+                                                          SingleChildScrollView(
+                                                              child:
+                                                                  PrivacyPolicy()),
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              top: 20,
+                                                              right: 20,
+                                                              left: 20,
+                                                              bottom: 5),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child: const Text(
+                                                            '확인',
+                                                            style: TextStyle(
+                                                                fontSize: 20,
+                                                                color: Color(
+                                                                    0xff131313)),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
                                               child: const Icon(
                                                   FlutterRemix
                                                       .arrow_right_s_line,
@@ -556,5 +599,68 @@ class _EssentialInformationState extends State<EssentialInformation> {
                         style: TextStyle(fontSize: 16, color: Colors.white)))
           ],
         )));
+  }
+}
+
+class EmailCheckBox extends StatefulWidget {
+  EmailCheckBox({super.key, this.flagValidateEmail, this.flagDuplicateEmail});
+  var flagValidateEmail;
+  var flagDuplicateEmail;
+  @override
+  State<EmailCheckBox> createState() => _EmailCheckBoxState();
+}
+
+class _EmailCheckBoxState extends State<EmailCheckBox> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.flagValidateEmail == -1) {
+      return const SizedBox(width: 0, height: 0);
+    } else if (widget.flagValidateEmail == 0) {
+      return Container(
+        width: 100.w - 32,
+        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Icon(FlutterRemix.checkbox_circle_fill,
+                color: Color(0xffD74646)),
+            Container(
+                margin: const EdgeInsets.only(left: 6),
+                child: Text('email 형식이 맞지 않습니다', style: textStyle17))
+          ],
+        ),
+      );
+    } else if (widget.flagValidateEmail == 1 &&
+        widget.flagDuplicateEmail == 0) {
+      return Container(
+        width: 100.w - 32,
+        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Icon(FlutterRemix.checkbox_circle_fill,
+                color: Color(0xffD74646)),
+            Container(
+                margin: const EdgeInsets.only(left: 6),
+                child: Text('중복된 email입니다', style: textStyle17)),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        width: 100.w - 32,
+        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Icon(FlutterRemix.checkbox_circle_fill,
+                color: Color(0xff57AC6A)),
+            Container(
+                margin: const EdgeInsets.only(left: 6),
+                child: Text('사용 가능한 email입니다', style: textStyle15))
+          ],
+        ),
+      );
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:ourcohol/home/tabs/calendar_page/party_memory.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 
 import 'package:ourcohol/style.dart';
@@ -27,6 +28,12 @@ class _CalendarState extends State<Calendar> {
   int selectedYear = -1;
   int selectedMonth = -1;
   int selectedDay = -1;
+
+  rebuild() {
+    setDate();
+    partyMemory = null;
+    _future = getMyPartyList();
+  }
 
   setDate() {
     DateTime? date = DateTime.now();
@@ -109,7 +116,6 @@ class _CalendarState extends State<Calendar> {
   List<Widget> getDateList(week) {
     int lastWeekDay = 0;
     List<Widget> childs = [];
-
     for (int i = week * 7; i < week * 7 + 7; i++) {
       if (i - startDayOfWeek + 1 > 0 &&
           i - startDayOfWeek + 1 <=
@@ -117,9 +123,10 @@ class _CalendarState extends State<Calendar> {
         // 이번 달
         if (myPartyList.isNotEmpty && countParty < myPartyList.length) {
           // party가 있었을 때
+
           for (int j = 0; j < myPartyList.length; j++) {
             var parsedDate =
-                DateTime.parse(myPartyList[j]['party']['created_at']);
+                DateTime.parse(myPartyList[j]['party']['started_at']);
             if (parsedDate.year == year &&
                 parsedDate.month == month &&
                 parsedDate.day == i - startDayOfWeek + 1) {
@@ -606,7 +613,7 @@ class _CalendarState extends State<Calendar> {
     http.Response response;
     response = await http.get(
         Uri.parse(
-            'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+            'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -743,10 +750,22 @@ class _CalendarState extends State<Calendar> {
                                 '${partyMemory['party']['name']}',
                                 style: textStyle6,
                               ),
-                              Text(
-                                '더 보기',
-                                style: textStyle7,
-                              ),
+                              Container(
+                                  width: 30,
+                                  child: MaterialButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () async {
+                                        Navigator.of(context,
+                                                rootNavigator: false)
+                                            .push(MaterialPageRoute(
+                                                builder: (c) => PartyDetail(
+                                                    partyMemory: partyMemory,
+                                                    rebuild: rebuild)));
+                                      },
+                                      child: Text(
+                                        '더 보기',
+                                        style: textStyle7,
+                                      ))),
                             ],
                           ),
                         ),
@@ -857,6 +876,7 @@ class _TmpPictureState extends State<TmpPicture> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 0.59.h),
       decoration: const BoxDecoration(
           image: DecorationImage(
         fit: BoxFit.fill,

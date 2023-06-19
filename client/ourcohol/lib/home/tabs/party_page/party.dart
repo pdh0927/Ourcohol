@@ -36,9 +36,9 @@ class _PartyState extends State<Party> {
     var party = {};
     http.Response response;
 
-    response = await http.get(
-        Uri.parse(
-            'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/recent/${context.read<UserProvider>().userId}/'),
+    response = await http.get(Uri.parse(
+            // 'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/recent/${context.read<UserProvider>().userId}/'),
+            'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/recent/${context.read<UserProvider>().userId}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -85,7 +85,7 @@ class _PartyState extends State<Party> {
   //     // print(context.read<UserProvider>().tokenRefresh);
   //     response = await post(
   //         Uri.parse(
-  //             'http://127.0.0.1:8000/api/accounts/jwt-token-auth/refresh/'),
+  //             'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/jwt-token-auth/refresh/'),
   //         body: {'refresh': context.read<UserProvider>().tokenRefresh});
   //   } else {
   //     response = await http.get(Uri.parse(
@@ -98,29 +98,13 @@ class _PartyState extends State<Party> {
   updateParty(String key, String value) async {
     http.Response response;
     try {
-      if (Platform.isIOS) {
-        response = await patch(
-            Uri.parse(
-                "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
-            body: {
-              key: value
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      } else {
-        response = await patch(
-            Uri.parse(
-                "http://10.0.2.2:8000/api/party/${context.read<PartyProvider>().partyId}/"),
-            body: {
-              key: value
-            },
-            headers: {
-              'Authorization':
-                  'Bearer ${context.read<UserProvider>().tokenAccess}',
-            });
-      }
+      response = await patch(Uri.parse(
+          // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
+          "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"), body: {
+        key: value
+      }, headers: {
+        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
+      });
 
       if (response.statusCode == 200) {
         print('update success');

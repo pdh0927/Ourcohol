@@ -1,16 +1,18 @@
+import os
+from django.conf import settings
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from .models import User
 from allauth.account.adapter import get_adapter
 import base64
-
+import boto3
 
 class UserRegisterSerializer(RegisterSerializer):
     nickname = serializers.CharField(
         max_length=100,
     )
-    image = serializers.ImageField()
+    image = serializers.ImageField(required=False, allow_null=True)  # image 필드가 필수가 아님을 명시합니다.
 
     class Meta:
         model = User
@@ -30,7 +32,7 @@ class UserRegisterSerializer(RegisterSerializer):
             "password2": self.validated_data.get("password2", ""),
             "email": self.validated_data.get("email", ""),
             "nickname": self.validated_data.get("nickname", ""),
-            "image": self.validated_data.get("image", ""),
+            "image": self.validated_data.get("image", None),  # None이 기본값이 됩니다.
         }
 
     # override save method of RegisterSerializer
@@ -66,8 +68,18 @@ class UserSerializer(serializers.ModelSerializer):
 
 class Base64Encoding:
     def encoding_image(instance):
-        if instance.image != None and instance.image != "":
-            with open(f"media/{instance.image.name}", mode="rb") as loadedfile:
-                return base64.b64encode(loadedfile.read())
-        else:
-            return
+        if instance.image and instance.image.name:
+            s3 = boto3.client('s3')
+            bucket_name = settings.AWS_STORAGE_BUCKET_NAME  # S3 버킷 이름
+
+            try:
+                # S3에서 이미지 파일을 가져옴
+                response = s3.get_object(Bucket=bucket_name, Key=instance.image.name)
+                image_data = response['Body'].read()
+
+                # 이미지를 base64로 인코딩하여 반환
+                return base64.b64encode(image_data).decode('utf-8')
+            except Exception as e:
+                print(f'Failed to encode image: {str(e)}')
+
+        return None

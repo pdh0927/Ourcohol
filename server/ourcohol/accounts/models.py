@@ -1,3 +1,4 @@
+import os
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -53,5 +54,13 @@ class User(AbstractUser):
     # 필수로 작성해야하는 field
     REQUIRED_FIELDS = ["nickname"]
 
+    def replace_image(self, new_image):
+        if self.image and os.path.isfile(self.image.path):
+            os.remove(self.image.path)
+        self.image = new_image
+        self.save()
+        
     def __str__(self):
         return f"{self.id} {self.email} {self.nickname}"
+    
+    
