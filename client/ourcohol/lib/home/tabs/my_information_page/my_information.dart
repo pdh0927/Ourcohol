@@ -105,6 +105,10 @@ class _MyInformationState extends State<MyInformation> {
       if (key != 'image') {
         formData = FormData.fromMap({key: value});
       } else {
+        var file = File(resultImage!.path); // 파일 객체 생성
+
+        var fileSize = await file.length(); // 파일 크기 확인
+        print('File size: $fileSize bytes'); // 파일 크기 출력
         formData = FormData.fromMap(
             {'image': await MultipartFile.fromFile(resultImage!.path)});
       }
@@ -115,6 +119,7 @@ class _MyInformationState extends State<MyInformation> {
       // 업로드 요청
       final response = await dio.patch(
           'http://127.0.0.1:8000/api/accounts/${context.read<UserProvider>().userId}/',
+          //'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${context.read<UserProvider>().userId}/',
           data: formData,
           options: options);
 
