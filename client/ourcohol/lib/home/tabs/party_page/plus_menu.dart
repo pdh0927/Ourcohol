@@ -80,10 +80,10 @@ class _PlusMenuState extends State<PlusMenu> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Text('주량 초과 알림'),
-                      content: const Text('니 더 먹으면 꽐라됨 ㅅㄱ'),
+                      content: const Text('좀 더 조절해서 마시기 바랍니다.'),
                       actions: <Widget>[
                         TextButton(
-                          child: const Text('Approve'),
+                          child: const Text('승인'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -119,10 +119,10 @@ class _PlusMenuState extends State<PlusMenu> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Text('주량 초과 알림'),
-                      content: const Text('니 더 먹으면 꽐라됨 ㅅㄱ'),
+                      content: const Text('좀 더 조절해서 마시기 바랍니다.'),
                       actions: <Widget>[
                         TextButton(
-                          child: const Text('Approve'),
+                          child: const Text('승인'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
