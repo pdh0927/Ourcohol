@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:ourcohol/common/function/function.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -185,9 +186,9 @@ class _UnactivePartyState extends State<UnactiveParty> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: NetworkImage(context
+                            image: NetworkImage(getBaseURl(context
                                 .read<PartyProvider>()
-                                .participants[i]['user']['image']),
+                                .participants[i]['user']['image'])),
                             fit: BoxFit.fill)))
                 : Container(
                     width: 80 / 393 * 100.w,
@@ -317,10 +318,8 @@ class _UnactivePartyState extends State<UnactiveParty> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               (context.read<PartyProvider>().participants[
-                                              context
-                                                  .read<PartyProvider>()
-                                                  .myPaticipantIndex]['user']
-                                          ['image'] !=
+                                              context.read<PartyProvider>().myPaticipantIndex]
+                                          ['user']['image'] !=
                                       null
                                   ? Container(
                                       width: 150 / 852 * 100.h,
@@ -329,10 +328,10 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
-                                              image: NetworkImage(context
+                                              image: NetworkImage(getBaseURl(context
                                                       .read<PartyProvider>()
                                                       .participants[context.read<PartyProvider>().myPaticipantIndex]
-                                                  ['user']['image']),
+                                                  ['user']['image'])),
                                               fit: BoxFit.fill)))
                                   : Container(
                                       width: 150 / 852 * 100.h,
