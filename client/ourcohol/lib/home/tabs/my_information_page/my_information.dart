@@ -118,15 +118,16 @@ class _MyInformationState extends State<MyInformation> {
 
       // 업로드 요청
       final response = await dio.patch(
-          'http://127.0.0.1:8000/api/accounts/${context.read<UserProvider>().userId}/',
-          //'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${context.read<UserProvider>().userId}/',
+          'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${context.read<UserProvider>().userId}/',
           data: formData,
           options: options);
-
-      setState(() {
-        context.read<UserProvider>().image_memory =
-            response.data['image_memory'];
-      });
+      if (response.statusCode == 200) {
+        if (response.data['image'] != null) {
+          setState(() {
+            context.read<UserProvider>().image = response.data['image'];
+          });
+        }
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -180,8 +181,7 @@ class _MyInformationState extends State<MyInformation> {
                             children: [
                               Stack(
                                 children: [
-                                  (context.read<UserProvider>().image_memory !=
-                                          ''
+                                  (context.read<UserProvider>().image != ''
                                       ? Container(
                                           width: 100 / 393 * 100.w,
                                           height: 100 / 393 * 100.w,
@@ -190,10 +190,9 @@ class _MyInformationState extends State<MyInformation> {
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                  image: MemoryImage(
-                                                      base64Decode(context
-                                                          .read<UserProvider>()
-                                                          .image_memory)),
+                                                  image: NetworkImage(context
+                                                      .read<UserProvider>()
+                                                      .image),
                                                   fit: BoxFit.fill)))
                                       : Container(
                                           width: 100 / 393 * 100.w,

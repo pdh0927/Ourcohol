@@ -30,14 +30,17 @@ class _UnactivePartyState extends State<UnactiveParty> {
   startParty() async {
     http.Response response;
     try {
-      response = await patch(Uri.parse(
-          // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
-          "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"), body: {
-        'started_at': context.read<PartyProvider>().started_at,
-        'ended_at': context.read<PartyProvider>().ended_at,
-      }, headers: {
-        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-      });
+      response = await patch(
+          Uri.parse(
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
+          body: {
+            'started_at': context.read<PartyProvider>().started_at,
+            'ended_at': context.read<PartyProvider>().ended_at,
+          },
+          headers: {
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
       if (response.statusCode == 200) {
         print('update success');
         return null;
@@ -53,8 +56,8 @@ class _UnactivePartyState extends State<UnactiveParty> {
   deleteParticipant(participantId) async {
     Response response;
 
-    response = await delete(Uri.parse(
-            // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/${participantId}/"),
+    response = await delete(
+        Uri.parse(
             "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/${participantId}/"),
         headers: {
           'Content-Type': 'application/json',
@@ -72,8 +75,8 @@ class _UnactivePartyState extends State<UnactiveParty> {
   deleteParty() async {
     Response response;
 
-    response = await delete(Uri.parse(
-            // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
+    response = await delete(
+        Uri.parse(
             "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
         headers: {
           'Content-Type': 'application/json',
@@ -173,8 +176,7 @@ class _UnactivePartyState extends State<UnactiveParty> {
             bottom: 5),
         child: Stack(children: [
           Column(children: [
-            (context.read<PartyProvider>().participants[i]['user']
-                        ['image_memory'] !=
+            (context.read<PartyProvider>().participants[i]['user']['image'] !=
                     null
                 ? Container(
                     width: 80 / 393 * 100.w,
@@ -183,9 +185,9 @@ class _UnactivePartyState extends State<UnactiveParty> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: MemoryImage(base64Decode(context
+                            image: NetworkImage(context
                                 .read<PartyProvider>()
-                                .participants[i]['user']['image_memory'])),
+                                .participants[i]['user']['image']),
                             fit: BoxFit.fill)))
                 : Container(
                     width: 80 / 393 * 100.w,
@@ -314,10 +316,11 @@ class _UnactivePartyState extends State<UnactiveParty> {
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              (context
-                                              .read<PartyProvider>()
-                                              .participants[context.read<PartyProvider>().myPaticipantIndex]
-                                          ['user']['image_memory'] !=
+                              (context.read<PartyProvider>().participants[
+                                              context
+                                                  .read<PartyProvider>()
+                                                  .myPaticipantIndex]['user']
+                                          ['image'] !=
                                       null
                                   ? Container(
                                       width: 150 / 852 * 100.h,
@@ -326,10 +329,10 @@ class _UnactivePartyState extends State<UnactiveParty> {
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
-                                              image: MemoryImage(base64Decode(context
+                                              image: NetworkImage(context
                                                       .read<PartyProvider>()
                                                       .participants[context.read<PartyProvider>().myPaticipantIndex]
-                                                  ['user']['image_memory'])),
+                                                  ['user']['image']),
                                               fit: BoxFit.fill)))
                                   : Container(
                                       width: 150 / 852 * 100.h,

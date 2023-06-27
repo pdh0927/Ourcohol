@@ -34,12 +34,11 @@ class _NoPartyState extends State<NoParty> {
 
       context.read<PartyProvider>().setPartyInformation(
           json.decode(utf8.decode(response.bodyBytes))['id'],
-          json.decode(utf8.decode(response.bodyBytes))['image_memory'] ?? '',
-          [],
+          json.decode(utf8.decode(response.bodyBytes))['image'] ?? '',
+          json.decode(utf8.decode(response.bodyBytes))['participants'] ?? [],
           json.decode(utf8.decode(response.bodyBytes))['comments'] ?? [],
           json.decode(utf8.decode(response.bodyBytes))['name'],
           json.decode(utf8.decode(response.bodyBytes))['place'],
-          json.decode(utf8.decode(response.bodyBytes))['image'] ?? '',
           json.decode(utf8.decode(response.bodyBytes))['created_at'] ?? '',
           json.decode(utf8.decode(response.bodyBytes))['started_at'] ?? '',
           json.decode(utf8.decode(response.bodyBytes))['ended_at'] ?? '',

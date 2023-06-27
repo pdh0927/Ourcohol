@@ -150,8 +150,7 @@ class _PartyInformationState extends State<PartyInformation> {
             bottom: 5),
         child: Stack(children: [
           Column(children: [
-            (context.read<PartyProvider>().participants[i]['user']
-                        ['image_memory'] !=
+            (context.read<PartyProvider>().participants[i]['user']['image'] !=
                     null
                 ? Container(
                     width: 80 / 393 * 100.w,
@@ -160,9 +159,9 @@ class _PartyInformationState extends State<PartyInformation> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: MemoryImage(base64Decode(context
+                            image: NetworkImage(context
                                 .read<PartyProvider>()
-                                .participants[i]['user']['image_memory'])),
+                                .participants[i]['user']['image']),
                             fit: BoxFit.fill)))
                 : Container(
                     width: 80 / 393 * 100.w,

@@ -37,7 +37,6 @@ class _ActivePartyState extends State<ActiveParty> {
     http.StreamedResponse response;
     try {
       String url =
-          // "http://OURcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/";
           "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/";
       var request = http.MultipartRequest(
         'PATCH',
@@ -136,7 +135,7 @@ class _ActivePartyState extends State<ActiveParty> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   (context.read<PartyProvider>().participants[i]['user']
-                              ['image_memory'] !=
+                              ['image'] !=
                           null
                       ? Container(
                           width: (100.w - 50) / 7,
@@ -144,10 +143,9 @@ class _ActivePartyState extends State<ActiveParty> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: MemoryImage(base64Decode(context
-                                          .read<PartyProvider>()
-                                          .participants[i]['user']
-                                      ['image_memory'])),
+                                  image: NetworkImage(context
+                                      .read<PartyProvider>()
+                                      .participants[i]['user']['image']),
                                   fit: BoxFit.fill)))
                       : Container(
                           width: (100.w - 50) / 7,
@@ -537,15 +535,13 @@ class _ActivePartyState extends State<ActiveParty> {
                               margin: const EdgeInsets.only(bottom: 10),
                               child: Text(context.read<PartyProvider>().name,
                                   style: textStyle22)),
-                          context.read<PartyProvider>().image_memory != ''
+                          context.read<PartyProvider>().image != ''
                               ? Container(
                                   margin: const EdgeInsets.only(left: 15),
                                   width: 100.w - 32 - 50,
                                   height: (100.w - 32 - 50) / 7 * 5,
-                                  child: Image.memory(
-                                    base64Decode(context
-                                        .read<PartyProvider>()
-                                        .image_memory),
+                                  child: Image.network(
+                                    context.read<PartyProvider>().image,
                                     fit: BoxFit.fill,
                                   ))
                               : Container(

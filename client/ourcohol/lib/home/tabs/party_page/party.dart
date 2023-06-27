@@ -36,8 +36,8 @@ class _PartyState extends State<Party> {
     var party = {};
     http.Response response;
 
-    response = await http.get(Uri.parse(
-            // 'http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/participant/recent/${context.read<UserProvider>().userId}/'),
+    response = await http.get(
+        Uri.parse(
             'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/recent/${context.read<UserProvider>().userId}/'),
         headers: {
           'Content-Type': 'application/json',
@@ -52,12 +52,11 @@ class _PartyState extends State<Party> {
 
         context.read<PartyProvider>().setPartyInformation(
             party['id'],
-            party['image_memory'] ?? '',
+            party['image'] ?? '',
             party['participants'] ?? [],
             party['comments'] ?? [],
             party['name'],
             party['place'],
-            party['image'] ?? '',
             party['created_at'] ?? '',
             party['started_at'] ?? '',
             party['ended_at'] ?? '',
@@ -98,13 +97,16 @@ class _PartyState extends State<Party> {
   updateParty(String key, String value) async {
     http.Response response;
     try {
-      response = await patch(Uri.parse(
-          // "http://ourcohol-env.eba-fh7m884a.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
-          "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"), body: {
-        key: value
-      }, headers: {
-        'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
-      });
+      response = await patch(
+          Uri.parse(
+              "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/party/${context.read<PartyProvider>().partyId}/"),
+          body: {
+            key: value
+          },
+          headers: {
+            'Authorization':
+                'Bearer ${context.read<UserProvider>().tokenAccess}',
+          });
 
       if (response.statusCode == 200) {
         print('update success');
