@@ -30,15 +30,27 @@ class _LoginState extends State<Login> {
   _asyncMethod() async {
     // read 함수로 key값에 맞는 정보를 불러오고 데이터타입은 String 타입
     // 데이터가 없을때는 null을 반환
-    userInfo = await context.read<UserProvider>().storage.read(key: 'login');
 
-    // user의 정보가 있다면 첫 페이지로 넘어가게 합니다.
-    if (userInfo != null) {
-      userInfo = jsonDecode(userInfo);
-      // 앱내에서 유저 변경 정보가 있을수도 있으니 Login말고 detail 가져오기로 정보 불러와서 povider에 저장
-      await getUserInfo(userInfo['user']['id'], userInfo['access']);
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const Home()));
+    String? userId =
+        await context.read<UserProvider>().storage.read(key: 'userId');
+    String? accessToken =
+        await context.read<UserProvider>().storage.read(key: 'accessToken');
+    String? refreshToken =
+        await context.read<UserProvider>().storage.read(key: 'refreshToken');
+
+    if (accessToken != null && refreshToken != null && userId != null) {
+      context.read<UserProvider>().tokenAccess = accessToken;
+      context.read<UserProvider>().tokenRefresh = refreshToken;
+      context.read<UserProvider>().userId = int.parse(userId);
+
+      await getUserInfo(
+          context.read<UserProvider>().userId,
+          context
+              .read<UserProvider>()
+              .tokenAccess); // 앱내에서 유저 변경 정보가 있을수도 있으니 Login말고 detail 가져오기로 정보 불러와서 povider에 저장
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              const Home())); // user의 정보가 있다면 첫 페이지로 넘어가게 합니다.
     } else {
       print('로그인이 필요합니다');
     }
@@ -53,28 +65,31 @@ class _LoginState extends State<Login> {
   getUserInfo(int userId, String accessToken) async {
     Response response;
     try {
-      response = await patch(Uri.parse(
-              // ""http://127.0.0.1:8000/api/accounts/${userId}/"),
+      response = await patch(
+          Uri.parse(
               "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${userId}/"),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': 'Bearer ${accessToken}',
           });
+      var userDetail =
+          Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
+
       if (response.statusCode == 200) {
         context.read<UserProvider>().setUserInformation(
-            userInfo['user']['id'],
-            userInfo['user']['email'],
-            userInfo['user']['nickname'],
-            userInfo['user']['image_memory'] ?? '',
-            userInfo['user']['type_alcohol'],
-            userInfo['user']['amount_alcohol'],
-            userInfo['access'],
-            userInfo['refresh']);
+            userDetail['id'],
+            userDetail['email'],
+            userDetail['nickname'],
+            userDetail['image'] ?? '',
+            userDetail['type_alcohol'],
+            userDetail['amount_alcohol'],
+            context.read<UserProvider>().tokenAccess,
+            context.read<UserProvider>().tokenAccess);
         print('get information Successfully');
+
         return null;
       } else {
-        print(response.statusCode);
         return null;
       }
     } catch (e) {
@@ -85,17 +100,26 @@ class _LoginState extends State<Login> {
   login(String email, String password) async {
     Response response;
     try {
-      response = await post(Uri.parse(
-              // "http://127.0.0.1:8000/api/accounts/dj-rest-auth/login/"),
+      response = await post(
+          Uri.parse(
               "http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/dj-rest-auth/login/"),
           body: {'email': email, 'password': password});
       if (response.statusCode == 200) {
         var userData =
             Map.castFrom(json.decode(utf8.decode(response.bodyBytes)));
         await context.read<UserProvider>().storage.write(
-              key: 'login',
-              value: jsonEncode(userData),
+              key: 'accessToken',
+              value: userData['access'],
             );
+        await context.read<UserProvider>().storage.write(
+              key: 'refreshToken',
+              value: userData['refresh'],
+            );
+        await context.read<UserProvider>().storage.write(
+              key: 'userId',
+              value: userData['user']['id'].toString(),
+            );
+
         print('Login Successfully');
         return userData;
       } else {
