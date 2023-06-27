@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ourcohol/common/function/function.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 import 'package:ourcohol/style.dart';
 import 'package:provider/provider.dart';
@@ -44,15 +44,12 @@ class _MyInformationState extends State<MyInformation> {
       File? img = File(image.path);
 
       img = await cropImage(imageFile: img);
-      print('1');
 
       img = await compressImage(imageFile: img);
-      print('2');
 
       setState(() {
         resultImage = img;
       });
-      print('3');
     } catch (e) {
       print(e);
     }
@@ -71,11 +68,17 @@ class _MyInformationState extends State<MyInformation> {
   }
 
   Future<File?> compressImage({required File? imageFile}) async {
+    if (imageFile == null) return null;
+
     final tempDir = await getTemporaryDirectory();
-    final targetPath = '${tempDir.path}/compressed_image.jpg';
+    final filePathParts =
+        imageFile.path.split(Platform.pathSeparator); // 경로 구분자를 기준으로 분할
+    final fileName = filePathParts.last; // 마지막 요소가 파일 이름
+    final targetPath =
+        '${tempDir.path}${Platform.pathSeparator}$fileName'; // 원래 파일 이름을 포함하는 경로 생성
 
     var result = await FlutterImageCompress.compressAndGetFile(
-      imageFile!.absolute.path,
+      imageFile.absolute.path,
       targetPath,
       quality: 10, // 압축 품질 (0 ~ 100)
     );
@@ -138,7 +141,8 @@ class _MyInformationState extends State<MyInformation> {
 
       // 업로드 요청
       final response = await dio.patch(
-          'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${context.read<UserProvider>().userId}/',
+          // 'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/accounts/${context.read<UserProvider>().userId}/',
+          'http://127.0.0.1:8000/api/accounts/${context.read<UserProvider>().userId}/',
           data: formData,
           options: options);
       if (response.statusCode == 200) {
@@ -210,9 +214,10 @@ class _MyInformationState extends State<MyInformation> {
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                  image: NetworkImage(context
-                                                      .read<UserProvider>()
-                                                      .image),
+                                                  image: NetworkImage(
+                                                      getBaseURl(context
+                                                          .read<UserProvider>()
+                                                          .image)),
                                                   fit: BoxFit.fill)))
                                       : Container(
                                           width: 100 / 393 * 100.w,
@@ -571,8 +576,8 @@ class _MyInformationState extends State<MyInformation> {
                                   MaterialButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {},
-                                      child: Row(
-                                        children: const [
+                                      child: const Row(
+                                        children: [
                                           Text('검사하기',
                                               style: TextStyle(
                                                   fontSize: 15,
@@ -603,8 +608,8 @@ class _MyInformationState extends State<MyInformation> {
                               MaterialButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: () {},
-                                  child: Row(
-                                    children: const [
+                                  child: const Row(
+                                    children: [
                                       Text('개발자와 소통하기',
                                           style: TextStyle(
                                               fontSize: 15,
