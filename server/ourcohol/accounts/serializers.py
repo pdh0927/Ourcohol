@@ -48,7 +48,7 @@ class UserRegisterSerializer(RegisterSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    image_memory = serializers.SerializerMethodField()
+   # image_memory = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -57,29 +57,29 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "nickname",
             "image",
-            "image_memory",
+           # "image_memory",
             "type_alcohol",
             "amount_alcohol",
         ]
 
-    def get_image_memory(self, user: User):
-        return Base64Encoding.encoding_image(user)
+    # def get_image_memory(self, user: User):
+    #     return Base64Encoding.encoding_image(user)
 
 
-class Base64Encoding:
-    def encoding_image(instance):
-        if instance.image and instance.image.name:
-            s3 = boto3.client('s3')
-            bucket_name = settings.AWS_STORAGE_BUCKET_NAME  # S3 버킷 이름
+# class Base64Encoding:
+#     def encoding_image(instance):
+#         if instance.image and instance.image.name:
+#             s3 = boto3.client('s3')
+#             bucket_name = settings.AWS_STORAGE_BUCKET_NAME  # S3 버킷 이름
 
-            try:
-                # S3에서 이미지 파일을 가져옴
-                response = s3.get_object(Bucket=bucket_name, Key=instance.image.name)
-                image_data = response['Body'].read()
+#             try:
+#                 # S3에서 이미지 파일을 가져옴
+#                 response = s3.get_object(Bucket=bucket_name, Key=instance.image.name)
+#                 image_data = response['Body'].read()
 
-                # 이미지를 base64로 인코딩하여 반환
-                return base64.b64encode(image_data).decode('utf-8')
-            except Exception as e:
-                print(f'Failed to encode image: {str(e)}')
+#                 # 이미지를 base64로 인코딩하여 반환
+#                 return base64.b64encode(image_data).decode('utf-8')
+#             except Exception as e:
+#                 print(f'Failed to encode image: {str(e)}')
 
-        return None
+#         return None
