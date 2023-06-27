@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +13,7 @@ import 'package:ourcohol/style.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class MyInformation extends StatefulWidget {
   const MyInformation({super.key});
@@ -42,10 +44,15 @@ class _MyInformationState extends State<MyInformation> {
       File? img = File(image.path);
 
       img = await cropImage(imageFile: img);
+      print('1');
+
+      img = await compressImage(imageFile: img);
+      print('2');
 
       setState(() {
         resultImage = img;
       });
+      print('3');
     } catch (e) {
       print(e);
     }
@@ -61,6 +68,19 @@ class _MyInformationState extends State<MyInformation> {
     } else {
       return File(croppedImage.path);
     }
+  }
+
+  Future<File?> compressImage({required File? imageFile}) async {
+    final tempDir = await getTemporaryDirectory();
+    final targetPath = '${tempDir.path}/compressed_image.jpg';
+
+    var result = await FlutterImageCompress.compressAndGetFile(
+      imageFile!.absolute.path,
+      targetPath,
+      quality: 10, // 압축 품질 (0 ~ 100)
+    );
+
+    return File(result!.path);
   }
 
   logout() async {
