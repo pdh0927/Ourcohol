@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:ourcohol/common/function/function.dart';
 import 'package:ourcohol/home/tabs/calendar_page/party_memory.dart';
 import 'package:ourcohol/provider_ourcohol.dart';
 
@@ -167,14 +168,27 @@ class _CalendarState extends State<Calendar> {
                                           color: Colors.red,
                                           fontWeight: FontWeight.w700,
                                           height: 1.3)),
-                              myPartyList[j]['party']['image_memory'] != null
+                              //         myPartyList[j]['party']['image_memory'] != null
+                              // ? Container(
+                              //     margin: EdgeInsets.only(bottom: 0.59.h),
+                              //     width: (100.w - 32) / 7 - 0.59.h * 2,
+                              //     height: (100.w - 32) / 7 - 0.59.h * 2,
+                              //     child: Image.memory(
+                              //       base64Decode(myPartyList[j]['party']
+                              //           ['image_memory']),
+                              //       fit: BoxFit.fill,
+                              //       width: (100.w - 32) / 7 - 0.59.h * 2,
+                              //       height: ((100.w - 32) / 7 - 0.59.h * 2),
+                              //     ),
+                              //   )
+                              myPartyList[j]['party']['image'] != null
                                   ? Container(
                                       margin: EdgeInsets.only(bottom: 0.59.h),
                                       width: (100.w - 32) / 7 - 0.59.h * 2,
                                       height: (100.w - 32) / 7 - 0.59.h * 2,
-                                      child: Image.memory(
-                                        base64Decode(myPartyList[j]['party']
-                                            ['image_memory']),
+                                      child: Image.network(
+                                        getBaseURl(
+                                            myPartyList[j]['party']['image']),
                                         fit: BoxFit.fill,
                                         width: (100.w - 32) / 7 - 0.59.h * 2,
                                         height: ((100.w - 32) / 7 - 0.59.h * 2),
@@ -323,14 +337,14 @@ class _CalendarState extends State<Calendar> {
                                           (i - startDayOfWeek + 1))
                                       .toString(),
                                   style: textStyle5),
-                              myPartyList[j]['party']['image_memory'] != null
+                              myPartyList[j]['party']['image'] != null
                                   ? Container(
                                       margin: EdgeInsets.only(bottom: 0.59.h),
                                       width: (100.w - 32) / 7 - 0.59.h * 2,
                                       height: (100.w - 32) / 7 - 0.59.h * 2,
-                                      child: Image.memory(
-                                        base64Decode(myPartyList[j]['party']
-                                            ['image_memory']),
+                                      child: Image.network(
+                                        getBaseURl(
+                                            myPartyList[j]['party']['image']),
                                         fit: BoxFit.fill,
                                         width: (100.w - 32) / 7 - 0.59.h * 2,
                                         height: ((100.w - 32) / 7 - 0.59.h * 2),
@@ -460,14 +474,14 @@ class _CalendarState extends State<Calendar> {
                             children: [
                               Text((i - 7 * week - lastWeekDay + 1).toString(),
                                   style: textStyle5),
-                              myPartyList[j]['party']['image_memory'] != null
+                              myPartyList[j]['party']['image'] != null
                                   ? Container(
                                       margin: EdgeInsets.only(bottom: 0.59.h),
                                       width: (100.w - 32) / 7 - 0.59.h * 2,
                                       height: (100.w - 32) / 7 - 0.59.h * 2,
-                                      child: Image.memory(
-                                        base64Decode(myPartyList[j]['party']
-                                            ['image_memory']),
+                                      child: Image.network(
+                                        getBaseURl(
+                                            myPartyList[j]['party']['image']),
                                         fit: BoxFit.fill,
                                         width: (100.w - 32) / 7 - 0.59.h * 2,
                                         height: ((100.w - 32) / 7 - 0.59.h * 2),
@@ -580,24 +594,23 @@ class _CalendarState extends State<Calendar> {
                 width: 6.w,
                 height: 6.w,
                 margin: const EdgeInsets.only(right: 7),
-                decoration: partyMemory['party']['comments'][i]['user']
-                            ['image_memory'] !=
-                        null
-                    ? BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: MemoryImage(base64Decode(partyMemory['party']
-                                ['comments'][i]['user']['image_memory']))))
-                    : const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.grey),
-                child: partyMemory['party']['comments'][i]['user']
-                            ['image_memory'] ==
-                        null
-                    ? const Icon(
-                        FlutterRemix.user_2_fill,
-                        color: Colors.white,
-                      )
-                    : null),
+                decoration:
+                    partyMemory['party']['comments'][i]['user']['image'] != null
+                        ? BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: NetworkImage(getBaseURl(
+                                    partyMemory['party']['comments'][i]['user']
+                                        ['image']))))
+                        : const BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.grey),
+                child:
+                    partyMemory['party']['comments'][i]['user']['image'] == null
+                        ? const Icon(
+                            FlutterRemix.user_2_fill,
+                            color: Colors.white,
+                          )
+                        : null),
             Text(partyMemory['party']['comments'][i]['content'],
                 style: textStyle8),
           ],
@@ -614,16 +627,20 @@ class _CalendarState extends State<Calendar> {
     response = await http.get(
         Uri.parse(
             'http://ourcohol-server-dev.ap-northeast-2.elasticbeanstalk.com/api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
+        //'http://127.0.0.1:8000//api/participant/list/${context.read<UserProvider>().userId}/${selectedYear}/${selectedMonth}/'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer ${context.read<UserProvider>().tokenAccess}',
         });
 
-    if (json.decode(utf8.decode(response.bodyBytes)).length > 0) {
-      setState(() {
-        myPartyList = json.decode(utf8.decode(response.bodyBytes)).toList();
-      });
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
+      if (responseBody.length > 0) {
+        setState(() {
+          myPartyList = responseBody.toList();
+        });
+      }
     }
 
     return myPartyList;
@@ -774,14 +791,14 @@ class _CalendarState extends State<Calendar> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              partyMemory['party']['image_memory'] != null
+                              partyMemory['party']['image'] != null
                                   ? Container(
                                       margin: const EdgeInsets.only(right: 8),
                                       width: 42.w,
                                       height: 30.w,
-                                      child: Image.memory(
-                                        base64Decode(partyMemory['party']
-                                            ['image_memory']),
+                                      child: Image.network(
+                                        getBaseURl(
+                                            partyMemory['party']['image']),
                                         fit: BoxFit.fill,
                                         width: 42.w,
                                         height: 30.w,
@@ -843,7 +860,7 @@ class _TmpPictureState extends State<TmpPicture> {
     List<Widget> childs = [];
     for (int i = 0; i < widget.participants.length; i++) {
       childs.add(Container(
-        child: (widget.participants[i]['user']['image_memory'] != null
+        child: (widget.participants[i]['user']['image'] != null
             ? Container(
                 width: widget.width /
                     (4 * (widget.participants.length / 4).ceil()),
@@ -852,8 +869,8 @@ class _TmpPictureState extends State<TmpPicture> {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                        image: MemoryImage(base64Decode(
-                            widget.participants[i]['user']['image_memory'])),
+                        image: NetworkImage(getBaseURl(
+                            widget.participants[i]['user']['image'])),
                         fit: BoxFit.fill)))
             : Container(
                 width: widget.width /
