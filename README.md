@@ -29,4 +29,4 @@
 ## 실행 화면
 
 ### 술자리 추억
-<img alt="캘린더" src="https://github.com/pdh0927/Ourcohol/assets/67888951/fcea02f8-894b-4b8b-b6c3-d60183c38380" width = "250"><img alt="술자리 추억 자세히" src="https://github.com/pdh0927/Ourcohol/assets/67888951/d939dfc3-7b73-4985-8aa0-0e6f5ab6d1b6" width = "250">
+<img alt="캘린더" src="https://github.com/pdh0927/Ourcohol/assets/67888951/d09e657d-1c3a-4cb0-851a-be584732fb94" width = "250"><img alt="술자리 추억 자세히" src="https://github.com/pdh0927/Ourcohol/assets/67888951/fcea02f8-894b-4b8b-b6c3-d60183c38380" width = "250">
