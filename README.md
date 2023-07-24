@@ -9,6 +9,7 @@
 
 
 
+
 ## 기술스택
 
 ### Front-end
@@ -23,6 +24,7 @@
 ### **Design** by 허준우
 
 - Figma
+
 
 
 
@@ -45,7 +47,7 @@
 - 사용자가 사용하기 쉽고, 읽기 편하도록 제작
   
 ### 내정보 및 로그인/회원가입
-<img alt="내 정보" src="https://github.com/pdh0927/Ourcohol/assets/67888951/c6f6bcd3-6363-47f4-ba0d-f7781cf3c128" width = "250" height = "500"><img alt="로그인" src="https://github.com/pdh0927/Ourcohol/assets/67888951/0423f0b5-77d8-4e69-b8e4-4e29e8a49380" width = "250" height = "500">
-<img alt="회원가입1" src="https://github.com/pdh0927/Ourcohol/assets/67888951/711b06de-58a3-40e5-a1f5-646e20f2c3ff" width = "250" height = "500"><img alt="회원가입2" src="https://github.com/pdh0927/Ourcohol/assets/67888951/d3d6f426-542b-4141-aa4e-c24ebc8c8ffd" width = "250" height = "500">
+<img alt="내 정보" src="https://github.com/pdh0927/Ourcohol/assets/67888951/c6f6bcd3-6363-47f4-ba0d-f7781cf3c128" width = "220" height = "500"><img alt="로그인" src="https://github.com/pdh0927/Ourcohol/assets/67888951/0423f0b5-77d8-4e69-b8e4-4e29e8a49380" width = "220" height = "500">
+<img alt="회원가입1" src="https://github.com/pdh0927/Ourcohol/assets/67888951/711b06de-58a3-40e5-a1f5-646e20f2c3ff" width = "220" height = "500"><img alt="회원가입2" src="https://github.com/pdh0927/Ourcohol/assets/67888951/d3d6f426-542b-4141-aa4e-c24ebc8c8ffd" width = "220" height = "500">
 
 - 이메일 인증까지 직접 구현하여 보안 Up
